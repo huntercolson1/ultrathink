@@ -31,6 +31,12 @@
   top: 0;
   z-index: var(--z-nav);
   backdrop-filter: blur(12px);
+  width: 100%;
+}
+
+.pin-nav .container {
+  width: 100%;
+  max-width: 100%;
 }
 
 .grid {

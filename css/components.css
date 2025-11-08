@@ -4,10 +4,13 @@
   align-items: center;
   justify-content: space-between;
   padding-block: var(--space-md);
+  padding-inline: clamp(var(--space-md), 3vw, var(--space-lg));
   border-bottom: 1px solid rgb(255 255 255 / 5%);
   transition: padding var(--transition-fast),
     background var(--transition-fast), border-color var(--transition-fast);
   background: rgb(0 0 0 / 40%);
+  width: 100%;
+  max-width: 100%;
 }
 
 .c-header.is-condensed {
@@ -161,6 +164,25 @@
 .c-btn--solid {
   background: var(--white);
   color: var(--black);
+}
+
+.c-social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  transition: color var(--transition-fast);
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.c-social-link:hover,
+.c-social-link:focus-visible {
+  color: var(--white);
+}
+
+.c-social-link svg {
+  flex-shrink: 0;
 }
 
 /* Cards */
