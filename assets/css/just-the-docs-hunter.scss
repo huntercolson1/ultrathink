@@ -1,0 +1,7 @@
+---
+---
+{% comment %}
+Switchable scheme entrypoint so we can call jtd.setTheme('dark'|'light').
+This file is required for JTD’s JS theme switch helper.
+{% endcomment %}
+{% include css/just-the-docs.scss.liquid color_scheme=site.color_scheme %}
