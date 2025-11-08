@@ -14,7 +14,7 @@ plugins:
 search_enabled: true
 heading_anchors: true
 nav_sort: case_insensitive
-color_scheme: light
+color_scheme: hunter
 
 logo:
 favicon_ico: /assets/images/favicon.ico

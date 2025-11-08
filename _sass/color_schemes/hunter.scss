@@ -1,18 +1,91 @@
-// Hunter monochrome tweaks (light)
-$body-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+// ═══════════════════════════════════════════════════════════════
+// HUNTER DARK THEME — Professional & Beautiful
+// ═══════════════════════════════════════════════════════════════
 
-// Neutral palette tuning
-$body-background-color: #ffffff;
-$sidebar-color: #f7f7f8;
-$border-color: #e6e7ea;
+// Typography — Modern, clean fonts
+$body-font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$mono-font-family: "SF Mono", "Fira Code", "Cascadia Code", Menlo, Monaco, "Courier New", monospace;
 
-// Accent is still neutral-leaning (links, focus)
-$link-color: #1f2937;        // slate-800 vibe
-$link-color-hover: #111827;  // slate-900
-$btn-primary-color: #111827;
-$btn-primary-color-dark: #0b1220;
+// ═══════════════════════════════════════════════════════════════
+// COLOR PALETTE — Dark & Sophisticated
+// ═══════════════════════════════════════════════════════════════
 
-// Comfortable reading measure
-$content-width: 68ch; // ~45–85 characters per line window
-$body-line-height: 1.6;
-$body-heading-line-height: 1.25;
+// Background layers (deep, rich darks)
+$body-background-color: #0a0a0f;           // Deep space black
+$sidebar-color: #12121a;                   // Slightly lighter for contrast
+$code-background-color: #1a1a24;           // Code blocks
+$table-background-color: #0f0f16;          // Tables
+$feedback-color: #151520;                  // Callouts/alerts
+
+// Surface colors (for cards, panels)
+$card-background: #161622;
+$elevated-background: #1c1c2a;
+
+// Border colors (subtle, refined)
+$border-color: #2a2a3e;
+$border-color-light: #1f1f2f;
+
+// Text colors (excellent readability)
+$body-text-color: #e8e8f0;                 // Primary text
+$body-heading-color: #ffffff;              // Headings pop
+$nav-child-link-color: #b8b8c8;           // Secondary text
+$search-result-preview-color: #9898a8;    // Tertiary text
+
+// ═══════════════════════════════════════════════════════════════
+// ACCENT COLORS — Purple/Blue Gradient Theme
+// ═══════════════════════════════════════════════════════════════
+
+$link-color: #a78bfa;                      // Soft purple
+$link-color-hover: #c4b5fd;                // Lighter purple on hover
+$btn-primary-color: #8b5cf6;               // Vibrant purple
+$btn-primary-color-hover: #a78bfa;         // Lighter on hover
+$focus-color: #a78bfa;                     // Focus rings
+$base-button-color: #7c3aed;               // Button base
+
+// Secondary accent (blue for variety)
+$accent-blue: #60a5fa;
+$accent-blue-bright: #93c5fd;
+
+// Success/Warning/Error (for UI feedback)
+$success-color: #34d399;
+$warning-color: #fbbf24;
+$error-color: #f87171;
+
+// ═══════════════════════════════════════════════════════════════
+// LAYOUT & SPACING
+// ═══════════════════════════════════════════════════════════════
+
+$content-width: 72ch;
+$nav-width: 280px;
+$nav-width-md: 260px;
+
+// Typography scale
+$body-line-height: 1.7;
+$body-heading-line-height: 1.3;
+$font-size-1: 2.5rem;      // h1
+$font-size-2: 2rem;        // h2  
+$font-size-3: 1.5rem;      // h3
+$font-size-4: 1.25rem;     // h4
+$font-size-5: 1.125rem;    // h5
+$font-size-6: 1rem;        // h6
+
+// Spacing scale
+$sp-1: 0.25rem;
+$sp-2: 0.5rem;
+$sp-3: 0.75rem;
+$sp-4: 1rem;
+$sp-5: 1.5rem;
+$sp-6: 2rem;
+$sp-7: 2.5rem;
+$sp-8: 3rem;
+$sp-9: 4rem;
+$sp-10: 6rem;
+
+// Border radius
+$border-radius: 12px;
+$border-radius-sm: 8px;
+$border-radius-lg: 16px;
+
+// Transitions
+$transition-duration: 0.2s;
+$transition-function: cubic-bezier(0.4, 0, 0.2, 1);
