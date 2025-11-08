@@ -1,7 +1,8 @@
 title: "Hunter — Research & Notes"
 description: "Clean, modular, and fast. A minimalist blog & knowledge site."
-url: ""
-baseurl: ""
+# GitHub Pages will automatically set url and baseurl
+# url: "" # Will be set by GitHub Pages
+# baseurl: "" # Will be set by GitHub Pages if using project site
 
 remote_theme: just-the-docs/just-the-docs
 
