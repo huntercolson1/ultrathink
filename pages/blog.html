@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Ultrathink blog — essays and notes.">
+  <title>Blog — Ultrathink</title>
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/utilities.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="main-shell">
+    <header class="pin-nav" data-component="nav scroll-header">
+      <div class="container c-header">
+        <a class="c-header__brand" href="/">ULTRATHINK</a>
+        <nav class="c-nav" aria-label="Primary navigation">
+          <ul class="c-nav__list">
+            <li><a class="c-nav__link" href="/">Home</a></li>
+            <li><a class="c-nav__link" href="/pages/series.html">Series</a></li>
+            <li><a class="c-nav__link" href="/pages/blog.html" aria-current="page">Blog</a></li>
+            <li><a class="c-nav__link" href="/pages/projects.html">Projects</a></li>
+            <li><a class="c-nav__link" href="/pages/about.html">About</a></li>
+          </ul>
+          <button class="c-nav__toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="nav-drawer">
+            <span>Menu</span>
+          </button>
+        </nav>
+      </div>
+    </header>
+    <div class="c-drawer" data-nav-drawer id="nav-drawer" aria-hidden="true">
+      <div class="c-drawer__panel">
+        <a class="c-header__brand" href="/">ULTRATHINK</a>
+        <a class="c-nav__link" href="/pages/series.html">Series</a>
+        <a class="c-nav__link" href="/pages/blog.html">Blog</a>
+        <a class="c-nav__link" href="/pages/projects.html">Projects</a>
+        <a class="c-nav__link" href="/pages/about.html">About</a>
+        <button class="c-btn c-btn--ghost" data-component="theme-toggle" type="button">Light mode</button>
+      </div>
+    </div>
+
+    <main id="main">
+      <section class="hero">
+        <div class="container stack" style="gap: var(--space-lg);">
+          <div>
+            <p class="hero__kicker">Signals</p>
+            <h1 class="hero__title">Blog, notes, and dispatches.</h1>
+            <p class="hero__lead">A quiet feed of essays and updates. No ads, no popups, just calibrated perspective.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="research-systems" data-section-tone="raised">
+        <div class="container stack" style="gap: var(--space-lg);">
+          <div>
+            <p class="c-section-label">11.04.25</p>
+            <h2 class="c-section-heading">Why research systems need changelogs</h2>
+            <p class="u-text-muted reading-width">
+              The longer a system runs, the more invisible adjustments it accumulates. Document each change and the team keeps its calibration.
+            </p>
+          </div>
+          <article class="panel stack" style="gap: var(--space-md);">
+            <p>
+              Every research environment has drift. Without an explicit changelog, drift compounds into confusion. A simple table — timestamp,
+              owner, change, reason — eliminates the mystery. Future you will thank present you for stopping the entropy.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="tooling" data-section-tone="surface">
+        <div class="container stack" style="gap: var(--space-lg);">
+          <div>
+            <p class="c-section-label">10.18.25</p>
+            <h2 class="c-section-heading">Clinical tooling stack 2025</h2>
+            <p class="u-text-muted">Hardware, software, and rituals powering Ultrathink right now.</p>
+          </div>
+          <div class="grid u-grid-3">
+            <article class="c-card">
+              <h3 class="c-card__title">Capture</h3>
+              <p class="c-card__desc">iPad Pro + Pencil + Craft for raw capture, synced nightly.</p>
+            </article>
+            <article class="c-card">
+              <h3 class="c-card__title">Processing</h3>
+              <p class="c-card__desc">Obsidian vault with monochrome custom theme.</p>
+            </article>
+            <article class="c-card">
+              <h3 class="c-card__title">Output</h3>
+              <p class="c-card__desc">Static exports with serverless hooks for analytics.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="analysis-lag" data-section-tone="raised">
+        <div class="container stack" style="gap: var(--space-lg);">
+          <div>
+            <p class="c-section-label">09.10.25</p>
+            <h2 class="c-section-heading">Reducing analysis lag</h2>
+            <p class="u-text-muted">A set of constraints to keep the loop from capture to decision under 48 hours.</p>
+          </div>
+          <div class="grid u-grid-2">
+            <article class="c-card">
+              <h3 class="c-card__title">One dataset</h3>
+              <p class="c-card__desc">Centralize ingestion to avoid parallel sources.</p>
+            </article>
+            <article class="c-card">
+              <h3 class="c-card__title">Zero wait states</h3>
+              <p class="c-card__desc">Automate each handoff with a checklist-bound owner.</p>
+            </article>
+            <article class="c-card">
+              <h3 class="c-card__title">Fixed cadence</h3>
+              <p class="c-card__desc">Ship outputs twice a week even if the report is small.</p>
+            </article>
+            <article class="c-card">
+              <h3 class="c-card__title">Audit shadows</h3>
+              <p class="c-card__desc">Every chart has a link to the raw query.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="container c-footer" role="contentinfo">
+      <div>
+        <p class="c-header__brand">ULTRATHINK</p>
+        <p class="u-text-muted">Minimal systems for research, writing, and tooling.</p>
+      </div>
+      <div class="c-footer__links" aria-label="Utility links">
+        <a href="/pages/about.html">About</a>
+        <a href="/pages/series.html">Series</a>
+        <a href="/pages/projects.html">Projects</a>
+        <a href="/pages/blog.html">Blog</a>
+      </div>
+    </footer>
+  </div>
+  <script type="module" src="/js/main.js"></script>
+</body>
+
+</html>

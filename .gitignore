@@ -1,10 +1,7 @@
-# Jekyll / Ruby
-_site/
-.sass-cache/
-.jekyll-cache/
-.jekyll-metadata
-vendor/
-Gemfile.lock
+# Build artifacts
+node_modules/
+dist/
+*.log
 
 # macOS
 .DS_Store

@@ -1,0 +1,23 @@
+[
+  {
+    "title": "Atlas",
+    "summary": "An operating system for structuring long-form research, annotations, and lab notes.",
+    "url": "/pages/projects.html#atlas",
+    "updated": "In progress",
+    "type": "Project"
+  },
+  {
+    "title": "Pulse",
+    "summary": "Monitoring framework for daily metrics, vitals, and intervention tracking in clinics.",
+    "url": "/pages/projects.html#pulse",
+    "updated": "Beta",
+    "type": "Project"
+  },
+  {
+    "title": "Grid",
+    "summary": "A component library for monochrome data-heavy dashboards and tools.",
+    "url": "/pages/projects.html#grid",
+    "updated": "Stable",
+    "type": "Project"
+  }
+]

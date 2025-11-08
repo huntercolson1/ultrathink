@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Ultrathink — minimal systems for research, writing, and tools.">
+  <title>Ultrathink — Research, Notes, Systems</title>
+  <link rel="preload" href="/assets/fonts/space-grotesk-v22-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/utilities.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="main-shell">
+    <header class="pin-nav" data-component="nav scroll-header">
+      <div class="container c-header">
+        <a class="c-header__brand" href="/">ULTRATHINK</a>
+        <nav class="c-nav" aria-label="Primary navigation">
+          <ul class="c-nav__list">
+            <li><a class="c-nav__link" href="/" aria-current="page">Home</a></li>
+            <li><a class="c-nav__link" href="/pages/series.html">Series</a></li>
+            <li><a class="c-nav__link" href="/pages/blog.html">Blog</a></li>
+            <li><a class="c-nav__link" href="/pages/projects.html">Projects</a></li>
+            <li><a class="c-nav__link" href="/pages/about.html">About</a></li>
+          </ul>
+          <button class="c-nav__toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="nav-drawer">
+            <span>Menu</span>
+          </button>
+        </nav>
+      </div>
+    </header>
+    <div class="c-drawer" data-nav-drawer id="nav-drawer" aria-hidden="true">
+      <div class="c-drawer__panel">
+        <a class="c-header__brand" href="/">ULTRATHINK</a>
+        <a class="c-nav__link" href="/pages/series.html">Series</a>
+        <a class="c-nav__link" href="/pages/blog.html">Blog</a>
+        <a class="c-nav__link" href="/pages/projects.html">Projects</a>
+        <a class="c-nav__link" href="/pages/about.html">About</a>
+        <button class="c-btn c-btn--ghost" data-component="theme-toggle" type="button">Light mode</button>
+      </div>
+    </div>
+
+    <main id="main">
+      <section class="hero">
+        <div class="container grid u-grid-2 u-gap-loose">
+          <div class="stack" style="gap: var(--space-lg);">
+            <div>
+              <p class="hero__kicker">Hunter Colson — Ultrathink</p>
+              <h1 class="hero__title">Minimalist, precise, inevitable.</h1>
+              <p class="hero__lead reading-width">
+                Research systems, clinical tooling, and notes engineered to stay calm under load. No gradients, no noise,
+                just monochrome clarity.
+              </p>
+            </div>
+            <div class="cluster" style="gap: var(--space-md);">
+              <a class="c-btn c-btn--solid" href="/pages/series.html">Explore series</a>
+              <a class="c-btn c-btn--ghost" href="/pages/projects.html">Browse projects</a>
+            </div>
+          </div>
+          <div class="panel stack" style="gap: var(--space-lg);" data-component="stats">
+            <div class="c-stat">
+              <span class="c-stat__value" data-target-value="38">0</span>
+              <span class="c-stat__label">Published series</span>
+            </div>
+            <div class="c-stat">
+              <span class="c-stat__value" data-target-value="126">0</span>
+              <span class="c-stat__label">Research briefs</span>
+            </div>
+            <div class="c-stat">
+              <span class="c-stat__value" data-target-value="14">0</span>
+              <span class="c-stat__label">Active tools</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" data-section-tone="raised">
+        <div class="container stack" style="gap: var(--space-lg);">
+          <div class="stack" style="gap: var(--space-sm);">
+            <p class="c-section-label">Systems</p>
+            <h2 class="c-section-heading">Series library</h2>
+            <p class="u-text-muted reading-width">
+              Deep dives on methodology, tooling, and repeatable processes. Built to be rearranged without breaking the system.
+            </p>
+          </div>
+          <div class="grid u-grid-3" data-component="dataset" data-source="/data/series.json" data-limit="3" data-template="card"></div>
+        </div>
+      </section>
+
+      <section class="section" data-section-tone="surface">
+        <div class="container grid u-grid-2 u-gap-tight">
+          <div class="stack" style="gap: var(--space-md);">
+            <p class="c-section-label">Projects</p>
+            <h2 class="c-section-heading">Active build log</h2>
+            <p class="u-text-muted">
+              Tooling for clinicians, researchers, and operators. Each project is modular and ships with documentation.
+            </p>
+            <div class="grid u-grid-2" data-component="dataset" data-source="/data/projects.json" data-limit="4" data-template="card"></div>
+          </div>
+          <div class="panel stack" style="gap: var(--space-md);">
+            <h3>Quick links</h3>
+            <div class="c-list" data-component="dataset" data-source="/data/blog.json" data-limit="3" data-template="list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" data-section-tone="raised">
+        <div class="container grid u-grid-2 u-gap-tight">
+          <div class="panel stack" style="gap: var(--space-md);">
+            <p class="c-section-label">Signals</p>
+            <h2 class="c-section-heading">Research log</h2>
+            <p class="u-text-muted">
+              Essays and notes on frameworks, constraints, and everything in between. Designed for a 65-character measure.
+            </p>
+            <a class="c-btn c-btn--ghost" href="/pages/blog.html">Read the feed</a>
+          </div>
+          <div class="panel stack" style="gap: var(--space-md);">
+            <p class="c-section-label">Contact</p>
+            <h3 class="c-section-heading">Work with Hunter</h3>
+            <p class="u-text-muted">
+              I partner with researchers, clinicians, and builders who need systems thinking on demand. Brief me, and let's design something inevitable.
+            </p>
+            <a class="c-btn c-btn--solid" href="mailto:hunter@ultrathink.studio">Email Hunter</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="container c-footer" role="contentinfo">
+      <div>
+        <p class="c-header__brand">ULTRATHINK</p>
+        <p class="u-text-muted">Minimal systems for research, writing, and tooling.</p>
+      </div>
+      <div class="c-footer__links" aria-label="Utility links">
+        <a href="/pages/about.html">About</a>
+        <a href="/pages/series.html">Series</a>
+        <a href="/pages/projects.html">Projects</a>
+        <a href="/pages/blog.html">Blog</a>
+      </div>
+    </footer>
+  </div>
+  <script type="module" src="/js/main.js"></script>
+</body>
+
+</html>

@@ -1,72 +1,59 @@
-# Hunter — Research & Notes
+# Ultrathink — Monochrome Research System
 
-A minimalist, professional Jekyll blog optimized for **GitHub Pages**. Built with Just the Docs theme.
+Ultrathink is a black–white–grey website engineered for GitHub Pages. Every element is modular: tokens live in `css/theme.css`, HTML components live in `/components`, and lightweight ES modules power the micro-interactions.
 
-## 🚀 GitHub Pages Deployment
+## Stack & Structure
 
-**This site is 100% ready for GitHub Pages!**
-
-### Quick Deploy
-
-1. **Push to GitHub:**
-   ```bash
-   git add .
-   git commit -m "Initial commit"
-   git push origin main
-   ```
-
-2. **Enable GitHub Pages:**
-   - Go to repository **Settings** → **Pages**
-   - Source: `main` branch, `/ (root)` folder
-   - Click **Save**
-
-3. **Your site will be live at:** `https://YOUR_USERNAME.github.io/hunter-site/`
-
-📖 **Full deployment guide:** See [GITHUB_PAGES.md](GITHUB_PAGES.md)
-
-## ✅ GitHub Pages Compatibility
-
-- ✅ Uses `github-pages` gem (official GitHub Jekyll version)
-- ✅ Only GitHub Pages whitelisted plugins
-- ✅ Remote theme: Just the Docs
-- ✅ Collections properly configured
-- ✅ SEO and sitemap plugins included
-
-## 🖥️ Local Development
-
-### Option 1: Docker (Recommended)
-
-```bash
-docker run -it --rm \
-  -v "$PWD":/srv/jekyll \
-  -p 4000:4000 \
-  jekyll/jekyll:4.3 \
-  jekyll serve --host 0.0.0.0 --force_polling
+```
+project-root
+├── index.html
+├── pages/                 # About, Series, Blog, Projects
+├── components/            # Atomic HTML snippets + docs
+├── css/                   # theme, base, layout, components, utilities
+├── js/                    # utils, ui, components registry, main entry
+├── data/                  # JSON feeds powering cards/lists
+├── assets/fonts           # Space Grotesk self-hosted
+├── tools/validate.sh      # Lint helper
+└── .nojekyll              # Forces static hosting on GitHub Pages
 ```
 
-Then open [http://localhost:4000](http://localhost:4000)
-
-### Option 2: Local Ruby (if Ruby 3.2-3.3 available)
+## Commands
 
 ```bash
-bundle install
-bundle exec jekyll serve
+npm install          # install dev dependencies
+npm run dev          # watch + compile CSS (if you add SCSS later)
+npm run build:css    # one-off CSS build
+npm run lint:css     # stylelint (BEM-friendly config)
+npm run lint:js      # eslint (ES modules, browser globals)
+npm run lint:html    # htmlhint
+npm test             # runs all linters
+./tools/validate.sh  # same as npm test (bash shortcut)
 ```
 
-For troubleshooting, see [SETUP.md](SETUP.md)
+## Deployment
 
-## Structure
+1. Commit + push to `main`.
+2. In repository settings → Pages → Source: `main` /root.
+3. GitHub Pages serves the static bundle. `.nojekyll` prevents the Ruby build.
 
-* `_series/` — series content included in sidebar
-* `_blog/` — blog posts (collection)
-* `projects/` — projects landing
-* `assets/` — images, CSS, JS
-* `_sass/` — theme tokens, schemes, and overrides
-* `_includes/components/` — reusable UI pieces
+## Design Principles
 
-## Design principles
+- **Palette**: `#000`, `#fff`, greys only.
+- **Typography**: Space Grotesk, 1.4–1.6 line height, 60–75 character measure.
+- **Layout**: CSS Grid/Flex hybrid with max width `1200px`.
+- **Motion**: Sub-200ms transitions, respects `prefers-reduced-motion`.
+- **Components**: BEM-like class names (`.c-card__title`, `.c-nav__toggle`), data hooks via `data-component`.
+- **Accessibility**: High contrast, focus-visible states, skip links, keyboard-friendly drawer, aria attributes.
 
-* Comfortable reading measure (~45–85 characters)
-* WCAG AA contrast targets (4.5:1+ body text)
-* System-UI sans stack by default; easy to swap later
+## Data-driven UI
 
+JSON files in `/data` feed cards and lists. Any element with `data-component="dataset"` automatically fetches its source and renders cards (`data-template="card"`) or quick lists (`data-template="list"`). Stats blocks animate values with `data-target-value="42"`.
+
+## Extending
+
+- Add new pages within `/pages` by copying an existing shell.
+- Drop new components into `/components` and document their modifiers.
+- Update `data/*.json` to change homepage rails without touching markup.
+- Run Lighthouse/Pa11y against `index.html` to keep performance ≥95 and accessibility at AA.
+
+Everything is monochrome and intentional—treat it like an operating system, not a theme.

@@ -1,0 +1,74 @@
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/space-grotesk-v22-latin-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/space-grotesk-v22-latin-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/space-grotesk-v22-latin-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/space-grotesk-v22-latin-700.woff2') format('woff2');
+}
+
+:root {
+  color-scheme: dark;
+  --black: #000;
+  --white: #fff;
+  --grey-1: #111;
+  --grey-2: #222;
+  --grey-3: #444;
+  --grey-4: #888;
+  --font-sans: 'Space Grotesk', -apple-system, blinkmacsystemfont, 'Segoe UI', sans-serif;
+  --line-body: 1.5;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 2rem;
+  --space-xl: 4rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --transition-fast: 150ms ease;
+  --transition-med: 200ms ease;
+  --z-base: 10;
+  --z-nav: 100;
+  --z-overlay: 1000;
+  --container-max: 1200px;
+  --surface: var(--grey-1);
+  --surface-raised: #161616;
+  --text-primary: var(--white);
+  --text-secondary: var(--grey-4);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+  --surface: var(--white);
+  --surface-raised: #f2f2f2;
+  --text-primary: var(--black);
+  --text-secondary: var(--grey-3);
+}
+
+@media (width >= 1440px) {
+  :root {
+    --space-xl: 5rem;
+  }
+}

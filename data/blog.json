@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Why Research Systems Need Changelogs",
+    "summary": "A short essay on documenting every adjustment to avoid drifting baselines.",
+    "url": "/pages/blog.html#research-systems"
+  },
+  {
+    "title": "Clinical Tooling Stack 2025",
+    "summary": "The hardware + software kit powering Ultrathink right now.",
+    "url": "/pages/blog.html#tooling"
+  },
+  {
+    "title": "Reducing Analysis Lag",
+    "summary": "Methods to collapse the time from data capture to executive-ready readouts.",
+    "url": "/pages/blog.html#analysis-lag"
+  }
+]

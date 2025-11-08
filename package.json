@@ -1,0 +1,34 @@
+{
+  "name": "ultrathink-site",
+  "version": "1.0.0",
+  "description": "Ultrathink — monochrome research hub engineered for GitHub Pages.",
+  "type": "module",
+  "scripts": {
+    "dev": "sass css:css --watch --style=expanded",
+    "build:css": "sass css:css --style=compressed",
+    "lint:css": "stylelint \"css/**/*.css\"",
+    "lint:js": "eslint \"js/**/*.js\"",
+    "lint:html": "htmlhint \"*.html\" \"pages/**/*.html\"",
+    "test": "npm run lint:css && npm run lint:js && npm run lint:html",
+    "deploy": "npm run build:css && npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huntercolson1/hunter-site.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/huntercolson1/hunter-site/issues"
+  },
+  "homepage": "https://github.com/huntercolson1/hunter-site#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "eslint": "^9.39.1",
+    "htmlhint": "^1.7.1",
+    "sass": "^1.93.3",
+    "stylelint": "^16.25.0",
+    "stylelint-config-standard": "^39.0.1"
+  }
+}

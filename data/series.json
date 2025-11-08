@@ -1,0 +1,23 @@
+[
+  {
+    "title": "Research Operations",
+    "summary": "Frameworks for planning, ethics, and field execution of clinical research.",
+    "url": "/pages/series.html#research-operations",
+    "updated": "Nov 2024",
+    "type": "Series"
+  },
+  {
+    "title": "Data Systems",
+    "summary": "Notebook-ready guides for wrangling, cleaning, and auditing medical datasets.",
+    "url": "/pages/series.html#data-systems",
+    "updated": "Nov 2024",
+    "type": "Series"
+  },
+  {
+    "title": "Insights Briefings",
+    "summary": "Rapid readouts on current projects, tools, and literature worth tracking.",
+    "url": "/pages/series.html#insights",
+    "updated": "Oct 2024",
+    "type": "Series"
+  }
+]
