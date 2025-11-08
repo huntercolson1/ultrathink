@@ -5,3 +5,13 @@ _site/
 .jekyll-metadata
 vendor/
 Gemfile.lock
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
