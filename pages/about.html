@@ -18,7 +18,7 @@ permalink: /pages/about/
       <div class="stack" style="gap: var(--space-md);">
         <div class="cluster" style="gap: var(--space-md);">
           <a class="c-btn c-btn--solid" href="mailto:{{ site.data.about.email }}">Get in touch</a>
-          <a class="c-btn c-btn--ghost" href="{{ '/pages/projects/' | relative_url }}">See work</a>
+          <a class="c-btn c-btn--ghost" href="{{ '/pages/tutorials/' | relative_url }}">See tutorials</a>
         </div>
         <div class="cluster" style="gap: var(--space-md);">
           {% if site.data.about.social.github %}
@@ -40,13 +40,8 @@ permalink: /pages/about/
         </div>
       </div>
     </div>
-    <div class="panel stack" style="gap: var(--space-md);">
-      <h3>Principles</h3>
-      <ul class="u-text-muted">
-        {% for principle in site.data.about.principles %}
-          <li>{{ principle }}</li>
-        {% endfor %}
-      </ul>
+    <div style="display: flex; align-items: center; min-height: 100%;">
+      <canvas data-math-animation="ribbon" style="width: 100%; height: 100%; max-height: 100%; background: transparent; display: block;"></canvas>
     </div>
   </div>
 </section>
@@ -55,7 +50,12 @@ permalink: /pages/about/
   <div class="container grid u-grid-2 u-gap-loose">
     <div class="panel stack" style="gap: var(--space-md);">
       <h3>Currently</h3>
-      <p class="u-text-muted">{{ site.data.about.now }}</p>
+      <p class="u-text-muted">{{ site.data.about.now.intro }}</p>
+      <ul class="u-text-muted">
+        {% for project in site.data.about.now.projects %}
+          <li>{{ project }}</li>
+        {% endfor %}
+      </ul>
     </div>
     <div class="panel stack" style="gap: var(--space-md);">
       <h3>Focus areas</h3>

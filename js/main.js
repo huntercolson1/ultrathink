@@ -1,8 +1,10 @@
 import { initComponents } from './components.js';
+import { initMathAnimation } from './math-animation.js';
 
-const boot = () => {
+const boot = async () => {
   document.documentElement.setAttribute('data-theme', 'dark');
-  initComponents();
+  await initComponents();
+  initMathAnimation();
 };
 
 const ready = () => {

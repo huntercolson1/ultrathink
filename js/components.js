@@ -4,7 +4,8 @@ import {
   initScrollHeader,
   initThemeToggle,
   initStats,
-  initBlogFilter
+  initBlogFilter,
+  initSearch
 } from './ui.js';
 
 const registry = {
@@ -13,6 +14,7 @@ const registry = {
   'theme-toggle': initThemeToggle,
   stats: initStats,
   'blog-filter': initBlogFilter,
+  search: initSearch,
   dataset: initDataset
 };
 
@@ -83,15 +85,25 @@ async function initDataset(node) {
   }
 }
 
-export const initComponents = () => {
+export const initComponents = async () => {
+  const componentPromises = [];
+  
   document.querySelectorAll('[data-component]').forEach((node) => {
     const keys = node.dataset.component.split(' ').filter(Boolean);
     keys.forEach((key) => {
       if (registry[key]) {
-        registry[key](node);
+        const result = registry[key](node);
+        // Handle async components
+        if (result instanceof Promise) {
+          componentPromises.push(result);
+        }
       }
     });
   });
+  
+  // Wait for all async components to initialize
+  await Promise.all(componentPromises);
+  
   // ensure skip links focus target exists
   const skip = qs('.skip-link');
   if (skip) {

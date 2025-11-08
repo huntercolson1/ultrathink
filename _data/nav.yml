@@ -1,11 +1,9 @@
 - title: Home
   url: /
-- title: Series
-  url: /pages/series/
 - title: Blog
   url: /pages/blog/
-- title: Projects
-  url: /pages/projects/
+- title: Tutorials
+  url: /pages/tutorials/
 - title: About
   url: /pages/about/
 

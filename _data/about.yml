@@ -9,7 +9,12 @@ social:
   linkedin: https://www.linkedin.com/in/hunter-colson/
 principles:
   - Add your principles here.
-now: Currently working on [your current projects/interests]. Focused on [what you're learning/building].
+now:
+  intro: "I'm currently working on a few projects outside of medical school:"
+  projects:
+    - Developing an AI-driven medical education platform for Socratic tutoring and USMLE-style question generation based on uploaded material.
+    - Conducting a clinical trial aimed at improving surgical outcomes for women undergoing reconstructive breast surgery after mastectomy, using LiDAR scanning and photogrammetry to objectively analyze breast shape and volume.
+    - Investigating new diagnostic metrics from hepatobiliary scintigraphy (HIDA) to improve the evaluation of gallbladder dysfunction beyond traditional ejection fraction thresholds.
 capabilities:
   - Medical education & clinical research
   - AI/ML applications in healthcare

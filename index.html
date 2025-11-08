@@ -1,89 +1,147 @@
 ---
 layout: default
-title: Ultrathink — Research, Notes, Systems
-description: Ultrathink — minimal systems for research, writing, and tools.
+title: Ultrathink — Tutorials and Thoughts
+description: Ultrathink — step-by-step tutorials and thoughts on medicine, math, and tech.
 permalink: /
 ---
 
 <section class="hero">
-  <div class="container grid u-grid-2 u-gap-loose">
-    <div class="stack" style="gap: var(--space-lg);">
-      <div>
-        <p class="hero__kicker">Your kicker here</p>
-        <h1 class="hero__title">Your main title here.</h1>
-        <p class="hero__lead reading-width">
-          Your description here.
-        </p>
-      </div>
-      <div class="cluster" style="gap: var(--space-md);">
-        <a class="c-btn c-btn--solid" href="{{ '/pages/series/' | relative_url }}">Explore series</a>
-        <a class="c-btn c-btn--ghost" href="{{ '/pages/projects/' | relative_url }}">Browse projects</a>
-      </div>
+  <div class="container stack" style="gap: var(--space-lg); max-width: 700px; margin: 0 auto; text-align: center;">
+    <div>
+      <p class="hero__kicker">Tutorials and thoughts</p>
+      <h1 class="hero__title">Step-by-step guides and thoughts on medicine, math, and tech.</h1>
+      <p class="hero__lead reading-width" style="margin: 0 auto;">
+        A place for tutorials that teach what I've learned, and blog posts sharing thoughts and opinions on my interests.
+      </p>
     </div>
-    <div class="panel stack" style="gap: var(--space-lg);" data-component="stats">
-      <div class="c-stat">
-        <span class="c-stat__value" data-target-value="0">0</span>
-        <span class="c-stat__label">Published series</span>
-      </div>
-      <div class="c-stat">
-        <span class="c-stat__value" data-target-value="0">0</span>
-        <span class="c-stat__label">Research briefs</span>
-      </div>
-      <div class="c-stat">
-        <span class="c-stat__value" data-target-value="0">0</span>
-        <span class="c-stat__label">Active tools</span>
+    <div class="stack" style="gap: var(--space-md); align-items: center;">
+      <form class="c-search" data-component="search" style="max-width: 400px; width: 100%; margin: 0 auto;">
+        <label for="search-input" class="u-sr-only">Search tutorials and blog posts</label>
+        <input 
+          type="search" 
+          id="search-input" 
+          class="c-search__input" 
+          placeholder="Search tutorials and posts..." 
+          autocomplete="off"
+          aria-label="Search"
+        />
+        <div class="c-search__results" id="search-results" hidden></div>
+      </form>
+      <div class="cluster" style="gap: var(--space-md); justify-content: center;">
+        <a class="c-btn c-btn--solid" href="{{ '/pages/tutorials/' | relative_url }}">Browse tutorials</a>
+        <a class="c-btn c-btn--ghost" href="{{ '/pages/blog/' | relative_url }}">Read blog</a>
       </div>
     </div>
   </div>
 </section>
 
+{% assign latest_post = site.posts | first %}
+{% assign tutorials = site.data.tutorials %}
+{% assign latest_tutorial = null %}
+{% for tutorial in tutorials %}
+  {% if latest_tutorial == null %}
+    {% assign latest_tutorial = tutorial %}
+  {% else %}
+    {% assign tutorial_date = tutorial.date | default: tutorial.updated | default: '1970-01-01' %}
+    {% assign current_date = latest_tutorial.date | default: latest_tutorial.updated | default: '1970-01-01' %}
+    {% if tutorial_date > current_date %}
+      {% assign latest_tutorial = tutorial %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% if latest_post and latest_tutorial %}
+  {% assign post_date = latest_post.date | date: '%s' | default: 0 %}
+  {% assign tutorial_date = latest_tutorial.date | default: latest_tutorial.updated | date: '%s' | default: 0 %}
+  {% if tutorial_date > post_date %}
+    {% assign most_recent = 'tutorial' %}
+    {% assign most_recent_item = latest_tutorial %}
+  {% else %}
+    {% assign most_recent = 'post' %}
+    {% assign most_recent_item = latest_post %}
+  {% endif %}
+{% elsif latest_post %}
+  {% assign most_recent = 'post' %}
+  {% assign most_recent_item = latest_post %}
+{% elsif latest_tutorial %}
+  {% assign most_recent = 'tutorial' %}
+  {% assign most_recent_item = latest_tutorial %}
+{% endif %}
+
+{% if most_recent_item %}
 <section class="section" data-section-tone="raised">
-  <div class="container stack" style="gap: var(--space-lg);">
-    <div class="stack" style="gap: var(--space-sm);">
-      <p class="c-section-label">Systems</p>
-      <h2 class="c-section-heading">Series library</h2>
-      <p class="u-text-muted reading-width">
-        Deep dives on methodology, tooling, and repeatable processes. Built to be rearranged without breaking the system.
-      </p>
+  <div class="container">
+    <div class="panel stack" style="gap: var(--space-md);">
+      <p class="c-section-label">Recent activity</p>
+      <h2 class="c-section-heading">Latest {{ most_recent }}</h2>
+      {% if most_recent == 'tutorial' %}
+        <div class="stack" style="gap: var(--space-sm);">
+          <h3 style="font-size: var(--step-1); margin: 0;">{{ most_recent_item.title }}</h3>
+          {% if most_recent_item.summary %}
+            <p class="u-text-muted">{{ most_recent_item.summary }}</p>
+          {% endif %}
+          {% if most_recent_item.updated %}
+            <p class="c-section-label">{{ most_recent_item.updated }}</p>
+          {% endif %}
+          <a class="c-btn c-btn--ghost" href="{{ most_recent_item.url | relative_url }}" style="align-self: flex-start;">Read tutorial →</a>
+        </div>
+      {% else %}
+        <div class="stack" style="gap: var(--space-sm);">
+          <h3 style="font-size: var(--step-1); margin: 0;">{{ most_recent_item.title }}</h3>
+          {% if most_recent_item.subtitle or most_recent_item.description %}
+            <p class="u-text-muted">{{ most_recent_item.subtitle | default: most_recent_item.description }}</p>
+          {% endif %}
+          <p class="c-section-label">{{ most_recent_item.date | date: "%B %d, %Y" }}</p>
+          {% if most_recent_item.tags %}
+            <div class="cluster" style="gap: var(--space-xs);">
+              {% for tag in most_recent_item.tags limit: 3 %}
+                <span class="c-badge">#{{ tag }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+          <a class="c-btn c-btn--ghost" href="{{ most_recent_item.url | relative_url }}" style="align-self: flex-start;">Read post →</a>
+        </div>
+      {% endif %}
     </div>
-    <div class="grid u-grid-3" data-component="dataset" data-source="{{ '/data/series.json' | relative_url }}" data-limit="3" data-template="card"></div>
   </div>
 </section>
+{% endif %}
 
 <section class="section" data-section-tone="surface">
-  <div class="container grid u-grid-2 u-gap-tight">
-    <div class="stack" style="gap: var(--space-md);">
-      <p class="c-section-label">Projects</p>
-      <h2 class="c-section-heading">Active build log</h2>
-      <p class="u-text-muted">
-        Tooling for clinicians, researchers, and operators. Each project is modular and ships with documentation.
-      </p>
-      <div class="grid u-grid-2" data-component="dataset" data-source="{{ '/data/projects.json' | relative_url }}" data-limit="4" data-template="card"></div>
-    </div>
-    <div class="panel stack" style="gap: var(--space-md);">
-      <h3>Quick links</h3>
-      <div class="c-list" data-component="dataset" data-source="{{ '/data/blog.json' | relative_url }}" data-limit="3" data-template="list"></div>
-    </div>
-  </div>
-</section>
-
-<section class="section" data-section-tone="raised">
-  <div class="container grid u-grid-2 u-gap-tight">
-    <div class="panel stack" style="gap: var(--space-md);">
-      <p class="c-section-label">Signals</p>
-      <h2 class="c-section-heading">Research log</h2>
-      <p class="u-text-muted">
-        Essays and notes on frameworks, constraints, and everything in between. Designed for a 65-character measure.
-      </p>
-      <a class="c-btn c-btn--ghost" href="{{ '/pages/blog/' | relative_url }}">Read the feed</a>
-    </div>
-    <div class="panel stack" style="gap: var(--space-md);">
-      <p class="c-section-label">Contact</p>
-      <h3 class="c-section-heading">Get in touch</h3>
-      <p class="u-text-muted">
-        Your contact message here.
-      </p>
-      <a class="c-btn c-btn--solid" href="mailto:your@email.com">Email</a>
+  <div class="container stack" style="gap: var(--space-lg);">
+    <div class="grid u-grid-2 u-gap-loose">
+      <div class="stack" style="gap: var(--space-md);">
+        <h2 class="c-section-heading" style="font-size: var(--step-1);">Recent tutorials</h2>
+        <div class="grid u-grid-2" data-component="dataset" data-source="{{ '/data/tutorials.json' | relative_url }}" data-limit="4" data-template="card"></div>
+        <a class="c-btn c-btn--ghost" href="{{ '/pages/tutorials/' | relative_url }}">View all tutorials →</a>
+      </div>
+      <div class="stack" style="gap: var(--space-md);">
+        <h2 class="c-section-heading" style="font-size: var(--step-1);">Recent blog posts</h2>
+        {% assign recent_posts = site.posts | limit: 4 %}
+        {% if recent_posts.size > 0 %}
+          {% for post in recent_posts %}
+            <article class="panel stack" style="gap: var(--space-sm);">
+              <div class="cluster" style="justify-content: space-between;">
+                <p class="c-section-label">{{ post.date | date: "%b %d, %Y" }}</p>
+                {% if post.tags %}
+                  <div class="cluster" style="gap: var(--space-xs);">
+                    {% for tag in post.tags limit: 2 %}
+                      <span class="c-badge">#{{ tag }}</span>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              <h4 style="font-size: var(--step-0); margin: 0;"><a href="{{ post.url | relative_url }}" style="text-decoration: none; color: inherit;">{{ post.title }}</a></h4>
+              {% if post.subtitle or post.description %}
+                <p class="u-text-muted" style="font-size: var(--step--1);">{{ post.subtitle | default: post.description }}</p>
+              {% endif %}
+            </article>
+          {% endfor %}
+        {% else %}
+          <p class="u-text-muted">Blog posts coming soon.</p>
+        {% endif %}
+        <a class="c-btn c-btn--ghost" href="{{ '/pages/blog/' | relative_url }}">Read all posts →</a>
+      </div>
     </div>
   </div>
 </section>
