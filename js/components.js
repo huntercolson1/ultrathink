@@ -3,7 +3,8 @@ import {
   initNav,
   initScrollHeader,
   initThemeToggle,
-  initStats
+  initStats,
+  initBlogFilter
 } from './ui.js';
 
 const registry = {
@@ -11,6 +12,7 @@ const registry = {
   'scroll-header': initScrollHeader,
   'theme-toggle': initThemeToggle,
   stats: initStats,
+  'blog-filter': initBlogFilter,
   dataset: initDataset
 };
 

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+
+<head>
+{% include head.html %}
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="main-shell">
+    {% include header.html %}
+    {% include drawer.html %}
+
+    <main id="main">
+      {{ content }}
+    </main>
+
+    {% include footer.html %}
+  </div>
+
+  <script type="module" src="{{ '/js/main.js' | relative_url }}"></script>
+</body>
+
+</html>
+

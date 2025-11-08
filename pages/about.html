@@ -1,130 +1,71 @@
-<!doctype html>
-<html lang="en" data-theme="dark">
+---
+layout: default
+title: About — Ultrathink
+description: About Hunter Colson — Ultrathink.
+permalink: /pages/about/
+---
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="About Hunter Colson — Ultrathink.">
-  <title>About — Ultrathink</title>
-  <link rel="stylesheet" href="/css/theme.css">
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/layout.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/utilities.css">
-</head>
-
-<body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <div class="main-shell">
-    <header class="pin-nav" data-component="nav scroll-header">
-      <div class="container c-header">
-        <a class="c-header__brand" href="/">ULTRATHINK</a>
-        <nav class="c-nav" aria-label="Primary navigation">
-          <ul class="c-nav__list">
-            <li><a class="c-nav__link" href="/">Home</a></li>
-            <li><a class="c-nav__link" href="/pages/series.html">Series</a></li>
-            <li><a class="c-nav__link" href="/pages/blog.html">Blog</a></li>
-            <li><a class="c-nav__link" href="/pages/projects.html">Projects</a></li>
-            <li><a class="c-nav__link" href="/pages/about.html" aria-current="page">About</a></li>
-          </ul>
-          <button class="c-nav__toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="nav-drawer">
-            <span>Menu</span>
-          </button>
-        </nav>
+<section class="hero">
+  <div class="container grid u-grid-2 u-gap-tight">
+    <div class="stack" style="gap: var(--space-lg);">
+      <div>
+        <p class="hero__kicker">About Hunter</p>
+        <h1 class="hero__title">Minimalist operator & clinical engineer.</h1>
+        <p class="hero__lead">
+          I build systems for research, medicine, and productivity—always monochrome, always intentional.
+        </p>
       </div>
-    </header>
-    <div class="c-drawer" data-nav-drawer id="nav-drawer" aria-hidden="true">
-      <div class="c-drawer__panel">
-        <a class="c-header__brand" href="/">ULTRATHINK</a>
-        <a class="c-nav__link" href="/pages/series.html">Series</a>
-        <a class="c-nav__link" href="/pages/blog.html">Blog</a>
-        <a class="c-nav__link" href="/pages/projects.html">Projects</a>
-        <a class="c-nav__link" href="/pages/about.html">About</a>
-        <button class="c-btn c-btn--ghost" data-component="theme-toggle" type="button">Light mode</button>
+      <div class="cluster" style="gap: var(--space-md);">
+        <a class="c-btn c-btn--solid" href="mailto:hunter@ultrathink.studio">Get in touch</a>
+        <a class="c-btn c-btn--ghost" href="{{ '/pages/projects/' | relative_url }}">See work</a>
       </div>
     </div>
-
-    <main id="main">
-      <section class="hero">
-        <div class="container grid u-grid-2 u-gap-tight">
-          <div class="stack" style="gap: var(--space-lg);">
-            <div>
-              <p class="hero__kicker">About Hunter</p>
-              <h1 class="hero__title">Minimalist operator & clinical engineer.</h1>
-              <p class="hero__lead">
-                I build systems for research, medicine, and productivity—always monochrome, always intentional.
-              </p>
-            </div>
-            <div class="cluster" style="gap: var(--space-md);">
-              <a class="c-btn c-btn--solid" href="mailto:hunter@ultrathink.studio">Get in touch</a>
-              <a class="c-btn c-btn--ghost" href="/pages/projects.html">See work</a>
-            </div>
-          </div>
-          <div class="panel stack" style="gap: var(--space-md);">
-            <h3>Principles</h3>
-            <ul class="u-text-muted">
-              <li>Silence the UI so the work is loud.</li>
-              <li>Document decisions before moving on.</li>
-              <li>Ship small, reversible changes daily.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" data-section-tone="raised">
-        <div class="container grid u-grid-2 u-gap-loose">
-          <div class="stack" style="gap: var(--space-md);">
-            <p class="c-section-label">Profile</p>
-            <h2 class="c-section-heading">Hunter Colson</h2>
-            <p class="u-text-muted">Medical professional, researcher, toolmaker.</p>
-            <p>Ultrathink is the culmination of clinical experience and systems design. The goal is to make research
-              feel like an engineered product—fast, learnable, auditable.</p>
-          </div>
-          <div class="panel stack" style="gap: var(--space-md);">
-            <h3>Timeline</h3>
-            <div class="c-list">
-              <div class="c-list__item"><span>2025</span><span class="u-text-muted">Ultrathink relaunch</span></div>
-              <div class="c-list__item"><span>2023</span><span class="u-text-muted">Clinical research lead</span></div>
-              <div class="c-list__item"><span>2021</span><span class="u-text-muted">Medical training milestones</span></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" data-section-tone="surface">
-        <div class="container grid u-grid-2 u-gap-loose">
-          <div class="panel stack" style="gap: var(--space-md);">
-            <h3>Now</h3>
-            <p class="u-text-muted">Building the Ultrathink component library, documenting workflows, and publishing
-              the Signals brief each week.</p>
-          </div>
-          <div class="panel stack" style="gap: var(--space-sm);">
-            <h3>Capabilities</h3>
-            <ul class="u-text-muted">
-              <li>Research and clinical ops</li>
-              <li>Interface + system design</li>
-              <li>Technical writing</li>
-              <li>Decision narrative building</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="container c-footer" role="contentinfo">
-      <div>
-        <p class="c-header__brand">ULTRATHINK</p>
-        <p class="u-text-muted">Minimal systems for research, writing, and tooling.</p>
-      </div>
-      <div class="c-footer__links" aria-label="Utility links">
-        <a href="/pages/about.html">About</a>
-        <a href="/pages/series.html">Series</a>
-        <a href="/pages/projects.html">Projects</a>
-        <a href="/pages/blog.html">Blog</a>
-      </div>
-    </footer>
+    <div class="panel stack" style="gap: var(--space-md);">
+      <h3>Principles</h3>
+      <ul class="u-text-muted">
+        <li>Silence the UI so the work is loud.</li>
+        <li>Document decisions before moving on.</li>
+        <li>Ship small, reversible changes daily.</li>
+      </ul>
+    </div>
   </div>
-  <script type="module" src="/js/main.js"></script>
-</body>
+</section>
 
-</html>
+<section class="section" data-section-tone="raised">
+  <div class="container grid u-grid-2 u-gap-loose">
+    <div class="stack" style="gap: var(--space-md);">
+      <p class="c-section-label">Profile</p>
+      <h2 class="c-section-heading">Hunter Colson</h2>
+      <p class="u-text-muted">Medical professional, researcher, toolmaker.</p>
+      <p>Ultrathink is the culmination of clinical experience and systems design. The goal is to make research
+        feel like an engineered product—fast, learnable, auditable.</p>
+    </div>
+    <div class="panel stack" style="gap: var(--space-md);">
+      <h3>Timeline</h3>
+      <div class="c-list">
+        <div class="c-list__item"><span>2025</span><span class="u-text-muted">Ultrathink relaunch</span></div>
+        <div class="c-list__item"><span>2023</span><span class="u-text-muted">Clinical research lead</span></div>
+        <div class="c-list__item"><span>2021</span><span class="u-text-muted">Medical training milestones</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" data-section-tone="surface">
+  <div class="container grid u-grid-2 u-gap-loose">
+    <div class="panel stack" style="gap: var(--space-md);">
+      <h3>Now</h3>
+      <p class="u-text-muted">Building the Ultrathink component library, documenting workflows, and publishing
+        the Signals brief each week.</p>
+    </div>
+    <div class="panel stack" style="gap: var(--space-sm);">
+      <h3>Capabilities</h3>
+      <ul class="u-text-muted">
+        <li>Research and clinical ops</li>
+        <li>Interface + system design</li>
+        <li>Technical writing</li>
+        <li>Decision narrative building</li>
+      </ul>
+    </div>
+  </div>
+</section>

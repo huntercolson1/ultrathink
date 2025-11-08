@@ -1,0 +1,24 @@
+<header class="pin-nav" data-component="nav scroll-header">
+  <div class="container c-header">
+    <a class="c-header__brand" href="{{ '/' | relative_url }}">ULTRATHINK</a>
+    <nav class="c-nav" aria-label="Primary navigation">
+      <ul class="c-nav__list">
+        {% assign current = page.url | default: '/' %}
+        {% for item in site.data.nav %}
+          {% assign item_url = item.url | relative_url %}
+          {% assign is_current = current == item.url %}
+          {% if item.url == '/pages/blog/' and current contains '/blog/' %}
+            {% assign is_current = true %}
+          {% endif %}
+          <li>
+            <a class="c-nav__link" href="{{ item_url }}"{% if is_current %} aria-current="page"{% endif %}>{{ item.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+      <button class="c-nav__toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="nav-drawer">
+        <span>Menu</span>
+      </button>
+    </nav>
+  </div>
+</header>
+

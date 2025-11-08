@@ -1,0 +1,13 @@
+<footer class="container c-footer" role="contentinfo">
+  <div>
+    <p class="c-header__brand">ULTRATHINK</p>
+    <p class="u-text-muted">Minimal systems for research, writing, and tooling.</p>
+  </div>
+  <div class="c-footer__links" aria-label="Utility links">
+    {% for item in site.data.nav %}
+      {% assign item_url = item.url | relative_url %}
+      <a href="{{ item_url }}">{{ item.title }}</a>
+    {% endfor %}
+  </div>
+</footer>
+

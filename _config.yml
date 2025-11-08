@@ -1,0 +1,40 @@
+title: Ultrathink — Monochrome Research System
+description: Minimal systems for research, writing, and tooling.
+url: ""        # e.g. https://huntercolson1.github.io
+baseurl: ""    # e.g. /hunter-site
+
+permalink: /blog/:slug/
+
+collections:
+  posts:
+    output: true
+    permalink: /blog/:slug/
+
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: post
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: default
+
+exclude:
+  - node_modules
+  - package.json
+  - package-lock.json
+  - README.md
+  - ULTRATHINK_BLUEPRINT.md
+  - tools
+  - reports
+
+plugins:
+  - jekyll-feed
+
+markdown: kramdown
+kramdown:
+  input: GFM
+

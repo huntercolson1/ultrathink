@@ -1,6 +1,8 @@
 # Build artifacts
 node_modules/
 dist/
+_site/
+.jekyll-cache/
 *.log
 
 # macOS

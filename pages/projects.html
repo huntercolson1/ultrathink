@@ -1,166 +1,107 @@
-<!doctype html>
-<html lang="en" data-theme="dark">
+---
+layout: default
+title: Projects — Ultrathink
+description: Ultrathink active projects and tooling.
+permalink: /pages/projects/
+---
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Ultrathink active projects and tooling.">
-  <title>Projects — Ultrathink</title>
-  <link rel="stylesheet" href="/css/theme.css">
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/layout.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/utilities.css">
-</head>
+<section class="hero">
+  <div class="container stack" style="gap: var(--space-lg);">
+    <div>
+      <p class="hero__kicker">Tooling stack</p>
+      <h1 class="hero__title">Projects engineered like instruments.</h1>
+      <p class="hero__lead">
+        Every build is scoped, documented, and resilient. The system is monochrome; the control is total.
+      </p>
+    </div>
+  </div>
+</section>
 
-<body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <div class="main-shell">
-    <header class="pin-nav" data-component="nav scroll-header">
-      <div class="container c-header">
-        <a class="c-header__brand" href="/">ULTRATHINK</a>
-        <nav class="c-nav" aria-label="Primary navigation">
-          <ul class="c-nav__list">
-            <li><a class="c-nav__link" href="/">Home</a></li>
-            <li><a class="c-nav__link" href="/pages/series.html">Series</a></li>
-            <li><a class="c-nav__link" href="/pages/blog.html">Blog</a></li>
-            <li><a class="c-nav__link" href="/pages/projects.html" aria-current="page">Projects</a></li>
-            <li><a class="c-nav__link" href="/pages/about.html">About</a></li>
-          </ul>
-          <button class="c-nav__toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="nav-drawer">
-            <span>Menu</span>
-          </button>
-        </nav>
-      </div>
-    </header>
-    <div class="c-drawer" data-nav-drawer id="nav-drawer" aria-hidden="true">
-      <div class="c-drawer__panel">
-        <a class="c-header__brand" href="/">ULTRATHINK</a>
-        <a class="c-nav__link" href="/pages/series.html">Series</a>
-        <a class="c-nav__link" href="/pages/blog.html">Blog</a>
-        <a class="c-nav__link" href="/pages/projects.html">Projects</a>
-        <a class="c-nav__link" href="/pages/about.html">About</a>
-        <button class="c-btn c-btn--ghost" data-component="theme-toggle" type="button">Light mode</button>
+<section class="section" id="atlas" data-section-tone="raised">
+  <div class="container grid u-grid-2 u-gap-loose">
+    <div class="stack" style="gap: var(--space-md);">
+      <p class="c-section-label">Atlas</p>
+      <h2 class="c-section-heading">Research operating system</h2>
+      <p class="u-text-muted">Atlas is the core OS for capturing notes, linking references, and issuing decision-ready packets.</p>
+      <ul class="u-text-muted">
+        <li>Synchronized notebooks with semantic tagging.</li>
+        <li>Versioned components for methodologies and SOPs.</li>
+        <li>Exports to briefings, decks, and APIs.</li>
+      </ul>
+      <a class="c-btn c-btn--ghost" href="#">Request Atlas</a>
+    </div>
+    <div class="panel stack" style="gap: var(--space-md);">
+      <h3>Tech spec</h3>
+      <p class="u-text-muted">Static front-end with portable JSON schema, optionally wired into Supabase or Airtable.</p>
+      <div class="c-list">
+        <div class="c-list__item">
+          <span>Status</span>
+          <span class="u-text-muted">In progress</span>
+        </div>
+        <div class="c-list__item">
+          <span>Stack</span>
+          <span class="u-text-muted">HTML, CSS, Alpine scripts</span>
+        </div>
       </div>
     </div>
-
-    <main id="main">
-      <section class="hero">
-        <div class="container stack" style="gap: var(--space-lg);">
-          <div>
-            <p class="hero__kicker">Tooling stack</p>
-            <h1 class="hero__title">Projects engineered like instruments.</h1>
-            <p class="hero__lead">
-              Every build is scoped, documented, and resilient. The system is monochrome; the control is total.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="atlas" data-section-tone="raised">
-        <div class="container grid u-grid-2 u-gap-loose">
-          <div class="stack" style="gap: var(--space-md);">
-            <p class="c-section-label">Atlas</p>
-            <h2 class="c-section-heading">Research operating system</h2>
-            <p class="u-text-muted">Atlas is the core OS for capturing notes, linking references, and issuing decision-ready packets.</p>
-            <ul class="u-text-muted">
-              <li>Synchronized notebooks with semantic tagging.</li>
-              <li>Versioned components for methodologies and SOPs.</li>
-              <li>Exports to briefings, decks, and APIs.</li>
-            </ul>
-            <a class="c-btn c-btn--ghost" href="#">Request Atlas</a>
-          </div>
-          <div class="panel stack" style="gap: var(--space-md);">
-            <h3>Tech spec</h3>
-            <p class="u-text-muted">Static front-end with portable JSON schema, optionally wired into Supabase or Airtable.</p>
-            <div class="c-list">
-              <div class="c-list__item">
-                <span>Status</span>
-                <span class="u-text-muted">In progress</span>
-              </div>
-              <div class="c-list__item">
-                <span>Stack</span>
-                <span class="u-text-muted">HTML, CSS, Alpine scripts</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="pulse" data-section-tone="surface">
-        <div class="container grid u-grid-2 u-gap-loose">
-          <div class="panel stack" style="gap: var(--space-md);">
-            <p class="c-section-label">Pulse</p>
-            <h2 class="c-section-heading">Clinical monitoring</h2>
-            <p class="u-text-muted">Pulse tracks vitals, metrics, and automation triggers from a single monochrome console.</p>
-            <div class="cluster">
-              <span class="c-badge">Beta</span>
-              <span class="c-badge">Low-latency</span>
-            </div>
-          </div>
-          <div class="stack" style="gap: var(--space-md);">
-            <p class="u-text-muted">Modules</p>
-            <div class="grid u-grid-2">
-              <article class="c-card panel--dense">
-                <h3 class="c-card__title">Vitals ingest</h3>
-                <p class="c-card__desc">Interfaces with EHR exports, Apple Health, and manual uploads.</p>
-              </article>
-              <article class="c-card panel--dense">
-                <h3 class="c-card__title">Alert fabric</h3>
-                <p class="c-card__desc">Rules engine with message templates and escalation matrix.</p>
-              </article>
-              <article class="c-card panel--dense">
-                <h3 class="c-card__title">Dash wall</h3>
-                <p class="c-card__desc">Single-screen overview with prioritized states.</p>
-              </article>
-              <article class="c-card panel--dense">
-                <h3 class="c-card__title">Playbooks</h3>
-                <p class="c-card__desc">Standard responses bound to metrics.</p>
-              </article>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="grid" data-section-tone="raised">
-        <div class="container stack" style="gap: var(--space-lg);">
-          <div>
-            <p class="c-section-label">Grid</p>
-            <h2 class="c-section-heading">Component library</h2>
-            <p class="u-text-muted">Grid is a library of monochrome components tailored to data-heavy interfaces.</p>
-          </div>
-          <div class="grid u-grid-3">
-            <article class="c-card">
-              <h3 class="c-card__title">Navigation suite</h3>
-              <p class="c-card__desc">Fixed nav, side rail, command palette.</p>
-            </article>
-            <article class="c-card">
-              <h3 class="c-card__title">Data blocks</h3>
-              <p class="c-card__desc">Tables, stat cards, and annotation modules.</p>
-            </article>
-            <article class="c-card">
-              <h3 class="c-card__title">Motion tokens</h3>
-              <p class="c-card__desc">Micro transitions tuned to 150ms max.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="container c-footer" role="contentinfo">
-      <div>
-        <p class="c-header__brand">ULTRATHINK</p>
-        <p class="u-text-muted">Minimal systems for research, writing, and tooling.</p>
-      </div>
-      <div class="c-footer__links" aria-label="Utility links">
-        <a href="/pages/about.html">About</a>
-        <a href="/pages/series.html">Series</a>
-        <a href="/pages/projects.html">Projects</a>
-        <a href="/pages/blog.html">Blog</a>
-      </div>
-    </footer>
   </div>
-  <script type="module" src="/js/main.js"></script>
-</body>
+</section>
 
-</html>
+<section class="section" id="pulse" data-section-tone="surface">
+  <div class="container grid u-grid-2 u-gap-loose">
+    <div class="panel stack" style="gap: var(--space-md);">
+      <p class="c-section-label">Pulse</p>
+      <h2 class="c-section-heading">Clinical monitoring</h2>
+      <p class="u-text-muted">Pulse tracks vitals, metrics, and automation triggers from a single monochrome console.</p>
+      <div class="cluster">
+        <span class="c-badge">Beta</span>
+        <span class="c-badge">Low-latency</span>
+      </div>
+    </div>
+    <div class="stack" style="gap: var(--space-md);">
+      <p class="u-text-muted">Modules</p>
+      <div class="grid u-grid-2">
+        <article class="c-card panel--dense">
+          <h3 class="c-card__title">Vitals ingest</h3>
+          <p class="c-card__desc">Interfaces with EHR exports, Apple Health, and manual uploads.</p>
+        </article>
+        <article class="c-card panel--dense">
+          <h3 class="c-card__title">Alert fabric</h3>
+          <p class="c-card__desc">Rules engine with message templates and escalation matrix.</p>
+        </article>
+        <article class="c-card panel--dense">
+          <h3 class="c-card__title">Dash wall</h3>
+          <p class="c-card__desc">Single-screen overview with prioritized states.</p>
+        </article>
+        <article class="c-card panel--dense">
+          <h3 class="c-card__title">Playbooks</h3>
+          <p class="c-card__desc">Standard responses bound to metrics.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="grid" data-section-tone="raised">
+  <div class="container stack" style="gap: var(--space-lg);">
+    <div>
+      <p class="c-section-label">Grid</p>
+      <h2 class="c-section-heading">Component library</h2>
+      <p class="u-text-muted">Grid is a library of monochrome components tailored to data-heavy interfaces.</p>
+    </div>
+    <div class="grid u-grid-3">
+      <article class="c-card">
+        <h3 class="c-card__title">Navigation suite</h3>
+        <p class="c-card__desc">Fixed nav, side rail, command palette.</p>
+      </article>
+      <article class="c-card">
+        <h3 class="c-card__title">Data blocks</h3>
+        <p class="c-card__desc">Tables, stat cards, and annotation modules.</p>
+      </article>
+      <article class="c-card">
+        <h3 class="c-card__title">Motion tokens</h3>
+        <p class="c-card__desc">Micro transitions tuned to 150ms max.</p>
+      </article>
+    </div>
+  </div>
+</section>
