@@ -1,0 +1,52 @@
+title: "Hunter — Research & Notes"
+description: "Clean, modular, and fast. A minimalist blog & knowledge site."
+url: ""
+baseurl: ""
+
+remote_theme: just-the-docs/just-the-docs
+
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+search_enabled: true
+heading_anchors: true
+nav_sort: case_insensitive
+color_scheme: light
+
+logo:
+favicon_ico: /assets/images/favicon.ico
+
+collections:
+  blog:
+    output: true
+    permalink: "/blog/:name/"
+  series:
+    output: true
+    permalink: "/series/:path/"
+
+just_the_docs:
+  collections:
+    series:
+      name: "Series"
+      nav_fold: true
+    blog:
+      name: "Blog"
+      nav_exclude: true
+      search_exclude: false
+
+defaults:
+  - scope: { path: "" }
+    values:
+      layout: default
+  - scope: { path: "_blog" }
+    values:
+      layout: post
+      nav_exclude: true
+  - scope: { path: "_series" }
+    values:
+      layout: default
+
+# SEO tag config (safe defaults)
+# Set 'url' and optional 'twitter_username' later

@@ -1,0 +1,21 @@
+// Minor polish: card-like main content on wide screens
+.main { padding-top: 0.5rem; }
+.main-content { max-width: 72ch; }
+
+// Sidebar collapsed state handled by JS toggle
+.sidebar-collapsed .side-bar { display: none; }
+.sidebar-collapsed .main { margin-left: 0 !important; }
+
+// Subtle utilities
+.rounded { border-radius: 12px; }
+.shadow { box-shadow: 0 6px 30px rgba(0,0,0,0.08); }
+.w-40 { width: 40%; max-width: 280px; }
+
+// Buttons in header
+.header-actions { display: inline-flex; gap: .5rem; align-items: center; }
+.header-actions button {
+  border: 1px solid var(--color-border,#e6e7ea);
+  background: transparent; padding: .35rem .6rem; border-radius: 10px;
+  font: inherit; cursor: pointer;
+}
+.header-actions button:focus { outline: 2px solid #111827; outline-offset: 2px; }
