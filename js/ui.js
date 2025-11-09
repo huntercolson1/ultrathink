@@ -115,17 +115,19 @@ export const initBlogFilter = (node) => {
   const target = document.querySelector(targetSelector);
   if (!target) return;
 
-  const posts = Array.from(target.querySelectorAll('[data-blog-post]'));
-  if (!posts.length) return;
+  const postNodes = Array.from(target.querySelectorAll('[data-blog-post]'));
+  if (!postNodes.length) return;
 
   const emptyTemplate = target.querySelector('[data-blog-empty]');
   let emptyMessage = null;
   if (emptyTemplate) {
     emptyMessage = emptyTemplate;
     emptyTemplate.remove();
+    emptyMessage.setAttribute('role', 'status');
+    emptyMessage.setAttribute('aria-live', 'polite');
   }
 
-  const allPosts = posts.map((post) => ({
+  const allPosts = postNodes.map((post) => ({
     node: post,
     tags: (post.dataset.tags || '')
       .split(/\s+/)
@@ -135,34 +137,248 @@ export const initBlogFilter = (node) => {
     date: post.dataset.published ? new Date(post.dataset.published) : new Date()
   }));
 
-  const filterButtons = Array.from(node.querySelectorAll('[data-filter-type]'));
+  // Support both new and legacy attributes for robustness
+  const filterButtons = Array.from(
+    node.querySelectorAll('[data-filter-group],[data-filter-type]')
+  );
   const sortButtons = Array.from(node.querySelectorAll('[data-sort]'));
   const resetButton = node.querySelector('[data-filter-reset]');
+  const countNode = node.querySelector('[data-blog-count]');
+  const activeFiltersContainer = node.querySelector('[data-active-filters]');
+  const activeFiltersList = node.querySelector('[data-active-filters-list]');
 
-  let currentFilter = { type: 'all', value: null };
+  const filterGroups = new Map();
+  const defaultButtons = new Map();
+
+  filterButtons.forEach((btn) => {
+    const group = btn.dataset.filterGroup || btn.dataset.filterType;
+    if (!group) return;
+    if (!filterGroups.has(group)) filterGroups.set(group, []);
+    filterGroups.get(group).push(btn);
+    if (btn.hasAttribute('data-filter-default')) {
+      defaultButtons.set(group, btn);
+    }
+    btn.setAttribute('aria-pressed', btn.classList.contains('is-active') ? 'true' : 'false');
+  });
+
+  if (!defaultButtons.has('view')) {
+    const fallbackView = (filterGroups.get('view') || []).find((btn) => btn.dataset.filterValue === 'all');
+    if (fallbackView) {
+      defaultButtons.set('view', fallbackView);
+      fallbackView.classList.add('is-active');
+      fallbackView.setAttribute('aria-pressed', 'true');
+    }
+  }
+
+  const state = {
+    viewSelection: defaultButtons.get('view')?.dataset.filterValue || 'all',
+    tag: null,
+    year: null
+  };
+
   let sortOrder = 'desc';
+  const totalPosts = allPosts.length;
 
-  const setActive = (buttonGroup, activeButton) => {
-    buttonGroup.forEach((btn) => {
+  const setActiveGroup = (group, activeButton) => {
+    const buttons = filterGroups.get(group) || [];
+    const fallbackButton = !activeButton ? defaultButtons.get(group) : null;
+    const buttonToActivate = activeButton || fallbackButton || null;
+    buttons.forEach((btn) => {
+      const isActive = btn === buttonToActivate;
+      btn.classList.toggle('is-active', isActive);
+      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+  };
+
+  const setActiveSort = (activeButton) => {
+    sortButtons.forEach((btn) => {
       const isActive = btn === activeButton;
       btn.classList.toggle('is-active', isActive);
       btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
   };
 
-  const applyRender = () => {
-    let workingSet = allPosts;
+  const defaultSortButton = sortButtons.find((btn) => btn.dataset.sort === 'desc') || sortButtons[0];
+  if (defaultSortButton) {
+    setActiveSort(defaultSortButton);
+    sortOrder = defaultSortButton.dataset.sort || 'desc';
+  }
 
-    if (currentFilter.type === 'tag') {
-      workingSet = allPosts.filter((item) => item.tags.includes(currentFilter.value));
-    } else if (currentFilter.type === 'year') {
-      workingSet = allPosts.filter((item) => item.year === currentFilter.value);
-    } else if (currentFilter.type === 'recent') {
-      const limit = Number(currentFilter.value) || 5;
-      workingSet = allPosts
+  if (resetButton) {
+    resetButton.setAttribute('aria-pressed', 'false');
+  }
+
+  // Helper to process filter button clicks consistently
+  const handleFilterGroupButton = (button) => {
+    const group =
+      button.dataset.filterGroup ||
+      button.dataset.filterType ||
+      button.getAttribute('data-filter-group') ||
+      button.getAttribute('data-filter-type');
+    const value =
+      button.dataset.filterValue ??
+      button.getAttribute('data-filter-value') ??
+      null;
+    if (!group) return;
+
+    if (group === 'view' || group === 'recent') {
+      if (!value || value === 'all') {
+        state.viewSelection = 'all';
+        setActiveGroup('view', defaultButtons.get('view') || button);
+      } else {
+        const normalized = group === 'recent' && value ? `recent:${value}` : value;
+        state.viewSelection = normalized;
+        setActiveGroup('view', button);
+      }
+      applyRender();
+      return;
+    }
+
+    if (group === 'tag') {
+      if (state.tag === value) {
+        state.tag = null;
+        setActiveGroup('tag', null);
+      } else {
+        state.tag = value;
+        setActiveGroup('tag', button);
+      }
+      applyRender();
+      return;
+    }
+
+    if (group === 'year') {
+      if (state.year === value) {
+        state.year = null;
+        setActiveGroup('year', null);
+      } else {
+        state.year = value;
+        setActiveGroup('year', button);
+      }
+      applyRender();
+      return;
+    }
+  };
+
+  // Attach direct listeners as a robustness fallback
+  filterButtons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleFilterGroupButton(btn);
+    });
+  });
+  sortButtons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const newSort = btn.dataset.sort;
+      if (newSort && sortOrder !== newSort) {
+        sortOrder = newSort;
+        setActiveSort(btn);
+        applyRender();
+      }
+    });
+  });
+
+  const parseRecentLimit = (value) => {
+    if (!value || !value.startsWith('recent:')) return null;
+    const limit = Number(value.split(':')[1]);
+    return Number.isFinite(limit) ? limit : null;
+  };
+
+  const getButtonForValue = (group, value) =>
+    (filterGroups.get(group) || []).find((btn) => btn.dataset.filterValue === value);
+
+  const updateCount = (visible) => {
+    if (!countNode) return;
+    const totalLabel = totalPosts === 1 ? 'post' : 'posts';
+    const visibleLabel = visible === 1 ? 'post' : 'posts';
+    if (visible === totalPosts) {
+      countNode.textContent = `Showing all ${totalPosts} ${totalLabel}`;
+    } else {
+      countNode.textContent = `Showing ${visible} of ${totalPosts} ${visibleLabel}`;
+    }
+  };
+
+  const renderActiveFilters = () => {
+    if (!activeFiltersContainer || !activeFiltersList) return;
+
+    const chips = [];
+
+    if (state.viewSelection && state.viewSelection !== 'all') {
+      const activeViewButton = getButtonForValue('view', state.viewSelection);
+      const label = activeViewButton ? activeViewButton.textContent.trim() : 'Recent';
+      chips.push({ group: 'view', text: `View: ${label}` });
+    }
+
+    if (state.tag) {
+      const activeTagButton = getButtonForValue('tag', state.tag);
+      const label = activeTagButton ? activeTagButton.textContent.trim() : `#${state.tag}`;
+      chips.push({ group: 'tag', text: `Tag: ${label}` });
+    }
+
+    if (state.year) {
+      const activeYearButton = getButtonForValue('year', state.year);
+      const label = activeYearButton ? activeYearButton.textContent.trim() : state.year;
+      chips.push({ group: 'year', text: `Year: ${label}` });
+    }
+
+    if (!chips.length) {
+      activeFiltersList.innerHTML = '';
+      activeFiltersContainer.hidden = true;
+      activeFiltersContainer.setAttribute('aria-hidden', 'true');
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    chips.forEach((chipInfo) => {
+      const chipButton = document.createElement('button');
+      chipButton.type = 'button';
+      chipButton.className = 'c-chip';
+      chipButton.dataset.filterRemove = chipInfo.group;
+      chipButton.setAttribute('aria-label', `Remove ${chipInfo.text}`);
+      chipButton.innerHTML = `<span class="c-chip__label">${chipInfo.text}</span><span aria-hidden="true">&times;</span>`;
+      fragment.appendChild(chipButton);
+    });
+
+    activeFiltersList.innerHTML = '';
+    activeFiltersList.appendChild(fragment);
+    activeFiltersContainer.hidden = false;
+    activeFiltersContainer.setAttribute('aria-hidden', 'false');
+  };
+
+  const clearGroup = (group) => {
+    if (group === 'view') {
+      state.viewSelection = 'all';
+      setActiveGroup('view', defaultButtons.get('view'));
+      return;
+    }
+
+    if (group === 'tag' || group === 'year') {
+      state[group] = null;
+      setActiveGroup(group, null);
+    }
+  };
+
+  const applyRender = () => {
+    let filtered = allPosts.slice();
+
+    // Filter by tag
+    if (state.tag) {
+      filtered = filtered.filter((item) => item.tags.includes(state.tag));
+    }
+
+    // Filter by year (ensure string comparison)
+    if (state.year) {
+      const yearStr = String(state.year);
+      filtered = filtered.filter((item) => String(item.year) === yearStr);
+    }
+
+    let workingSet = filtered;
+    const recentLimit = parseRecentLimit(state.viewSelection);
+    if (recentLimit) {
+      workingSet = filtered
         .slice()
         .sort((a, b) => b.date - a.date)
-        .slice(0, limit);
+        .slice(0, recentLimit);
     }
 
     const sorted = workingSet
@@ -173,66 +389,109 @@ export const initBlogFilter = (node) => {
     sorted.forEach((item) => fragment.appendChild(item.node));
 
     target.innerHTML = '';
-    if (!sorted.length && emptyMessage) {
-      emptyMessage.hidden = false;
-      emptyMessage.setAttribute('aria-live', 'polite');
-      fragment.appendChild(emptyMessage);
+    if (sorted.length) {
+      if (emptyMessage) emptyMessage.hidden = true;
+      target.appendChild(fragment);
     } else if (emptyMessage) {
-      emptyMessage.hidden = true;
+      emptyMessage.hidden = false;
+      target.appendChild(emptyMessage);
     }
 
-    target.appendChild(fragment);
+    updateCount(sorted.length);
+    renderActiveFilters();
   };
+
+  activeFiltersContainer?.addEventListener('click', (event) => {
+    const chip = event.target.closest('[data-filter-remove]');
+    if (!chip) return;
+    clearGroup(chip.dataset.filterRemove);
+    applyRender();
+  });
 
   node.addEventListener('click', (event) => {
     const button = event.target.closest('button');
     if (!button) return;
 
-    if (button.dataset.filterReset !== undefined) {
-      currentFilter = { type: 'all', value: null };
+    // Handle reset button
+    if (button.hasAttribute('data-filter-reset')) {
+      clearGroup('view');
+      clearGroup('tag');
+      clearGroup('year');
       sortOrder = 'desc';
-      const allButton = filterButtons.find((btn) => btn.dataset.filterType === 'all');
-      const newestButton = sortButtons.find((btn) => btn.dataset.sort === 'desc');
-      setActive(filterButtons, allButton);
-      setActive(sortButtons, newestButton);
-      applyRender();
-      return;
-    }
-
-    if (button.dataset.filterType) {
-      const type = button.dataset.filterType;
-      const value = button.dataset.filterValue || null;
-      const isSameSelection = button.classList.contains('is-active') && type !== 'all';
-
-      if (isSameSelection) {
-        const allButton = filterButtons.find((btn) => btn.dataset.filterType === 'all');
-        currentFilter = { type: 'all', value: null };
-        setActive(filterButtons, allButton);
-      } else {
-        currentFilter = { type, value };
-        setActive(filterButtons, button);
+      if (defaultSortButton) {
+        setActiveSort(defaultSortButton);
       }
       applyRender();
       return;
     }
 
-    if (button.dataset.sort) {
-      sortOrder = button.dataset.sort;
-      setActive(sortButtons, button);
-      applyRender();
+    // Handle filter group buttons (view, tag, year)
+    if (button.hasAttribute('data-filter-group') || button.hasAttribute('data-filter-type')) {
+      // Prefer dataset, but fall back to raw attributes for reliability
+      const group = button.dataset.filterGroup || button.dataset.filterType || button.getAttribute('data-filter-group') || button.getAttribute('data-filter-type');
+      const value = button.dataset.filterValue ?? button.getAttribute('data-filter-value') ?? null;
+
+      // Legacy support: buttons that use type=recent map to viewSelection
+      if (group === 'view' || group === 'recent') {
+        // View buttons: only one can be active at a time
+        if (!value || value === 'all') {
+          state.viewSelection = 'all';
+          setActiveGroup('view', defaultButtons.get('view') || button);
+        } else {
+          // Normalize legacy recent buttons to the new "recent:N" format
+          const normalized = group === 'recent' && value ? `recent:${value}` : value;
+          state.viewSelection = normalized;
+          setActiveGroup('view', button);
+        }
+        applyRender();
+        return;
+      }
+
+      if (group === 'tag') {
+        // Tag buttons: toggle on/off, only one tag active at a time
+        if (state.tag === value) {
+          // Clicking the same tag deselects it
+          state.tag = null;
+          setActiveGroup('tag', null);
+        } else {
+          // Select new tag
+          state.tag = value;
+          setActiveGroup('tag', button);
+        }
+        applyRender();
+        return;
+      }
+
+      if (group === 'year') {
+        // Year buttons: toggle on/off, only one year active at a time
+        if (state.year === value) {
+          // Clicking the same year deselects it
+          state.year = null;
+          setActiveGroup('year', null);
+        } else {
+          // Select new year
+          state.year = value;
+          setActiveGroup('year', button);
+        }
+        applyRender();
+        return;
+      }
+    }
+
+    // Handle sort buttons
+    if (button.hasAttribute('data-sort')) {
+      const newSort = button.dataset.sort;
+      if (sortOrder !== newSort) {
+        sortOrder = newSort;
+        setActiveSort(button);
+        applyRender();
+      }
     }
   });
 
-  filterButtons.forEach((btn) => {
-    btn.setAttribute('aria-pressed', btn.classList.contains('is-active') ? 'true' : 'false');
-  });
-  sortButtons.forEach((btn) => {
-    btn.setAttribute('aria-pressed', btn.classList.contains('is-active') ? 'true' : 'false');
-  });
-
-  if (resetButton) {
-    resetButton.setAttribute('aria-pressed', 'false');
-  }
+  setActiveGroup('view', defaultButtons.get('view'));
+  setActiveGroup('tag', null);
+  setActiveGroup('year', null);
 
   applyRender();
 };

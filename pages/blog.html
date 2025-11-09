@@ -8,9 +8,9 @@ permalink: /pages/blog/
 <section class="hero">
   <div class="container stack" style="gap: var(--space-lg);">
     <div>
-      <p class="hero__kicker">Signals</p>
-      <h1 class="hero__title">Blog, notes, and dispatches.</h1>
-      <p class="hero__lead">A quiet feed of essays and updates. No ads, no popups, just calibrated perspective.</p>
+      <p class="hero__kicker">Reflections</p>
+      <h1 class="hero__title">Ideas and opinions on medicine, technology, and everything in between.</h1>
+      <p class="hero__lead">Where I write about what I'm learning, building, or just thinking through.</p>
     </div>
   </div>
 </section>
@@ -50,54 +50,69 @@ permalink: /pages/blog/
 {% endif %}
 
 <section class="section" data-section-tone="raised">
-  <div class="container grid u-grid-3 u-gap-loose">
-    <aside class="panel stack" style="gap: var(--space-md);" data-component="blog-filter" data-target="#blog-feed">
-      <div class="stack" style="gap: var(--space-sm);">
-        <h2 class="c-section-heading" style="font-size: var(--step-1);">Filter feed</h2>
-        <p class="u-text-muted">Toggle categories or years to zero in on the story you need.</p>
-      </div>
-      <div class="stack" style="gap: var(--space-sm);">
-        <p class="u-text-muted">View</p>
-        <div class="cluster" style="gap: var(--space-xs);">
-          <button class="c-btn c-btn--ghost is-active" type="button" data-filter-type="all">All posts</button>
-          <button class="c-btn c-btn--ghost" type="button" data-filter-type="recent" data-filter-value="5">Recent 5</button>
+  <div class="container grid u-grid-3 u-gap-loose blog-layout">
+    <aside class="panel stack blog-filter" data-component="blog-filter" data-target="#blog-feed">
+      <header class="blog-filter__header">
+        <h2 class="c-section-heading blog-filter__title">Filter feed</h2>
+        <p class="u-text-muted blog-filter__intro">Toggle categories or years to zero in on the story you need.</p>
+        <p class="u-text-muted blog-filter__count" data-blog-count>
+          Showing {{ site.posts | size }} {% if site.posts | size == 1 %}post{% else %}posts{% endif %}
+        </p>
+      </header>
+
+      <div class="blog-filter__group">
+        <p class="u-text-muted blog-filter__label">View</p>
+        <div class="blog-filter__options">
+          <button class="c-btn c-btn--ghost is-active" type="button" data-filter-group="view" data-filter-value="all" data-filter-default>All posts</button>
+          <button class="c-btn c-btn--ghost" type="button" data-filter-group="view" data-filter-value="recent:5">Recent 5</button>
+          <button class="c-btn c-btn--ghost" type="button" data-filter-group="view" data-filter-value="recent:10">Recent 10</button>
         </div>
       </div>
-      <div class="stack" style="gap: var(--space-sm);">
-        <p class="u-text-muted">Tags</p>
-        <div class="stack" style="gap: var(--space-xs);">
-          {% assign tags = site.tags | sort_natural %}
-          {% for tag in tags %}
-            <button class="c-btn c-btn--ghost" type="button" data-filter-type="tag" data-filter-value="{{ tag[0] }}">#{{ tag[0] }}</button>
+
+      <div class="blog-filter__group">
+        <p class="u-text-muted blog-filter__label">Tags</p>
+        <p class="u-text-muted" style="font-size: 0.8rem; margin-bottom: var(--space-xs);">Click a tag to filter posts</p>
+        <div class="blog-filter__options blog-filter__options--stacked">
+          {% assign all_tags = site.tags | sort_natural %}
+          {% for tag in all_tags %}
+            <button class="c-btn c-btn--ghost" type="button" data-filter-group="tag" data-filter-value="{{ tag[0] }}">#{{ tag[0] }}</button>
           {% endfor %}
-          {% if tags == empty %}
+          {% if all_tags == empty %}
             <p class="u-text-muted">Tag as you publish to unlock quick filters.</p>
           {% endif %}
         </div>
       </div>
-      <div class="stack" style="gap: var(--space-sm);">
-        <p class="u-text-muted">Year</p>
-        <div class="cluster" style="flex-wrap: wrap; gap: var(--space-xs);">
+
+      <div class="blog-filter__group">
+        <p class="u-text-muted blog-filter__label">Year</p>
+        <div class="blog-filter__options">
           {% assign years = site.posts | group_by_exp: 'post', "post.date | date: '%Y'" %}
           {% assign sorted_years = years | sort: "name" | reverse %}
           {% for group in sorted_years %}
-            <button class="c-btn c-btn--ghost" type="button" data-filter-type="year" data-filter-value="{{ group.name }}">{{ group.name }}</button>
+            <button class="c-btn c-btn--ghost" type="button" data-filter-group="year" data-filter-value="{{ group.name }}">{{ group.name }}</button>
           {% endfor %}
         </div>
       </div>
-      <div class="stack" style="gap: var(--space-sm);">
-        <p class="u-text-muted">Sort</p>
-        <div class="cluster" style="gap: var(--space-xs);">
+
+      <div class="blog-filter__group">
+        <p class="u-text-muted blog-filter__label">Sort</p>
+        <div class="blog-filter__options">
           <button class="c-btn c-btn--ghost is-active" type="button" data-sort="desc">Newest</button>
           <button class="c-btn c-btn--ghost" type="button" data-sort="asc">Oldest</button>
         </div>
       </div>
-      <button class="c-btn c-btn--solid" type="button" data-filter-reset>Reset filters</button>
+
+      <div class="blog-filter__group blog-filter__group--active" data-active-filters hidden>
+        <p class="u-text-muted blog-filter__label">Active filters</p>
+        <div class="blog-filter__chips" data-active-filters-list></div>
+      </div>
+
+      <button class="c-btn c-btn--solid blog-filter__reset" type="button" data-filter-reset>Reset filters</button>
     </aside>
 
-    <div class="stack" style="gap: var(--space-lg); grid-column: span 2;" id="blog-feed">
+    <div class="blog-feed" id="blog-feed">
       {% if site.posts == empty %}
-        <p class="u-text-muted">No posts yet. Draft your first Markdown entry in <code>_posts/</code>.</p>
+        <p class="u-text-muted blog-feed__empty">No posts yet. Draft your first Markdown entry in <code>_posts/</code>.</p>
       {% else %}
         {% for post in site.posts %}
           <article class="panel stack" style="gap: var(--space-md);" data-blog-post data-tags="{{ post.tags | join: ' ' }}" data-year="{{ post.date | date: '%Y' }}" data-published="{{ post.date | date_to_xmlschema }}">
@@ -123,7 +138,7 @@ permalink: /pages/blog/
             </div>
           </article>
         {% endfor %}
-        <p class="u-text-muted" data-blog-empty hidden>No posts match your current filters.</p>
+        <p class="u-text-muted blog-feed__empty" data-blog-empty hidden>No posts match your current filters.</p>
       {% endif %}
     </div>
   </div>
