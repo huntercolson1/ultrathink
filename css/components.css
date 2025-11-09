@@ -36,9 +36,46 @@
 }
 
 .c-header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
   font-weight: 600;
   letter-spacing: 0.08em;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.c-header__logo {
+  display: block;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  transition: opacity var(--transition-fast);
+  opacity: 1;
+  vertical-align: middle;
+}
+
+.c-header__brand:hover .c-header__logo {
+  opacity: 0.85;
+}
+
+/* Logo is light gray/off-white - visible on dark backgrounds */
+/* In dark mode: ensure good visibility */
+:root .c-header__logo {
+  filter: brightness(1.05);
+}
+
+/* In light mode: slightly darker for contrast on white */
+[data-theme='light'] .c-header__logo {
+  filter: brightness(0.7) contrast(1.2);
+  opacity: 1;
+}
+
+.c-header__brand-text {
+  display: inline-block;
+  line-height: 1;
+  vertical-align: middle;
 }
 
 .c-nav {

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Möbius Strip Viewer</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .control-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input[type="range"] {
+            width: 300px;
+        }
+        .value {
+            display: inline-block;
+            margin-left: 10px;
+            color: #666;
+            font-family: monospace;
+        }
+        button {
+            padding: 8px 16px;
+            margin-right: 10px;
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #333;
+        }
+        #canvas-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+        }
+        .export-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Möbius Strip 3D Viewer</h1>
+        <p>Rotate and adjust the viewing angle, then export to SVG when you're happy with the angle.</p>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label>
+                    Rotation X: <input type="range" id="rotX" min="0" max="360" value="30">
+                    <span class="value" id="rotXVal">30°</span>
+                </label>
+            </div>
+            <div class="control-group">
+                <label>
+                    Rotation Y: <input type="range" id="rotY" min="0" max="360" value="45">
+                    <span class="value" id="rotYVal">45°</span>
+                </label>
+            </div>
+            <div class="control-group">
+                <label>
+                    Rotation Z: <input type="range" id="rotZ" min="0" max="360" value="0">
+                    <span class="value" id="rotZVal">0°</span>
+                </label>
+            </div>
+            <div class="control-group">
+                <label>
+                    Camera Distance: <input type="range" id="distance" min="3" max="8" step="0.1" value="5">
+                    <span class="value" id="distanceVal">5.0</span>
+                </label>
+            </div>
+            <button onclick="resetView()">Reset View</button>
+            <button onclick="bestAngle()">Best Angle</button>
+            <button onclick="exportSVG()">Export SVG</button>
+        </div>
+        
+        <div id="canvas-container">
+            <canvas id="canvas"></canvas>
+        </div>
+        
+        <div class="export-section">
+            <h3>Export Instructions</h3>
+            <p>Click "Export SVG" to generate an SVG file at the current viewing angle. The file will be saved as <code>ultrathink-mobius.svg</code> in the assets/icons directory.</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        let scene, camera, renderer, mobiusMesh;
+        let rotX = 30, rotY = 45, rotZ = 0, distance = 5;
+
+        function init() {
+            const container = document.getElementById('canvas-container');
+            const canvas = document.getElementById('canvas');
+            const width = Math.min(800, window.innerWidth - 80);
+            const height = 600;
+            
+            canvas.width = width;
+            canvas.height = height;
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf5f5f5);
+
+            camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+            camera.position.set(0, 0, distance);
+
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            renderer.setSize(width, height);
+            renderer.shadowMap.enabled = true;
+
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 5, 5);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+
+            const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
+            fillLight.position.set(-5, 0, -5);
+            scene.add(fillLight);
+
+            // Create Möbius strip geometry
+            createMobiusStrip();
+
+            // Setup controls
+            setupControls();
+
+            animate();
+        }
+
+        function createMobiusStrip() {
+            const geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            const normals = [];
+            const indices = [];
+            const uvs = [];
+
+            const uSegments = 80;
+            const vSegments = 12;
+            const R = 1.0;
+            const w = 0.3;
+
+            // Generate vertices
+            for (let i = 0; i <= vSegments; i++) {
+                const v = -w + (2 * w * i) / vSegments;
+                for (let j = 0; j <= uSegments; j++) {
+                    const u = (2 * Math.PI * j) / uSegments;
+                    
+                    const x = (R + v * Math.cos(u / 2)) * Math.cos(u);
+                    const y = (R + v * Math.cos(u / 2)) * Math.sin(u);
+                    const z = v * Math.sin(u / 2);
+                    
+                    vertices.push(x, y, z);
+                    
+                    // Calculate normal
+                    const eps = 0.01;
+                    const u1 = u + eps;
+                    const x1 = (R + v * Math.cos(u1 / 2)) * Math.cos(u1);
+                    const y1 = (R + v * Math.cos(u1 / 2)) * Math.sin(u1);
+                    const z1 = v * Math.sin(u1 / 2);
+                    
+                    const v1 = v + eps;
+                    const x2 = (R + v1 * Math.cos(u / 2)) * Math.cos(u);
+                    const y2 = (R + v1 * Math.cos(u / 2)) * Math.sin(u);
+                    const z2 = v1 * Math.sin(u / 2);
+                    
+                    const dx1 = x1 - x, dy1 = y1 - y, dz1 = z1 - z;
+                    const dx2 = x2 - x, dy2 = y2 - y, dz2 = z2 - z;
+                    
+                    const nx = dy1 * dz2 - dz1 * dy2;
+                    const ny = dz1 * dx2 - dx1 * dz2;
+                    const nz = dx1 * dy2 - dy1 * dx2;
+                    
+                    const len = Math.sqrt(nx * nx + ny * ny + nz * nz);
+                    normals.push(nx / len, ny / len, nz / len);
+                    
+                    uvs.push(j / uSegments, i / vSegments);
+                }
+            }
+
+            // Generate indices
+            for (let i = 0; i < vSegments; i++) {
+                for (let j = 0; j < uSegments; j++) {
+                    const a = i * (uSegments + 1) + j;
+                    const b = a + 1;
+                    const c = a + uSegments + 1;
+                    const d = c + 1;
+
+                    indices.push(a, b, c);
+                    indices.push(b, d, c);
+                }
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+            geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+            geometry.setIndex(indices);
+            geometry.computeVertexNormals();
+
+            const material = new THREE.MeshPhongMaterial({
+                color: 0xffffff,
+                shininess: 30,
+                side: THREE.DoubleSide
+            });
+
+            mobiusMesh = new THREE.Mesh(geometry, material);
+            scene.add(mobiusMesh);
+        }
+
+        function setupControls() {
+            document.getElementById('rotX').addEventListener('input', (e) => {
+                rotX = parseInt(e.target.value);
+                document.getElementById('rotXVal').textContent = rotX + '°';
+                updateRotation();
+            });
+
+            document.getElementById('rotY').addEventListener('input', (e) => {
+                rotY = parseInt(e.target.value);
+                document.getElementById('rotYVal').textContent = rotY + '°';
+                updateRotation();
+            });
+
+            document.getElementById('rotZ').addEventListener('input', (e) => {
+                rotZ = parseInt(e.target.value);
+                document.getElementById('rotZVal').textContent = rotZ + '°';
+                updateRotation();
+            });
+
+            document.getElementById('distance').addEventListener('input', (e) => {
+                distance = parseFloat(e.target.value);
+                document.getElementById('distanceVal').textContent = distance.toFixed(1);
+                camera.position.z = distance;
+            });
+        }
+
+        function updateRotation() {
+            if (mobiusMesh) {
+                mobiusMesh.rotation.x = (rotX * Math.PI) / 180;
+                mobiusMesh.rotation.y = (rotY * Math.PI) / 180;
+                mobiusMesh.rotation.z = (rotZ * Math.PI) / 180;
+            }
+        }
+
+        function resetView() {
+            rotX = 30;
+            rotY = 45;
+            rotZ = 0;
+            distance = 5;
+            document.getElementById('rotX').value = rotX;
+            document.getElementById('rotY').value = rotY;
+            document.getElementById('rotZ').value = rotZ;
+            document.getElementById('distance').value = distance;
+            document.getElementById('rotXVal').textContent = rotX + '°';
+            document.getElementById('rotYVal').textContent = rotY + '°';
+            document.getElementById('rotZVal').textContent = rotZ + '°';
+            document.getElementById('distanceVal').textContent = distance.toFixed(1);
+            updateRotation();
+            camera.position.z = distance;
+        }
+
+        function bestAngle() {
+            rotX = 25;
+            rotY = 50;
+            rotZ = 5;
+            distance = 4.5;
+            document.getElementById('rotX').value = rotX;
+            document.getElementById('rotY').value = rotY;
+            document.getElementById('rotZ').value = rotZ;
+            document.getElementById('distance').value = distance;
+            document.getElementById('rotXVal').textContent = rotX + '°';
+            document.getElementById('rotYVal').textContent = rotY + '°';
+            document.getElementById('rotZVal').textContent = rotZ + '°';
+            document.getElementById('distanceVal').textContent = distance.toFixed(1);
+            updateRotation();
+            camera.position.z = distance;
+        }
+
+        function exportSVG() {
+            // Call Python script with current angles
+            const params = {
+                rotX: rotX,
+                rotY: rotY,
+                rotZ: rotZ,
+                distance: distance
+            };
+            
+            alert(`To export SVG with current angles:\n\nRun this command:\npython3 tools/generate_mobius.py --rot-x ${rotX} --rot-y ${rotY} --rot-z ${rotZ} --distance ${distance}\n\nOr use the updated script that reads these values.`);
+            
+            // We'll update the Python script to accept these parameters
+            console.log('Export parameters:', params);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            const width = Math.min(800, window.innerWidth - 80);
+            const height = 600;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        });
+
+        init();
+    </script>
+</body>
+</html>
+

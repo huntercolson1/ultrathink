@@ -1,6 +1,9 @@
 <header class="pin-nav" data-component="nav scroll-header">
   <div class="container c-header">
-    <a class="c-header__brand" href="{{ '/' | relative_url }}">ULTRATHINK</a>
+    <a class="c-header__brand" href="{{ '/' | relative_url }}" aria-label="Ultrathink Home">
+      <img src="{{ '/assets/icons/ultrathink-mobius.png' | relative_url }}" alt="Ultrathink" class="c-header__logo" width="48" height="48">
+      <span class="c-header__brand-text">ULTRATHINK</span>
+    </a>
     <nav class="c-nav" aria-label="Primary navigation">
       <ul class="c-nav__list">
         {% assign current = page.url | default: '/' %}

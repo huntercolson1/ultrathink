@@ -1,6 +1,9 @@
 <div class="c-drawer" data-nav-drawer id="nav-drawer" aria-hidden="true">
   <div class="c-drawer__panel">
-    <a class="c-header__brand" href="{{ '/' | relative_url }}">ULTRATHINK</a>
+    <a class="c-header__brand" href="{{ '/' | relative_url }}" aria-label="Ultrathink Home">
+      <img src="{{ '/assets/icons/ultrathink-mobius.png' | relative_url }}" alt="Ultrathink" class="c-header__logo" width="48" height="48">
+      <span class="c-header__brand-text">ULTRATHINK</span>
+    </a>
     {% assign current = page.url | default: '/' %}
     {% for item in site.data.nav %}
       {% assign item_url = item.url | relative_url %}
