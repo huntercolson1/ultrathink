@@ -1,4 +1,4 @@
-import { qs, lockScroll, trapFocus, prefersReducedMotion } from './utils.js';
+import { qs, lockScroll, trapFocus, prefersReducedMotion, getBasePath } from './utils.js';
 
 export const initNav = (header) => {
   const toggle = qs('[data-nav-toggle]', header);
@@ -246,13 +246,14 @@ export const initSearch = async (form) => {
     return Promise.resolve();
   }
 
+  const basePath = getBasePath();
   let tutorials = [];
   let blogPosts = [];
   let searchTimeout;
 
   // Load tutorials
   try {
-    const tutorialsPath = form.dataset.tutorialsSource || './data/tutorials.json';
+    const tutorialsPath = form.dataset.tutorialsSource || `${basePath}/data/tutorials.json`;
     console.log('Loading tutorials from:', tutorialsPath);
     const tutorialsResponse = await fetch(tutorialsPath);
     if (tutorialsResponse.ok) {
@@ -267,21 +268,29 @@ export const initSearch = async (form) => {
 
   // Load blog posts from feed.xml (Jekyll RSS feed)
   try {
-    const feedPath = './feed.xml';
+    const feedPath = `${basePath}/feed.xml`;
     console.log('Loading blog posts from feed:', feedPath);
     const feedResponse = await fetch(feedPath);
     if (feedResponse.ok) {
       const feedText = await feedResponse.text();
       const parser = new DOMParser();
       const feedDoc = parser.parseFromString(feedText, 'text/xml');
-      const items = feedDoc.querySelectorAll('item');
+      // Jekyll generates Atom feeds, which use <entry> instead of <item>
+      const items = feedDoc.querySelectorAll('entry, item');
       
       blogPosts = Array.from(items).map((item) => {
+        // Atom uses <title> and <summary>, RSS uses <title> and <description>
         const title = item.querySelector('title')?.textContent || '';
-        const description = item.querySelector('description')?.textContent || '';
-        const link = item.querySelector('link')?.textContent || '';
-        const pubDate = item.querySelector('pubDate')?.textContent || '';
-        const categories = Array.from(item.querySelectorAll('category')).map(cat => cat.textContent);
+        const description = item.querySelector('summary, description')?.textContent || '';
+        // Atom uses <link href="...">, RSS uses <link>text</link>
+        const linkEl = item.querySelector('link');
+        const link = linkEl?.getAttribute('href') || linkEl?.textContent || '';
+        // Atom uses <published> or <updated>, RSS uses <pubDate>
+        const pubDate = item.querySelector('published, updated, pubDate')?.textContent || '';
+        // Atom uses <category term="...">, RSS uses <category>text</category>
+        const categories = Array.from(item.querySelectorAll('category')).map(cat => 
+          cat.getAttribute('term') || cat.textContent
+        );
         
         return {
           title: title,
@@ -300,7 +309,7 @@ export const initSearch = async (form) => {
     console.warn('Failed to load feed.xml, trying alternative methods:', error);
     // Try blog.json as fallback
     try {
-      const blogPath = './data/blog.json';
+      const blogPath = `${basePath}/data/blog.json`;
       console.log('Trying blog.json:', blogPath);
       const blogResponse = await fetch(blogPath);
       if (blogResponse.ok) {

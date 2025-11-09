@@ -2,6 +2,26 @@ export const qs = (selector, scope = document) => scope.querySelector(selector);
 export const qsa = (selector, scope = document) =>
   Array.from(scope.querySelectorAll(selector));
 
+/**
+ * Get the base URL path for the site (handles GitHub Pages baseurl)
+ * @returns {string} Base path (e.g., '' or '/hunter-site')
+ */
+export const getBasePath = () => {
+  // Try to get base path from the main.js script tag
+  const script = document.querySelector('script[src*="main.js"]');
+  if (script) {
+    const src = script.getAttribute('src');
+    // Extract everything before /js/main.js
+    const match = src.match(/^(.+)\/js\/main\.js/);
+    if (match) {
+      const basePath = match[1];
+      // Return empty string for root path (/), otherwise return the base path
+      return basePath === '/' ? '' : basePath;
+    }
+  }
+  return '';
+};
+
 export const lockScroll = (shouldLock) => {
   document.documentElement.style.overflow = shouldLock ? 'hidden' : '';
 };
