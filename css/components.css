@@ -56,6 +56,7 @@
 .c-nav__link {
   color: var(--text-secondary);
   font-size: 0.95rem;
+  text-decoration: none;
   transition: color var(--transition-fast);
 }
 
@@ -148,6 +149,7 @@
   border: 1px solid rgb(255 255 255 / 20%);
   min-height: 48px;
   font-weight: 500;
+  text-decoration: none;
   transition: background var(--transition-fast),
     transform var(--transition-fast);
 }
@@ -172,6 +174,7 @@
   gap: var(--space-xs);
   color: var(--text-secondary);
   font-size: 0.9rem;
+  text-decoration: none;
   transition: color var(--transition-fast);
   padding: var(--space-xs) var(--space-sm);
 }
@@ -363,6 +366,51 @@
 .c-search__result-meta {
   font-size: 0.85rem;
   color: var(--text-secondary);
+}
+
+/* Table of Contents */
+#markdown-toc {
+  margin: var(--space-lg) 0;
+  padding: var(--space-lg);
+  background: rgb(255 255 255 / 5%);
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: var(--radius-md);
+  border-left: 4px solid rgb(255 255 255 / 30%);
+}
+
+#markdown-toc::before {
+  content: "Table of Contents";
+  display: block;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+}
+
+#markdown-toc ul {
+  list-style: none;
+  padding-left: var(--space-md);
+  margin: 0;
+}
+
+#markdown-toc li {
+  margin: var(--space-xs) 0;
+}
+
+#markdown-toc a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+#markdown-toc a:hover {
+  color: var(--white);
+  text-decoration: underline;
+}
+
+#markdown-toc ul ul {
+  margin-top: var(--space-xs);
+  padding-left: var(--space-md);
 }
 
 @media (width <= 900px) {

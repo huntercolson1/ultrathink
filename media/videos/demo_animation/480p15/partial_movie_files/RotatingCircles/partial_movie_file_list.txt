@@ -1,0 +1,7 @@
+# This file is used internally by FFMPEG.
+file 'file:/Users/huntercolson/Documents/Projects/hunter-site/media/videos/demo_animation/480p15/partial_movie_files/RotatingCircles/1185818338_33584296_223132457.mp4'
+file 'file:/Users/huntercolson/Documents/Projects/hunter-site/media/videos/demo_animation/480p15/partial_movie_files/RotatingCircles/624642324_3301177037_3154061940.mp4'
+file 'file:/Users/huntercolson/Documents/Projects/hunter-site/media/videos/demo_animation/480p15/partial_movie_files/RotatingCircles/624642324_704343846_1561999994.mp4'
+file 'file:/Users/huntercolson/Documents/Projects/hunter-site/media/videos/demo_animation/480p15/partial_movie_files/RotatingCircles/624642324_1085621042_1561999994.mp4'
+file 'file:/Users/huntercolson/Documents/Projects/hunter-site/media/videos/demo_animation/480p15/partial_movie_files/RotatingCircles/624642324_1160120505_747536126.mp4'
+file 'file:/Users/huntercolson/Documents/Projects/hunter-site/media/videos/demo_animation/480p15/partial_movie_files/RotatingCircles/624642324_4217992463_3350548168.mp4'

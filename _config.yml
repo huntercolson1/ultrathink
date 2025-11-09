@@ -37,4 +37,10 @@ plugins:
 markdown: kramdown
 kramdown:
   input: GFM
+  math_engine: mathjax
+  math_engine_opts:
+    preview: false
+    preview_as_code: false
+  auto_ids: true
+  toc_levels: 2..6
 
