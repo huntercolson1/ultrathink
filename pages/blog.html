@@ -61,6 +61,22 @@ permalink: /pages/blog/
       </header>
 
       <div class="blog-filter__group">
+        <label class="u-text-muted blog-filter__label" for="blog-filter-search">Search</label>
+        <div class="blog-filter__search">
+          <input
+            class="blog-filter__search-input"
+            type="search"
+            id="blog-filter-search"
+            name="blog-filter-search"
+            placeholder="Search posts..."
+            autocomplete="off"
+            data-filter-search
+          />
+          <p class="u-text-muted blog-filter__hint">Matches titles, summaries, and tags.</p>
+        </div>
+      </div>
+
+      <div class="blog-filter__group">
         <p class="u-text-muted blog-filter__label">View</p>
         <div class="blog-filter__options">
           <button class="c-btn c-btn--ghost is-active" type="button" data-filter-group="view" data-filter-value="all" data-filter-default>All posts</button>
@@ -97,8 +113,12 @@ permalink: /pages/blog/
       <div class="blog-filter__group">
         <p class="u-text-muted blog-filter__label">Sort</p>
         <div class="blog-filter__options">
-          <button class="c-btn c-btn--ghost is-active" type="button" data-sort="desc">Newest</button>
-          <button class="c-btn c-btn--ghost" type="button" data-sort="asc">Oldest</button>
+          <button class="c-btn c-btn--ghost is-active" type="button" data-sort="date-desc">Newest</button>
+          <button class="c-btn c-btn--ghost" type="button" data-sort="date-asc">Oldest</button>
+          <button class="c-btn c-btn--ghost" type="button" data-sort="year-desc">Year ↓</button>
+          <button class="c-btn c-btn--ghost" type="button" data-sort="year-asc">Year ↑</button>
+          <button class="c-btn c-btn--ghost" type="button" data-sort="tag-asc">Tag A–Z</button>
+          <button class="c-btn c-btn--ghost" type="button" data-sort="tag-desc">Tag Z–A</button>
         </div>
       </div>
 
