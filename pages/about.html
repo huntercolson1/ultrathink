@@ -1,9 +1,33 @@
 ---
 layout: default
-title: About — Ultrathink
-description: About — Ultrathink.
+title: About Hunter Colson — Ultrathink
+description: Hunter Colson - Medical student, engineer, and AI enthusiast. Projects, experiments, and ideas in AI, medicine, and technology.
 permalink: /pages/about/
 ---
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Hunter Colson",
+  "url": "{{ site.url }}{{ site.baseurl }}",
+  "sameAs": [
+    "{{ site.data.about.social.github }}",
+    "{{ site.data.about.social.linkedin }}"
+  ],
+  "jobTitle": "Medical Student",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "University of Kentucky College of Medicine"
+  },
+  "alumniOf": {
+    "@type": "Organization",
+    "name": "University of Kentucky"
+  },
+  "email": "{{ site.data.about.email }}",
+  "description": "{{ site.data.about.tagline }}"
+}
+</script>
 
 <section class="hero">
   <div class="container grid u-grid-2 u-gap-tight">
