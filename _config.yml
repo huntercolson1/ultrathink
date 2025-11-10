@@ -39,6 +39,9 @@ exclude:
 plugins:
   - jekyll-feed
 
+# Force GitHub Pages to recognize this as a Jekyll site
+theme: null
+
 markdown: kramdown
 kramdown:
   input: GFM
