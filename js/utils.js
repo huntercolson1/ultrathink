@@ -4,7 +4,7 @@ export const qsa = (selector, scope = document) =>
 
 /**
  * Get the base URL path for the site (handles GitHub Pages baseurl)
- * @returns {string} Base path (e.g., '' or '/hunter-site')
+ * @returns {string} Base path (e.g., '' or '/ultrathink')
  */
 export const getBasePath = () => {
   // Try to get base path from the main.js script tag

@@ -1,7 +1,12 @@
 title: Ultrathink — Monochrome Research System
 description: Minimal systems for research, writing, and tooling.
-url: ""        # e.g. https://huntercolson1.github.io
-baseurl: ""    # e.g. /hunter-site
+# For custom domain (ultrathink.studio), use:
+url: "https://ultrathink.studio"
+baseurl: ""
+
+# For GitHub Pages subdomain, use:
+# url: "https://huntercolson1.github.io"
+# baseurl: "/ultrathink"
 
 permalink: /blog/:slug/
 

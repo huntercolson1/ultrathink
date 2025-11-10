@@ -5,6 +5,9 @@ _site/
 .jekyll-cache/
 *.log
 
+# Ruby dependencies (GitHub Pages builds with its own Jekyll)
+vendor/
+
 # macOS
 .DS_Store
 

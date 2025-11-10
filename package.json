@@ -14,15 +14,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/huntercolson1/hunter-site.git"
+    "url": "git+https://github.com/huntercolson1/ultrathink.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/huntercolson1/hunter-site/issues"
+    "url": "https://github.com/huntercolson1/ultrathink/issues"
   },
-  "homepage": "https://github.com/huntercolson1/hunter-site#readme",
+  "homepage": "https://github.com/huntercolson1/ultrathink#readme",
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "eslint": "^9.39.1",
