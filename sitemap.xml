@@ -4,7 +4,7 @@ layout: null
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   {% for page in site.pages %}
-    {% unless page.url == '/404.html' or page.url == '/feed.xml' or page.url == '/sitemap.xml' %}
+    {% unless page.url == '/404.html' or page.url == '/feed.xml' or page.url == '/sitemap.xml' or page.url contains '/assets/' or page.url contains '.css' or page.url contains '.js' or page.url contains '.png' or page.url contains '.svg' or page.url contains '.woff' %}
   <url>
     <loc>{{ site.url }}{{ site.baseurl }}{{ page.url }}</loc>
     <lastmod>{{ site.time | date: '%Y-%m-%d' }}</lastmod>
