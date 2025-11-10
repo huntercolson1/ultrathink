@@ -36,6 +36,7 @@ exclude:
   - tools
   - reports
   - vendor
+  - components/README.md
 
 plugins:
   - jekyll-feed
