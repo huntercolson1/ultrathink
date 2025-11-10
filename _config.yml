@@ -4,9 +4,13 @@ description: Minimal systems for research, writing, and tooling.
 # url: "https://ultrathink.studio"
 # baseurl: ""
 
-# For GitHub Pages subdomain (current: hunter-site, will be ultrathink after rename):
+# For GitHub Pages subdomain:
 url: "https://huntercolson1.github.io"
-baseurl: "/hunter-site"
+baseurl: "/ultrathink"
+
+# For custom domain (ultrathink.studio), use:
+# url: "https://ultrathink.studio"
+# baseurl: ""
 
 permalink: /blog/:slug/
 
