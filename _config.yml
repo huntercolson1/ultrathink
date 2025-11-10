@@ -35,6 +35,7 @@ exclude:
   - ULTRATHINK_BLUEPRINT.md
   - tools
   - reports
+  - vendor
 
 plugins:
   - jekyll-feed
