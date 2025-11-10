@@ -198,6 +198,11 @@
 
 .c-btn--ghost {
   background: transparent;
+  color: var(--white);
+}
+
+.c-btn--ghost:visited {
+  color: var(--white);
 }
 
 .c-btn--solid {

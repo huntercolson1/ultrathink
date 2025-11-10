@@ -802,3 +802,80 @@ export const initSearch = async (form) => {
     blogPosts: blogPosts.length
   });
 };
+
+export const initBlogSort = () => {
+  const blogFeed = document.getElementById('blog-feed');
+  if (!blogFeed) return;
+
+  const sortButtons = Array.from(document.querySelectorAll('[data-sort]'));
+  if (sortButtons.length === 0) return;
+
+  const sortPosts = (order) => {
+    try {
+      // Re-query posts each time to ensure we have fresh references
+      const posts = Array.from(blogFeed.querySelectorAll('[data-blog-post]'));
+      if (posts.length === 0) return;
+
+      // Store empty message if it exists (before clearing)
+      const emptyMessage = blogFeed.querySelector('.blog-feed__empty');
+
+      const sorted = posts.slice().sort((a, b) => {
+        const dateA = new Date(a.dataset.published || 0).getTime();
+        const dateB = new Date(b.dataset.published || 0).getTime();
+        
+        if (order === 'oldest') {
+          return dateA - dateB;
+        } else {
+          return dateB - dateA;
+        }
+      });
+
+      // Clear and re-append in sorted order
+      blogFeed.innerHTML = '';
+      sorted.forEach(post => {
+        blogFeed.appendChild(post);
+      });
+      
+      // Re-append empty message if it existed
+      if (emptyMessage) {
+        blogFeed.appendChild(emptyMessage);
+      }
+      
+      blogFeed.dataset.blogSort = order;
+    } catch (error) {
+      console.error('Blog sort: Error in sortPosts', error);
+    }
+  };
+
+  // Update button states
+  const updateButtons = (activeSort) => {
+    sortButtons.forEach(btn => {
+      const sortValue = btn.dataset.sort;
+      if (sortValue === activeSort) {
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-pressed', 'true');
+      } else {
+        btn.classList.remove('is-active');
+        btn.setAttribute('aria-pressed', 'false');
+      }
+    });
+  };
+
+  // Handle button clicks
+  sortButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const sortValue = btn.dataset.sort;
+      if (sortValue === 'newest' || sortValue === 'oldest') {
+        sortPosts(sortValue);
+        updateButtons(sortValue);
+      }
+    });
+  });
+
+  // Initialize with current sort order
+  const currentSort = blogFeed.dataset.blogSort || 'newest';
+  sortPosts(currentSort);
+  updateButtons(currentSort);
+};
