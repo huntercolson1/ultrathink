@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://huntercolson1.github.io/ultrathink/sitemap.xml
+
