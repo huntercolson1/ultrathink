@@ -607,6 +607,57 @@
     grid-template-columns: 1fr;
     gap: var(--space-md);
   }
+
+  .c-header {
+    padding-block: var(--space-sm);
+    padding-inline: var(--space-md);
+  }
+
+  .c-header__brand {
+    font-size: 1rem;
+    gap: var(--space-xs);
+  }
+
+  .c-header__logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .c-btn {
+    padding-inline: var(--space-md);
+    padding-block: var(--space-sm);
+    min-height: 44px;
+    font-size: 0.9rem;
+  }
+
+  .c-card {
+    padding: var(--space-md);
+  }
+
+  .c-card__title {
+    font-size: 1.2rem;
+  }
+
+  .c-search__input {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .c-drawer__panel {
+    width: min(100vw, 320px);
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .c-footer {
+    flex-direction: column;
+    gap: var(--space-md);
+    text-align: center;
+  }
+
+  .c-footer__links {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
 }
 
 /* Table of Contents */
@@ -665,5 +716,6 @@
 
   .c-footer {
     flex-direction: column;
+    gap: var(--space-md);
   }
 }

@@ -9,7 +9,20 @@
 
 img {
   max-width: 100%;
+  height: auto;
   display: block;
+}
+
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+iframe,
+embed,
+object {
+  max-width: 100%;
 }
 
 a {
@@ -230,5 +243,55 @@ blockquote > :last-child {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile-specific improvements */
+@media (width <= 600px) {
+  body {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 8vw, 2.5rem);
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+
+  h3 {
+    font-size: clamp(1.25rem, 5vw, 1.5rem);
+  }
+
+  p {
+    max-width: 100%;
+  }
+
+  pre {
+    padding: var(--space-md);
+    font-size: 0.85rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+
+  blockquote {
+    padding: var(--space-md);
+    padding-left: var(--space-md);
+    margin-inline: 0;
+  }
+
+  ul,
+  ol {
+    padding-left: var(--space-md);
   }
 }
