@@ -54,6 +54,7 @@
   transition: opacity var(--transition-fast);
   opacity: 1;
   vertical-align: middle;
+  background: transparent;
 }
 
 .c-header__brand:hover .c-header__logo {
