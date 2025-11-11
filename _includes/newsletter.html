@@ -1,0 +1,29 @@
+<!-- Newsletter Signup Component -->
+<div class="newsletter-signup">
+  <div class="newsletter-signup__content">
+    <h3 class="newsletter-signup__title">Get notified of new posts</h3>
+    <p class="newsletter-signup__description">Subscribe to get an email when I publish a new blog post.</p>
+    <form 
+      class="newsletter-signup__form" 
+      action="https://buttondown.email/api/emails/embed-subscribe/YOUR_BUTTONDOWN_USERNAME" 
+      method="post" 
+      target="popupwindow" 
+      onsubmit="window.open('https://buttondown.email/YOUR_BUTTONDOWN_USERNAME', 'popupwindow')"
+    >
+      <label for="newsletter-email" class="u-sr-only">Email address</label>
+      <input 
+        type="email" 
+        id="newsletter-email" 
+        name="email" 
+        class="newsletter-signup__input" 
+        placeholder="your@email.com" 
+        required
+        aria-label="Email address"
+      />
+      <input type="hidden" value="1" name="embed"/>
+      <button type="submit" class="c-btn c-btn--solid newsletter-signup__button">Subscribe</button>
+    </form>
+    <p class="newsletter-signup__privacy">No spam. Unsubscribe anytime.</p>
+  </div>
+</div>
+
