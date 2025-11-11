@@ -6,25 +6,29 @@ export const initNav = (header) => {
   if (!toggle || !drawer) return;
 
   const panel = qs('.c-drawer__panel', drawer);
+  if (!panel) return;
   let releaseFocus = () => {};
 
-const openDrawer = () => {
-  drawer.classList.add('is-active');
-  toggle.classList.add('is-active');
-  toggle.setAttribute('aria-expanded', 'true');
-  drawer.setAttribute('aria-hidden', 'false');
-  lockScroll(true);
-  releaseFocus = trapFocus(panel);
-};
+  const openDrawer = () => {
+    drawer.classList.add('is-active');
+    toggle.classList.add('is-active');
+    toggle.setAttribute('aria-expanded', 'true');
+    drawer.setAttribute('aria-hidden', 'false');
+    lockScroll(true);
+    releaseFocus = trapFocus(panel);
+  };
 
-const closeDrawer = () => {
-  drawer.classList.remove('is-active');
-  toggle.classList.remove('is-active');
-  toggle.setAttribute('aria-expanded', 'false');
-  drawer.setAttribute('aria-hidden', 'true');
-  lockScroll(false);
-  releaseFocus();
-};
+  const closeDrawer = () => {
+    if (!drawer.classList.contains('is-active')) return;
+    drawer.classList.remove('is-active');
+    toggle.classList.remove('is-active');
+    toggle.setAttribute('aria-expanded', 'false');
+    drawer.setAttribute('aria-hidden', 'true');
+    lockScroll(false);
+    releaseFocus();
+    releaseFocus = () => {};
+    toggle.focus({ preventScroll: true });
+  };
 
   toggle.addEventListener('click', () => {
     if (drawer.classList.contains('is-active')) {
@@ -38,6 +42,16 @@ const closeDrawer = () => {
     if (event.target === drawer) {
       closeDrawer();
     }
+  });
+
+  panel.querySelectorAll('[data-nav-close]').forEach((btn) => {
+    btn.addEventListener('click', closeDrawer);
+  });
+
+  panel.querySelectorAll('a[href]').forEach((link) => {
+    link.addEventListener('click', () => {
+      closeDrawer();
+    });
   });
 
   document.addEventListener('keydown', (event) => {
