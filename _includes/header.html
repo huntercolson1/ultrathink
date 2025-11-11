@@ -18,8 +18,20 @@
           </li>
         {% endfor %}
       </ul>
-      <button class="c-nav__toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="nav-drawer">
-        <span>Menu</span>
+      <button
+        class="c-nav__toggle"
+        type="button"
+        data-nav-toggle
+        aria-expanded="false"
+        aria-controls="nav-drawer"
+        aria-label="Toggle navigation menu"
+      >
+        <span class="c-nav__bars" aria-hidden="true">
+          <span class="c-nav__bar"></span>
+          <span class="c-nav__bar"></span>
+          <span class="c-nav__bar"></span>
+        </span>
+        <span class="u-sr-only">Toggle navigation menu</span>
       </button>
     </nav>
   </div>
