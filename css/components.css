@@ -630,6 +630,11 @@
     font-size: 0.9rem;
   }
 
+  .cluster .c-btn {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .c-card {
     padding: var(--space-md);
   }
@@ -657,6 +662,21 @@
   .c-footer__links {
     flex-direction: column;
     gap: var(--space-sm);
+    align-items: center;
+  }
+
+  .c-footer > div:first-child {
+    text-align: center;
+  }
+
+  .c-footer .c-header__brand {
+    justify-content: center;
+    margin-bottom: var(--space-xs);
+  }
+
+  .c-footer p {
+    font-size: 0.9rem;
+    line-height: 1.5;
   }
 }
 

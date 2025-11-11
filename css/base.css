@@ -254,8 +254,15 @@ blockquote > :last-child {
   }
 
   h1 {
-    font-size: clamp(2rem, 8vw, 2.5rem);
-    line-height: 1.2;
+    font-size: clamp(1.75rem, 7vw, 2.25rem);
+    line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .hero__title {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+    line-height: 1.3;
   }
 
   h2 {
