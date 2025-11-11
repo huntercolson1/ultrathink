@@ -122,6 +122,22 @@ li {
   line-height: var(--line-body);
 }
 
+/* Mermaid diagrams */
+.mermaid {
+  margin: var(--space-lg) 0;
+  text-align: center;
+  background: rgb(0 0 0 / 40%);
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  overflow-x: auto;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
 /* Code blocks and inline code */
 code {
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
@@ -300,5 +316,12 @@ blockquote > :last-child {
   ul,
   ol {
     padding-left: var(--space-md);
+  }
+
+  .mermaid {
+    padding: var(--space-md);
+    margin: var(--space-md) 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }

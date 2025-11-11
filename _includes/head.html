@@ -64,3 +64,58 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Mermaid for diagram rendering -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    
+    const initMermaid = () => {
+      mermaid.initialize({ 
+        startOnLoad: true,
+        theme: 'dark',
+        themeVariables: {
+          primaryColor: '#fff',
+          primaryTextColor: '#fff',
+          primaryBorderColor: '#888',
+          lineColor: '#444',
+          secondaryColor: '#111',
+          tertiaryColor: '#222',
+          background: '#000',
+          mainBkg: '#111',
+          secondBkg: '#161616',
+          textColor: '#fff',
+          secondaryTextColor: '#888',
+          tertiaryTextColor: '#444',
+          noteBkgColor: '#161616',
+          noteTextColor: '#fff',
+          noteBorderColor: '#444',
+          actorBorder: '#444',
+          actorBkg: '#111',
+          actorTextColor: '#fff',
+          actorLineColor: '#888',
+          signalColor: '#fff',
+          signalTextColor: '#fff',
+          labelBoxBkgColor: '#111',
+          labelBoxBorderColor: '#444',
+          labelTextColor: '#fff',
+          loopTextColor: '#fff',
+          activationBorderColor: '#444',
+          activationBkgColor: '#222',
+          sequenceNumberColor: '#000'
+        },
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        }
+      });
+      window.mermaid = mermaid;
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initMermaid);
+    } else {
+      initMermaid();
+    }
+  </script>
+
