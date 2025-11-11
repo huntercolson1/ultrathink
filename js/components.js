@@ -2,7 +2,6 @@ import { qs } from './utils.js';
 import {
   initNav,
   initScrollHeader,
-  initThemeToggle,
   initStats,
   initBlogFilter,
   initSearch
@@ -11,7 +10,6 @@ import {
 const registry = {
   nav: initNav,
   'scroll-header': initScrollHeader,
-  'theme-toggle': initThemeToggle,
   stats: initStats,
   'blog-filter': initBlogFilter,
   search: initSearch,
