@@ -121,10 +121,6 @@
     grid-template-columns: minmax(0, 75ch);
     justify-content: center;
   }
-  
-  .post-aside {
-    display: none;
-  }
 }
 
 .post-card {
@@ -226,9 +222,9 @@
 /* Desktop TOC Toggle Button */
 .post-toc__desktop-btn {
   position: fixed;
-  top: calc(var(--space-xl) + 2rem);
+  top: calc(var(--space-xl) + 1rem);
   right: var(--space-lg);
-  z-index: calc(var(--z-nav) - 1);
+  z-index: var(--z-nav);
   display: none; /* Hidden by default, shown on desktop */
   align-items: center;
   gap: var(--space-sm);
@@ -619,22 +615,8 @@
 
 
 @media (width <= 959px) {
-  .post-aside {
-    position: static;
-    display: block;
-  }
-  
   .post-card {
     width: 100%;
-  }
-  
-  .post-share__actions {
-    gap: 0.65rem;
-  }
-  
-  .post-share__btn {
-    padding: 0.75rem 1rem;
-    font-size: 0.95rem;
   }
   
   .post-footer {

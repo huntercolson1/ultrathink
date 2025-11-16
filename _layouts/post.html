@@ -108,18 +108,6 @@ layout: default
       <div class="post-main post-content">
         {{ content }}
       </div>
-      <aside class="post-aside">
-        <div class="post-card post-share-card" aria-label="Share this article">
-          <p class="post-card__label">Share</p>
-          <div class="post-share__actions">
-            <a class="post-share__btn" href="https://twitter.com/intent/tweet?url={{ share_url_encoded }}&text={{ share_title_encoded }}" target="_blank" rel="noopener noreferrer">Twitter / X</a>
-            <a class="post-share__btn" href="https://www.linkedin.com/sharing/share-offsite/?url={{ share_url_encoded }}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <button class="post-share__btn" type="button" data-share-copy data-share-url="{{ post_absolute_url }}">Copy link</button>
-          </div>
-          <p class="post-share__help">Tip: use "Copy link" for Instagram Stories or Threads.</p>
-          <p class="post-share__status" data-share-status aria-live="polite"></p>
-        </div>
-      </aside>
     </div>
     <div class="post-footer cluster" style="justify-content: space-between;">
       <span class="u-text-muted">Filed under:

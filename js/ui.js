@@ -848,8 +848,8 @@ export const initPostEnhancements = () => {
   if (!tocList) return;
 
   if (headings.length === 0) {
-    if (tocMobileBtn) tocMobileBtn.hidden = true;
-    if (tocDesktopBtn) tocDesktopBtn.hidden = true;
+    if (tocMobileBtn) tocMobileBtn.setAttribute('hidden', '');
+    if (tocDesktopBtn) tocDesktopBtn.setAttribute('hidden', '');
     return;
   }
 
@@ -915,8 +915,12 @@ export const initPostEnhancements = () => {
     tocMobileList.appendChild(mobileFragment);
   }
 
-  if (tocMobileBtn) tocMobileBtn.hidden = false;
-  if (tocDesktopBtn) tocDesktopBtn.hidden = false;
+  if (tocMobileBtn) {
+    tocMobileBtn.removeAttribute('hidden');
+  }
+  if (tocDesktopBtn) {
+    tocDesktopBtn.removeAttribute('hidden');
+  }
 
   // Get all TOC links (both desktop and mobile)
   const allLinks = [
