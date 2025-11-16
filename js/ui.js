@@ -821,6 +821,12 @@ export const initPostEnhancements = () => {
   const post = document.querySelector('.post-content');
   const tocRoot = document.querySelector('[data-post-toc]');
   const tocList = tocRoot?.querySelector('[data-post-toc-list]');
+  const tocMobileList = document.querySelector('[data-post-toc-list-mobile]');
+  const tocToggle = document.querySelector('[data-toc-toggle]');
+  const tocMobileBtn = document.querySelector('[data-toc-mobile-btn]');
+  const tocMobileDrawer = document.querySelector('[data-toc-mobile-drawer]');
+  const tocMobileOverlay = document.querySelector('[data-toc-mobile-overlay]');
+  const tocMobileClose = document.querySelector('[data-toc-mobile-close]');
   const shareCopyBtn = document.querySelector('[data-share-copy]');
   const shareStatusNode = document.querySelector('[data-share-status]');
 
@@ -841,6 +847,7 @@ export const initPostEnhancements = () => {
 
   if (headings.length === 0) {
     tocRoot.hidden = true;
+    if (tocMobileBtn) tocMobileBtn.hidden = true;
     return;
   }
 
@@ -874,9 +881,7 @@ export const initPostEnhancements = () => {
     }
   });
 
-  const fragment = document.createDocumentFragment();
-
-  headings.forEach((heading) => {
+  const createTocItem = (heading) => {
     const level = heading.tagName === 'H3' ? 3 : 2;
     const li = document.createElement('li');
     li.className = `post-toc__item post-toc__item--level-${level}`;
@@ -885,16 +890,38 @@ export const initPostEnhancements = () => {
     link.textContent = heading.textContent.trim();
     link.dataset.tocLink = heading.id;
     li.appendChild(link);
-    fragment.appendChild(li);
-  });
+    return li;
+  };
 
+  // Populate desktop TOC
+  const fragment = document.createDocumentFragment();
+  headings.forEach((heading) => {
+    fragment.appendChild(createTocItem(heading));
+  });
   tocList.innerHTML = '';
   tocList.appendChild(fragment);
-  tocRoot.hidden = false;
 
-  const links = tocList.querySelectorAll('a[data-toc-link]');
+  // Populate mobile TOC
+  if (tocMobileList) {
+    const mobileFragment = document.createDocumentFragment();
+    headings.forEach((heading) => {
+      mobileFragment.appendChild(createTocItem(heading));
+    });
+    tocMobileList.innerHTML = '';
+    tocMobileList.appendChild(mobileFragment);
+  }
+
+  tocRoot.hidden = false;
+  if (tocMobileBtn) tocMobileBtn.hidden = false;
+
+  // Get all TOC links (both desktop and mobile)
+  const allLinks = [
+    ...tocList.querySelectorAll('a[data-toc-link]'),
+    ...(tocMobileList ? tocMobileList.querySelectorAll('a[data-toc-link]') : [])
+  ];
+
   const setActiveLink = (id) => {
-    links.forEach((link) => {
+    allLinks.forEach((link) => {
       if (link.dataset.tocLink === id) {
         link.setAttribute('aria-current', 'true');
       } else {
@@ -918,6 +945,74 @@ export const initPostEnhancements = () => {
   );
 
   headings.forEach((heading) => observer.observe(heading));
+
+  // Desktop TOC toggle functionality
+  if (tocToggle) {
+    tocToggle.addEventListener('click', () => {
+      const isCollapsed = tocRoot.hasAttribute('data-toc-collapsed');
+      if (isCollapsed) {
+        tocRoot.removeAttribute('data-toc-collapsed');
+        tocToggle.setAttribute('aria-expanded', 'true');
+      } else {
+        tocRoot.setAttribute('data-toc-collapsed', '');
+        tocToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  // Mobile drawer functionality
+  const openMobileDrawer = () => {
+    if (tocMobileDrawer) {
+      tocMobileDrawer.removeAttribute('hidden');
+      tocMobileDrawer.setAttribute('data-toc-mobile-open', '');
+      document.body.style.overflow = 'hidden';
+    }
+  };
+
+  const closeMobileDrawer = () => {
+    if (tocMobileDrawer) {
+      tocMobileDrawer.removeAttribute('data-toc-mobile-open');
+      document.body.style.overflow = '';
+      // Wait for animation to complete before hiding
+      setTimeout(() => {
+        if (!tocMobileDrawer.hasAttribute('data-toc-mobile-open')) {
+          tocMobileDrawer.setAttribute('hidden', '');
+        }
+      }, 200);
+    }
+  };
+
+  if (tocMobileBtn) {
+    tocMobileBtn.addEventListener('click', openMobileDrawer);
+  }
+
+  if (tocMobileClose) {
+    tocMobileClose.addEventListener('click', closeMobileDrawer);
+  }
+
+  if (tocMobileOverlay) {
+    tocMobileOverlay.addEventListener('click', closeMobileDrawer);
+  }
+
+  // Close mobile drawer when clicking on a TOC link
+  if (tocMobileList) {
+    tocMobileList.addEventListener('click', (e) => {
+      const link = e.target.closest('a[data-toc-link]');
+      if (link) {
+        // Small delay to allow smooth scroll
+        setTimeout(() => {
+          closeMobileDrawer();
+        }, 100);
+      }
+    });
+  }
+
+  // Close mobile drawer on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && tocMobileDrawer?.hasAttribute('data-toc-mobile-open')) {
+      closeMobileDrawer();
+    }
+  });
 
   if (shareCopyBtn) {
     const shareUrl = shareCopyBtn.dataset.shareUrl || window.location.href;
