@@ -104,6 +104,7 @@
 .post-main {
   max-width: 75ch;
   width: 100%;
+  margin: 0 auto;
 }
 
 .post-aside {
@@ -118,8 +119,13 @@
 
 @media (width >= 960px) {
   .post-grid {
-    grid-template-columns: minmax(0, 75ch);
+    grid-template-columns: 1fr;
     justify-content: center;
+    align-items: start;
+  }
+  
+  .post-main {
+    margin: 0 auto;
   }
 }
 
@@ -225,7 +231,7 @@
   top: calc(var(--space-xl) + 1rem);
   right: var(--space-lg);
   z-index: var(--z-nav);
-  display: none; /* Hidden by default, shown on desktop */
+  display: none;
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
@@ -255,18 +261,20 @@
   transform: translateY(0);
 }
 
-.post-toc__desktop-btn[hidden] {
-  display: none !important;
-}
-
 .post-toc__desktop-btn-text {
   display: inline;
 }
 
+/* Show button on desktop when not hidden */
 @media (width >= 960px) {
   .post-toc__desktop-btn:not([hidden]) {
-    display: flex;
+    display: flex !important;
   }
+}
+
+/* Hide button when hidden attribute is present */
+.post-toc__desktop-btn[hidden] {
+  display: none !important;
 }
 
 /* Desktop TOC Drawer */
