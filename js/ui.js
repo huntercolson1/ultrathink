@@ -819,10 +819,12 @@ export const initSearch = async (form) => {
 
 export const initPostEnhancements = () => {
   const post = document.querySelector('.post-content');
-  const tocRoot = document.querySelector('[data-post-toc]');
-  const tocList = tocRoot?.querySelector('[data-post-toc-list]');
+  const tocList = document.querySelector('[data-post-toc-list]');
   const tocMobileList = document.querySelector('[data-post-toc-list-mobile]');
-  const tocToggle = document.querySelector('[data-toc-toggle]');
+  const tocDesktopBtn = document.querySelector('[data-toc-desktop-btn]');
+  const tocDesktopDrawer = document.querySelector('[data-toc-desktop-drawer]');
+  const tocDesktopOverlay = document.querySelector('[data-toc-desktop-overlay]');
+  const tocDesktopClose = document.querySelector('[data-toc-desktop-close]');
   const tocMobileBtn = document.querySelector('[data-toc-mobile-btn]');
   const tocMobileDrawer = document.querySelector('[data-toc-mobile-drawer]');
   const tocMobileOverlay = document.querySelector('[data-toc-mobile-overlay]');
@@ -843,11 +845,11 @@ export const initPostEnhancements = () => {
     heading.textContent.trim().length
   );
 
-  if (!tocRoot || !tocList) return;
+  if (!tocList) return;
 
   if (headings.length === 0) {
-    tocRoot.hidden = true;
     if (tocMobileBtn) tocMobileBtn.hidden = true;
+    if (tocDesktopBtn) tocDesktopBtn.hidden = true;
     return;
   }
 
@@ -894,12 +896,14 @@ export const initPostEnhancements = () => {
   };
 
   // Populate desktop TOC
-  const fragment = document.createDocumentFragment();
-  headings.forEach((heading) => {
-    fragment.appendChild(createTocItem(heading));
-  });
-  tocList.innerHTML = '';
-  tocList.appendChild(fragment);
+  if (tocList) {
+    const fragment = document.createDocumentFragment();
+    headings.forEach((heading) => {
+      fragment.appendChild(createTocItem(heading));
+    });
+    tocList.innerHTML = '';
+    tocList.appendChild(fragment);
+  }
 
   // Populate mobile TOC
   if (tocMobileList) {
@@ -911,12 +915,12 @@ export const initPostEnhancements = () => {
     tocMobileList.appendChild(mobileFragment);
   }
 
-  tocRoot.hidden = false;
   if (tocMobileBtn) tocMobileBtn.hidden = false;
+  if (tocDesktopBtn) tocDesktopBtn.hidden = false;
 
   // Get all TOC links (both desktop and mobile)
   const allLinks = [
-    ...tocList.querySelectorAll('a[data-toc-link]'),
+    ...(tocList ? tocList.querySelectorAll('a[data-toc-link]') : []),
     ...(tocMobileList ? tocMobileList.querySelectorAll('a[data-toc-link]') : [])
   ];
 
@@ -946,16 +950,49 @@ export const initPostEnhancements = () => {
 
   headings.forEach((heading) => observer.observe(heading));
 
-  // Desktop TOC toggle functionality
-  if (tocToggle) {
-    tocToggle.addEventListener('click', () => {
-      const isCollapsed = tocRoot.hasAttribute('data-toc-collapsed');
-      if (isCollapsed) {
-        tocRoot.removeAttribute('data-toc-collapsed');
-        tocToggle.setAttribute('aria-expanded', 'true');
-      } else {
-        tocRoot.setAttribute('data-toc-collapsed', '');
-        tocToggle.setAttribute('aria-expanded', 'false');
+  // Desktop drawer functionality
+  const openDesktopDrawer = () => {
+    if (tocDesktopDrawer) {
+      tocDesktopDrawer.removeAttribute('hidden');
+      tocDesktopDrawer.setAttribute('data-toc-desktop-open', '');
+      document.body.style.overflow = 'hidden';
+    }
+  };
+
+  const closeDesktopDrawer = () => {
+    if (tocDesktopDrawer) {
+      tocDesktopDrawer.removeAttribute('data-toc-desktop-open');
+      document.body.style.overflow = '';
+      // Wait for animation to complete before hiding
+      setTimeout(() => {
+        if (!tocDesktopDrawer.hasAttribute('data-toc-desktop-open')) {
+          tocDesktopDrawer.setAttribute('hidden', '');
+        }
+      }, 200);
+    }
+  };
+
+  if (tocDesktopBtn) {
+    tocDesktopBtn.addEventListener('click', openDesktopDrawer);
+  }
+
+  if (tocDesktopClose) {
+    tocDesktopClose.addEventListener('click', closeDesktopDrawer);
+  }
+
+  if (tocDesktopOverlay) {
+    tocDesktopOverlay.addEventListener('click', closeDesktopDrawer);
+  }
+
+  // Close desktop drawer when clicking on a TOC link
+  if (tocList) {
+    tocList.addEventListener('click', (e) => {
+      const link = e.target.closest('a[data-toc-link]');
+      if (link) {
+        // Small delay to allow smooth scroll
+        setTimeout(() => {
+          closeDesktopDrawer();
+        }, 100);
       }
     });
   }
@@ -1007,10 +1044,14 @@ export const initPostEnhancements = () => {
     });
   }
 
-  // Close mobile drawer on Escape key
+  // Close mobile drawer on Escape key (only if desktop drawer is not open)
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && tocMobileDrawer?.hasAttribute('data-toc-mobile-open')) {
-      closeMobileDrawer();
+    if (e.key === 'Escape') {
+      if (tocMobileDrawer?.hasAttribute('data-toc-mobile-open')) {
+        closeMobileDrawer();
+      } else if (tocDesktopDrawer?.hasAttribute('data-toc-desktop-open')) {
+        closeDesktopDrawer();
+      }
     }
   });
 
