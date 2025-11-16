@@ -113,6 +113,7 @@
   position: sticky;
   top: calc(var(--space-xl) + 2rem);
   align-self: flex-start;
+  max-width: 280px;
 }
 
 .post-card {
@@ -213,6 +214,7 @@
 
 .post-toc {
   min-width: 220px;
+  max-width: 280px;
 }
 
 .post-toc[hidden] {
@@ -276,7 +278,7 @@
 
 @media (width >= 960px) {
   .post-grid {
-    grid-template-columns: minmax(0, 75ch) minmax(220px, 1fr);
+    grid-template-columns: minmax(0, 75ch) minmax(220px, 280px);
     align-items: flex-start;
   }
 }
