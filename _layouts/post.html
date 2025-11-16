@@ -2,6 +2,15 @@
 layout: default
 ---
 
+{% assign word_count = content | number_of_words %}
+{% assign reading_minutes = word_count | plus: 199 | divided_by: 200 %}
+{% if reading_minutes < 1 %}
+  {% assign reading_minutes = 1 %}
+{% endif %}
+{% assign post_absolute_url = page.url | absolute_url %}
+{% assign share_url_encoded = post_absolute_url | uri_escape %}
+{% assign share_title_encoded = page.title | uri_escape %}
+
 <section class="hero">
   <div class="container stack" style="gap: var(--space-lg);">
     <div>
@@ -12,16 +21,41 @@ layout: default
       {% elsif page.description %}
         <p class="hero__lead reading-width">{{ page.description }}</p>
       {% endif %}
+      <div class="post-hero__meta" aria-label="Post meta">
+        {% if page.author %}
+          <span class="post-hero__meta-item">By {{ page.author }}</span>
+        {% endif %}
+        <span class="post-hero__meta-item">{{ reading_minutes }} min read</span>
+        <span class="post-hero__meta-item">{{ word_count }} words</span>
+      </div>
     </div>
   </div>
 </section>
 
 <article class="section" data-section-tone="raised">
-  <div class="container reading-width stack" style="gap: var(--space-lg);">
-    <div class="stack" style="gap: var(--space-md);">
-      {{ content }}
+  <div class="container post-shell">
+    <div class="post-grid">
+      <div class="post-main post-content">
+        {{ content }}
+      </div>
+      <aside class="post-aside">
+        <nav class="post-card post-toc" aria-label="On this page" data-post-toc hidden>
+          <p class="post-card__label">On this page</p>
+          <ol class="post-toc__list" data-post-toc-list></ol>
+        </nav>
+        <div class="post-card post-share-card" aria-label="Share this article">
+          <p class="post-card__label">Share</p>
+          <div class="post-share__actions">
+            <a class="post-share__btn" href="https://twitter.com/intent/tweet?url={{ share_url_encoded }}&text={{ share_title_encoded }}" target="_blank" rel="noopener noreferrer">Twitter / X</a>
+            <a class="post-share__btn" href="https://www.linkedin.com/sharing/share-offsite/?url={{ share_url_encoded }}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <button class="post-share__btn" type="button" data-share-copy data-share-url="{{ post_absolute_url }}">Copy link</button>
+          </div>
+          <p class="post-share__help">Tip: use “Copy link” for Instagram Stories or Threads.</p>
+          <p class="post-share__status" data-share-status aria-live="polite"></p>
+        </div>
+      </aside>
     </div>
-    <div class="cluster" style="justify-content: space-between;">
+    <div class="post-footer cluster" style="justify-content: space-between;">
       <span class="u-text-muted">Filed under:
         {% if page.tags %}
           {% for tag in page.tags %}

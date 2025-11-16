@@ -1,12 +1,13 @@
 import { initComponents } from './components.js';
 import { initMathAnimation } from './math-animation.js';
-import { initBlogSort } from './ui.js';
+import { initBlogSort, initPostEnhancements } from './ui.js';
 
 const boot = async () => {
   try {
     document.documentElement.setAttribute('data-theme', 'dark');
     await initComponents();
     initBlogSort();
+    initPostEnhancements();
     initMathAnimation();
   } catch (error) {
     console.error('Main.js: Error in boot', error);

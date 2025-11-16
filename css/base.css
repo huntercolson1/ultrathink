@@ -61,6 +61,7 @@ button {
 
 html {
   font-size: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -68,7 +69,7 @@ body {
   background-color: var(--surface, #000);
   color: var(--text-primary, #fff);
   font-family: var(--font-sans);
-  line-height: var(--line-body);
+  line-height: 1.7;
   font-size: 1rem;
   -webkit-font-smoothing: antialiased;
 }
@@ -76,6 +77,15 @@ body {
 p {
   max-width: 75ch;
   color: var(--text-secondary);
+  margin: 0.75em 0;
+}
+
+p:first-child {
+  margin-top: 0;
+}
+
+p:last-child {
+  margin-bottom: 0;
 }
 
 h1,
@@ -84,9 +94,20 @@ h3,
 h4,
 h5,
 h6 {
-  line-height: 1.2;
+  line-height: 1.3;
   font-weight: 600;
   color: var(--text-primary);
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+h1:first-child,
+h2:first-child,
+h3:first-child,
+h4:first-child,
+h5:first-child,
+h6:first-child {
+  margin-top: 0;
 }
 
 h1 {
@@ -95,16 +116,18 @@ h1 {
 
 h2 {
   font-size: clamp(1.75rem, 3vw, 2.5rem);
+  margin-top: 2em;
 }
 
 h3 {
   font-size: clamp(1.35rem, 2vw, 1.75rem);
+  margin-top: 1.75em;
 }
 
 ul,
 ol {
-  padding-left: var(--space-lg);
-  margin: var(--space-md) 0;
+  padding-left: 1.625rem;
+  margin: 0.75em 0;
   list-style-position: outside;
   color: var(--text-secondary);
 }
@@ -113,13 +136,13 @@ ul ul,
 ol ol,
 ul ol,
 ol ul {
-  margin-top: var(--space-xs);
-  margin-bottom: var(--space-xs);
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
 }
 
 li {
-  margin: var(--space-xs) 0;
-  line-height: var(--line-body);
+  margin: 0.25em 0;
+  line-height: 1.7;
 }
 
 /* Mermaid diagrams */
@@ -149,7 +172,7 @@ code {
 }
 
 pre {
-  margin: var(--space-lg) 0;
+  margin: 0.75em 0;
   padding: var(--space-lg);
   background: rgb(0 0 0 / 40%);
   border: 1px solid rgb(255 255 255 / 10%);
@@ -219,25 +242,27 @@ tbody tr:hover {
   background: rgb(255 255 255 / 3%);
 }
 
-/* Blockquotes */
+/* Blockquotes - Notion style */
 blockquote {
-  margin: var(--space-lg) 0;
-  padding: var(--space-lg);
-  padding-left: var(--space-xl);
-  border-left: 4px solid rgb(255 255 255 / 30%);
-  background: rgb(255 255 255 / 5%);
-  border-radius: var(--radius-sm);
+  margin: 0.75em 0;
+  padding: 0;
+  padding-left: 1.5em;
+  border-left: 3px solid rgb(255 255 255 / 20%);
+  background: transparent;
+  border-radius: 0;
   color: var(--text-secondary);
   position: relative;
+  font-style: normal;
 }
 
 blockquote p {
   margin: 0;
   color: var(--text-secondary);
+  line-height: 1.7;
 }
 
 blockquote p:not(:last-child) {
-  margin-bottom: var(--space-sm);
+  margin-bottom: 0.75em;
 }
 
 blockquote > :first-child {
@@ -246,6 +271,19 @@ blockquote > :first-child {
 
 blockquote > :last-child {
   margin-bottom: 0;
+}
+
+/* Horizontal rules (section dividers) */
+hr {
+  border: none;
+  border-top: 1px solid rgb(255 255 255 / 10%);
+  margin: 2em 0;
+  width: 100%;
+}
+
+hr + h2,
+hr + h3 {
+  margin-top: 0.5em;
 }
 
 :focus-visible {
@@ -282,10 +320,21 @@ blockquote > :last-child {
 
   h2 {
     font-size: clamp(1.5rem, 6vw, 2rem);
+    margin-top: 1.5em;
   }
 
   h3 {
     font-size: clamp(1.25rem, 5vw, 1.5rem);
+    margin-top: 1.25em;
+  }
+
+  hr {
+    margin: 1.5em 0;
+  }
+
+  hr + h2,
+  hr + h3 {
+    margin-top: 0.5em;
   }
 
   p {
@@ -307,9 +356,10 @@ blockquote > :last-child {
   }
 
   blockquote {
-    padding: var(--space-md);
-    padding-left: var(--space-md);
+    padding: 0;
+    padding-left: 1.25em;
     margin-inline: 0;
+    border-left-width: 2px;
   }
 
   ul,

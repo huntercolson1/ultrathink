@@ -38,6 +38,7 @@
   --grey-2: #222;
   --grey-3: #444;
   --grey-4: #888;
+  --grey-5: #b3b3b3;
   --font-sans: 'Space Grotesk', -apple-system, blinkmacsystemfont, 'Segoe UI', sans-serif;
   --line-body: 1.5;
   --space-xs: 0.25rem;
@@ -56,7 +57,7 @@
   --surface: var(--grey-1);
   --surface-raised: #161616;
   --text-primary: var(--white);
-  --text-secondary: var(--grey-4);
+  --text-secondary: var(--grey-5);
 }
 
 [data-theme='light'] {

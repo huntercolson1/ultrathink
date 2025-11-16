@@ -817,6 +817,154 @@ export const initSearch = async (form) => {
   });
 };
 
+export const initPostEnhancements = () => {
+  const post = document.querySelector('.post-content');
+  const tocRoot = document.querySelector('[data-post-toc]');
+  const tocList = tocRoot?.querySelector('[data-post-toc-list]');
+  const shareCopyBtn = document.querySelector('[data-share-copy]');
+  const shareStatusNode = document.querySelector('[data-share-status]');
+
+  if (!post) {
+    if (shareCopyBtn) {
+      shareCopyBtn.addEventListener('click', () => {
+        window.location.assign(shareCopyBtn.dataset.shareUrl || window.location.href);
+      });
+    }
+    return;
+  }
+
+  const headings = Array.from(post.querySelectorAll('h2, h3')).filter((heading) =>
+    heading.textContent.trim().length
+  );
+
+  if (!tocRoot || !tocList) return;
+
+  if (headings.length === 0) {
+    tocRoot.hidden = true;
+    return;
+  }
+
+  const slugify = (text) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/&/g, 'and')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '') || 'section';
+
+  const usedIds = new Set(
+    Array.from(post.querySelectorAll('[id]'))
+      .map((node) => node.id)
+      .filter(Boolean)
+  );
+
+  headings.forEach((heading) => {
+    if (!heading.id) {
+      let baseId = slugify(heading.textContent);
+      let uniqueId = baseId;
+      let suffix = 1;
+      while (usedIds.has(uniqueId)) {
+        uniqueId = `${baseId}-${suffix}`;
+        suffix += 1;
+      }
+      heading.id = uniqueId;
+      usedIds.add(uniqueId);
+    }
+  });
+
+  const fragment = document.createDocumentFragment();
+
+  headings.forEach((heading) => {
+    const level = heading.tagName === 'H3' ? 3 : 2;
+    const li = document.createElement('li');
+    li.className = `post-toc__item post-toc__item--level-${level}`;
+    const link = document.createElement('a');
+    link.href = `#${heading.id}`;
+    link.textContent = heading.textContent.trim();
+    link.dataset.tocLink = heading.id;
+    li.appendChild(link);
+    fragment.appendChild(li);
+  });
+
+  tocList.innerHTML = '';
+  tocList.appendChild(fragment);
+  tocRoot.hidden = false;
+
+  const links = tocList.querySelectorAll('a[data-toc-link]');
+  const setActiveLink = (id) => {
+    links.forEach((link) => {
+      if (link.dataset.tocLink === id) {
+        link.setAttribute('aria-current', 'true');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveLink(entry.target.id);
+        }
+      });
+    },
+    {
+      rootMargin: '-40% 0px -50% 0px',
+      threshold: 0
+    }
+  );
+
+  headings.forEach((heading) => observer.observe(heading));
+
+  if (shareCopyBtn) {
+    const shareUrl = shareCopyBtn.dataset.shareUrl || window.location.href;
+    const defaultLabel = shareCopyBtn.textContent;
+
+    const writeToClipboard = async (text) => {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
+      }
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'absolute';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+      } finally {
+        document.body.removeChild(textarea);
+      }
+      return Promise.resolve();
+    };
+
+    shareCopyBtn.addEventListener('click', async () => {
+      try {
+        await writeToClipboard(shareUrl);
+        shareCopyBtn.textContent = 'Link copied';
+        if (shareStatusNode) {
+          shareStatusNode.textContent = 'Copied to clipboard.';
+        }
+        setTimeout(() => {
+          shareCopyBtn.textContent = defaultLabel;
+          if (shareStatusNode) {
+            shareStatusNode.textContent = '';
+          }
+        }, 2500);
+      } catch (error) {
+        console.warn('Share copy failed', error);
+        if (shareStatusNode) {
+          shareStatusNode.textContent = 'Could not copy automatically. Please copy the address bar.';
+        }
+      }
+    });
+  }
+};
+
 export const initBlogSort = () => {
   const blogFeed = document.getElementById('blog-feed');
   if (!blogFeed) return;

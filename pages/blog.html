@@ -19,16 +19,19 @@ permalink: /pages/blog/
 {% if latest_post %}
 <section class="section" data-section-tone="surface">
   <div class="container">
-    <article class="panel stack" style="gap: var(--space-md); max-width: 800px;">
+    <article class="panel blog-latest-card stack">
       <p class="c-section-label">Latest</p>
       <h2 class="c-section-heading">{{ latest_post.title }}</h2>
       {% if latest_post.subtitle %}
-        <p class="u-text-muted reading-width">{{ latest_post.subtitle }}</p>
+        <p class="u-text-muted blog-latest-card__subtitle">{{ latest_post.subtitle }}</p>
       {% elsif latest_post.description %}
-        <p class="u-text-muted reading-width">{{ latest_post.description }}</p>
+        <p class="u-text-muted blog-latest-card__subtitle">{{ latest_post.description }}</p>
       {% endif %}
-      <p class="u-text-muted">{{ latest_post.date | date: "%B %d, %Y" }}</p>
-      <p>{{ latest_post.excerpt | strip_html }}</p>
+      <p class="u-text-muted blog-latest-card__date">{{ latest_post.date | date: "%B %d, %Y" }}</p>
+      {% assign excerpt_text = latest_post.excerpt | strip_html | strip %}
+      {% if excerpt_text != blank %}
+        <p class="blog-latest-card__excerpt">{{ excerpt_text | truncatewords: 30 }}</p>
+      {% endif %}
       <div class="c-card__actions">
         <a class="c-btn c-btn--ghost" href="{{ latest_post.url | relative_url }}">Read latest →</a>
       </div>
@@ -52,7 +55,7 @@ permalink: /pages/blog/
         <p class="u-text-muted blog-feed__empty">No posts yet. Draft your first Markdown entry in <code>_posts/</code>.</p>
       {% else %}
         {% for post in site.posts %}
-          <article class="panel stack" style="gap: var(--space-md);" data-blog-post data-tags="{{ post.tags | join: ' ' }}" data-year="{{ post.date | date: '%Y' }}" data-published="{{ post.date | date_to_xmlschema }}">
+          <article class="panel blog-card stack" data-blog-post data-tags="{{ post.tags | join: ' ' }}" data-year="{{ post.date | date: '%Y' }}" data-published="{{ post.date | date_to_xmlschema }}">
             <div class="cluster" style="justify-content: space-between;">
               <p class="c-section-label">{{ post.date | date: "%b %d, %Y" }}</p>
               {% if post.tags %}
@@ -63,13 +66,16 @@ permalink: /pages/blog/
                 </div>
               {% endif %}
             </div>
-            <h2 class="c-section-heading" style="font-size: var(--step-2);">{{ post.title }}</h2>
+            <h2 class="c-section-heading blog-card__title">{{ post.title }}</h2>
             {% if post.subtitle %}
-              <p class="u-text-muted reading-width">{{ post.subtitle }}</p>
+              <p class="u-text-muted blog-card__subtitle">{{ post.subtitle }}</p>
             {% elsif post.description %}
-              <p class="u-text-muted reading-width">{{ post.description }}</p>
+              <p class="u-text-muted blog-card__subtitle">{{ post.description }}</p>
             {% endif %}
-            <p class="reading-width">{{ post.excerpt | strip_html }}</p>
+            {% assign excerpt_text = post.excerpt | strip_html | strip %}
+            {% if excerpt_text != blank %}
+              <p class="blog-card__excerpt">{{ excerpt_text | truncatewords: 25 }}</p>
+            {% endif %}
             <div class="c-card__actions">
               <a class="c-btn c-btn--ghost" href="{{ post.url | relative_url }}">Read post →</a>
             </div>
