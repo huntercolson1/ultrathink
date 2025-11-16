@@ -122,9 +122,7 @@ The hardest part for beginners is not the math. It is the translation of intent 
 
 You can say something like:
 
-```
-Clean the dataset, handle missing values, and run a multivariable logistic regression with EF_low as the outcome and age, hypertension, diabetes, and BMI as predictors.
-```
+> Clean the dataset, handle missing values, and run a multivariable logistic regression with EF_low as the outcome and age, hypertension, diabetes, and BMI as predictors.
 
 An AI copilot drafts the skeleton. You run it, look at the output, adjust, and ask questions. Along the way, you see concrete examples of how the data is loaded, how variables are prepared, and how the model is specified.
 
