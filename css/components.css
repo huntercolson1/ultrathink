@@ -340,6 +340,9 @@
 
 .c-btn:hover {
   transform: translateY(-1px);
+}
+
+.c-btn--ghost:hover {
   background: rgb(255 255 255 / 5%);
 }
 
@@ -354,6 +357,16 @@
 
 .c-btn--solid {
   background: var(--white);
+  color: var(--black);
+  border-color: var(--white);
+}
+
+.c-btn--solid:hover {
+  background: var(--white);
+  opacity: 0.9;
+}
+
+.c-btn--solid:visited {
   color: var(--black);
 }
 
