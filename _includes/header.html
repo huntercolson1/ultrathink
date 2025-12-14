@@ -1,39 +1,24 @@
-<header class="pin-nav" data-component="nav scroll-header">
-  <div class="container c-header">
-    <a class="c-header__brand" href="{{ '/' | relative_url }}" aria-label="Ultrathink Home">
-      <img src="{{ '/assets/icons/ultrathink-mobius.png' | relative_url }}" alt="Ultrathink" class="c-header__logo" width="48" height="48">
-      <span class="c-header__brand-text">ULTRATHINK</span>
+<header class="pin-nav" data-component="nav scroll-header" style="border-bottom: 2px solid var(--black);">
+  <div class="container c-header" style="padding: 1rem 0;">
+    <a class="c-header__brand" href="{{ '/' | relative_url }}" aria-label="Ultrathink Home"
+      style="text-decoration: none;">
+      <!-- Logo in monochrome -->
+      <img src="{{ '/assets/icons/ultrathink-mobius.png' | relative_url }}" alt="Ultrathink" class="c-header__logo"
+        width="32" height="32" style="filter: grayscale(1) contrast(1.5);">
+      <span class="c-header__brand-text u-text-mono" style="font-weight: 700;">ULTRATHINK</span>
     </a>
+
     <nav class="c-nav" aria-label="Primary navigation">
-      <ul class="c-nav__list">
-        {% assign current = page.url | default: '/' %}
+      <ul class="c-nav__list u-text-mono" style="font-size: 0.9rem; gap: 1rem;">
         {% for item in site.data.nav %}
-          {% assign item_url = item.url | relative_url %}
-          {% assign is_current = current == item.url %}
-          {% if item.url == '/pages/blog/' and current contains '/blog/' %}
-            {% assign is_current = true %}
-          {% endif %}
-          <li>
-            <a class="c-nav__link" href="{{ item_url }}"{% if is_current %} aria-current="page"{% endif %}>{{ item.title }}</a>
-          </li>
+        <li>
+          <a href="{{ item.url | relative_url }}" style="text-transform: lowercase;">{{ item.title }}</a>
+        </li>
+        {% unless forloop.last %}
+        <li aria-hidden="true" style="opacity: 0.3;">/</li>
+        {% endunless %}
         {% endfor %}
       </ul>
-      <button
-        class="c-nav__toggle"
-        type="button"
-        data-nav-toggle
-        aria-expanded="false"
-        aria-controls="nav-drawer"
-        aria-label="Toggle navigation menu"
-      >
-        <span class="c-nav__bars" aria-hidden="true">
-          <span class="c-nav__bar"></span>
-          <span class="c-nav__bar"></span>
-          <span class="c-nav__bar"></span>
-        </span>
-        <span class="u-sr-only">Toggle navigation menu</span>
-      </button>
     </nav>
   </div>
 </header>
-

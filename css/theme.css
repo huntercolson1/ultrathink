@@ -31,45 +31,118 @@
 }
 
 :root {
-  color-scheme: dark;
-  --black: #000;
-  --white: #fff;
-  --grey-1: #111;
-  --grey-2: #222;
-  --grey-3: #444;
-  --grey-4: #888;
-  --grey-5: #b3b3b3;
-  --font-sans: 'Space Grotesk', -apple-system, blinkmacsystemfont, 'Segoe UI', sans-serif;
-  --line-body: 1.5;
+  color-scheme: light;
+
+  /* Core Colors - Monochrome */
+  --black: #050505;
+  --white: #ffffff;
+  --grey-light: #f4f4f4;
+  --grey-med: #e0e0e0;
+  --grey-dark: #333333;
+
+  /* Semantic Variables */
+  --bg-color: var(--white);
+  --text-primary: var(--black);
+  --text-secondary: var(--grey-dark);
+  --border-color: var(--black);
+  --accent-color: var(--black);
+
+  /* Typography */
+  --font-display: 'Space Grotesk', -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
+  --font-body: var(--font-mono);
+  /* Default to mono for that raw feel */
+
+  /* Layout */
+  --line-body: 1.6;
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
   --space-lg: 2rem;
   --space-xl: 4rem;
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --transition-fast: 150ms ease;
-  --transition-med: 200ms ease;
-  --z-base: 10;
-  --z-nav: 100;
-  --z-overlay: 1000;
-  --container-max: 1200px;
-  --surface: var(--grey-1);
-  --surface-raised: #161616;
-  --text-primary: var(--white);
-  --text-secondary: var(--grey-5);
+  --container-max: 900px;
+
+  /* Components */
+  --radius-sm: 0px;
+  /* Sharp corners */
+  --radius-md: 0px;
 }
 
-[data-theme='light'] {
-  color-scheme: light;
-  --surface: var(--white);
-  --surface-raised: #f2f2f2;
-  --text-primary: var(--black);
-  --text-secondary: var(--grey-3);
+/* Base Reset & Grid Background */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  line-height: var(--line-body);
+
+  /* Dotted Grid Pattern */
+  background-image: radial-gradient(var(--grey-med) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-@media (width >= 1440px) {
-  :root {
-    --space-xl: 5rem;
-  }
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: 2.5rem;
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: 1.75rem;
+  border-bottom: 2px solid var(--black);
+  padding-bottom: 0.5rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+/* Links */
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color var(--transition-fast);
+}
+
+a:hover {
+  text-decoration-color: var(--text-primary);
+}
+
+/* Code Blocks */
+pre,
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+pre {
+  background: var(--grey-light);
+  border: 1px solid var(--black);
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+/* Specific Utilities */
+.u-text-display {
+  font-family: var(--font-display);
+}
+
+.u-text-mono {
+  font-family: var(--font-mono);
 }
