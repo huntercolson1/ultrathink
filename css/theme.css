@@ -66,6 +66,10 @@
   --radius-sm: 0px;
   /* Sharp corners */
   --radius-md: 0px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-med: 200ms ease;
 }
 
 /* Base Reset & Grid Background */

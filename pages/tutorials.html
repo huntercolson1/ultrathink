@@ -5,17 +5,40 @@ description: Ultrathink tutorials and guides.
 permalink: /pages/tutorials/
 ---
 
-<section class="hero">
-  <div class="container stack" style="gap: var(--space-lg);">
-    <div>
-      <p class="hero__kicker">Hands-on learning</p>
-      <h1 class="hero__title">Step-by-step tutorials on math, medicine, coding, and more.</h1>
-      <p class="hero__lead">
-        Clear walkthroughs with examples, written for med students and anyone who learns by doing.
+<section class="section" style="padding-top: var(--space-xl);">
+  <div class="container stack" style="gap: var(--space-lg); max-width: 800px; margin: 0 auto;">
+    <header class="stack"
+      style="gap: var(--space-md); border-bottom: 2px solid var(--black); padding-bottom: var(--space-lg);">
+      <p class="u-text-mono" style="font-size: 0.9rem; opacity: 0.6;">// TUTORIALS</p>
+      <h1 class="u-text-display"
+        style="font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1.1; text-transform: uppercase;">Hands-On Guides</h1>
+      <p class="u-text-mono" style="max-width: 55ch; opacity: 0.8;">
+        Step-by-step walkthroughs for math, medicine, coding, and more. Clear, practical, and written for anyone who
+        learns by doing.
       </p>
+    </header>
+
+    <div class="u-text-mono"
+      style="font-size: 0.85rem; opacity: 0.6; border-bottom: 1px solid rgb(0 0 0 / 10%); padding-bottom: var(--space-sm);">
+      > TUTORIAL_INDEX</div>
+
+    <div class="stack" style="gap: var(--space-lg);">
+      {% if site.tutorials.size > 0 %}
+      {% for tutorial in site.tutorials %}
+      <article class="stack"
+        style="gap: var(--space-sm); padding-bottom: var(--space-lg); border-bottom: 1px solid rgb(0 0 0 / 10%);">
+        <span class="u-text-mono" style="font-size: 0.85rem;">{{ tutorial.date | date: "%Y-%m-%d" }}</span>
+        <a href="{{ tutorial.url | relative_url }}" style="text-decoration: none;">
+          <h2 class="u-text-display" style="font-size: 1.25rem; margin: 0;">{{ tutorial.title }}</h2>
+        </a>
+        {% if tutorial.description %}
+        <p class="u-text-mono" style="opacity: 0.7; font-size: 0.95rem;">{{ tutorial.description }}</p>
+        {% endif %}
+      </article>
+      {% endfor %}
+      {% else %}
+      <p class="u-text-mono" style="opacity: 0.5;">Tutorials coming soon.</p>
+      {% endif %}
     </div>
   </div>
 </section>
-
-<!-- Add your tutorials here -->
-
