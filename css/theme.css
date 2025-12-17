@@ -35,10 +35,10 @@
 
   /* Core Colors - Monochrome */
   --black: #050505;
-  --white: #ffffff;
+  --white: #fff;
   --grey-light: #f4f4f4;
   --grey-med: #e0e0e0;
-  --grey-dark: #333333;
+  --grey-dark: #333;
 
   /* Semantic Variables */
   --bg-color: var(--white);
@@ -49,8 +49,9 @@
 
   /* Typography */
   --font-display: 'Space Grotesk', -apple-system, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
+  --font-mono: ui-monospace, sfmono-regular, menlo, monaco, "Courier New", monospace;
   --font-body: var(--font-mono);
+
   /* Default to mono for that raw feel */
 
   /* Layout */
@@ -64,12 +65,35 @@
 
   /* Components */
   --radius-sm: 0px;
+
   /* Sharp corners */
   --radius-md: 0px;
 
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-med: 200ms ease;
+}
+
+/* Light theme (default) */
+[data-theme="light"] {
+  color-scheme: light;
+  --bg-color: var(--white);
+  --text-primary: var(--black);
+  --text-secondary: var(--grey-dark);
+  --border-color: var(--black);
+  --accent-color: var(--black);
+  --grid-dot-color: var(--grey-med);
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg-color: #0a0a0a;
+  --text-primary: #f0f0f0;
+  --text-secondary: #888;
+  --border-color: #f0f0f0;
+  --accent-color: #f0f0f0;
+  --grid-dot-color: #2a2a2a;
 }
 
 /* Base Reset & Grid Background */
@@ -80,7 +104,7 @@ body {
   line-height: var(--line-body);
 
   /* Dotted Grid Pattern */
-  background-image: radial-gradient(var(--grey-med) 1px, transparent 1px);
+  background-image: radial-gradient(var(--grid-dot-color, var(--grey-med)) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 

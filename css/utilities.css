@@ -7,7 +7,7 @@
   letter-spacing: 0.08em;
 }
 
-.u-flow-md > * + * {
+.u-flow-md>*+* {
   margin-top: var(--space-md);
 }
 
@@ -70,7 +70,7 @@
 }
 
 .u-text-contrast {
-  color: var(--white);
+  color: var(--text-primary);
 }
 
 .u-sr-only {

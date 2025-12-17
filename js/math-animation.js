@@ -695,7 +695,7 @@ class TorusKnotAnimation {
           vecScale(binormal, Math.sin(angle) * this.tubeRadius)
         );
         
-        let point = vecAdd(center, offset);
+        const point = vecAdd(center, offset);
         
         // Apply rotations
         let rotated = this.rotateX(point.x, point.y, point.z, this.rotationX);

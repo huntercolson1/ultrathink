@@ -894,6 +894,7 @@
 
   .c-search__input {
     font-size: 16px;
+
     /* Prevents zoom on iOS */
     padding: var(--space-sm) var(--space-md);
     appearance: none;
@@ -1036,7 +1037,6 @@
   color: var(--white);
   font-size: 0.95rem;
   transition: border-color var(--transition-fast), background var(--transition-fast);
-  -webkit-appearance: none;
   appearance: none;
 }
 
@@ -1087,4 +1087,170 @@
     flex-direction: column;
     gap: var(--space-md);
   }
+}
+
+/* Theme Toggle Button */
+.c-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgb(0 0 0 / 15%);
+  background: rgb(0 0 0 / 4%);
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast),
+    transform var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.c-theme-toggle:hover {
+  background: rgb(0 0 0 / 8%);
+  border-color: rgb(0 0 0 / 25%);
+  transform: translateY(-1px);
+}
+
+.c-theme-toggle:focus-visible {
+  outline: 2px solid rgb(0 0 0 / 80%);
+  outline-offset: 3px;
+}
+
+.c-theme-toggle__icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--text-primary);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Show/hide icons based on theme */
+.c-theme-toggle__sun {
+  display: none;
+}
+
+.c-theme-toggle__moon {
+  display: block;
+}
+
+[data-theme="dark"] .c-theme-toggle__sun {
+  display: block;
+}
+
+[data-theme="dark"] .c-theme-toggle__moon {
+  display: none;
+}
+
+/* Dark Theme Component Overrides */
+[data-theme="dark"] .c-header {
+  border-bottom-color: rgb(255 255 255 / 10%);
+}
+
+[data-theme="dark"] .c-header.is-condensed {
+  border-color: rgb(255 255 255 / 15%);
+}
+
+[data-theme="dark"] .skip-link {
+  background: var(--black);
+  color: var(--white);
+}
+
+[data-theme="dark"] .c-nav__toggle {
+  border-color: rgb(255 255 255 / 15%);
+  background: rgb(255 255 255 / 4%);
+}
+
+[data-theme="dark"] .c-nav__toggle:hover {
+  background: rgb(255 255 255 / 8%);
+  border-color: rgb(255 255 255 / 25%);
+}
+
+[data-theme="dark"] .c-nav__toggle:focus-visible {
+  outline-color: rgb(255 255 255 / 80%);
+}
+
+[data-theme="dark"] .c-nav__toggle.is-active {
+  background: rgb(255 255 255 / 10%);
+  border-color: rgb(255 255 255 / 30%);
+}
+
+[data-theme="dark"] .c-theme-toggle {
+  border-color: rgb(255 255 255 / 15%);
+  background: rgb(255 255 255 / 4%);
+}
+
+[data-theme="dark"] .c-theme-toggle:hover {
+  background: rgb(255 255 255 / 8%);
+  border-color: rgb(255 255 255 / 25%);
+}
+
+[data-theme="dark"] .c-theme-toggle:focus-visible {
+  outline-color: rgb(255 255 255 / 80%);
+}
+
+[data-theme="dark"] .c-drawer__panel {
+  box-shadow: -4px 0 32px rgb(0 0 0 / 40%);
+  border-left-color: rgb(255 255 255 / 10%);
+}
+
+[data-theme="dark"] .c-drawer__header {
+  border-bottom-color: rgb(255 255 255 / 10%);
+}
+
+[data-theme="dark"] .c-drawer__link:hover,
+[data-theme="dark"] .c-drawer__link:focus-visible {
+  background: rgb(255 255 255 / 5%);
+}
+
+[data-theme="dark"] .c-drawer__link[aria-current='page'] {
+  background: rgb(255 255 255 / 8%);
+}
+
+[data-theme="dark"] .c-drawer__close {
+  border-color: rgb(255 255 255 / 15%);
+  background: rgb(255 255 255 / 4%);
+}
+
+[data-theme="dark"] .c-drawer__close:hover {
+  background: rgb(255 255 255 / 10%);
+  border-color: rgb(255 255 255 / 25%);
+}
+
+[data-theme="dark"] .c-drawer__close:focus-visible {
+  outline-color: rgb(255 255 255 / 80%);
+}
+
+[data-theme="dark"] .c-btn {
+  border-color: rgb(255 255 255 / 20%);
+}
+
+[data-theme="dark"] .c-btn--ghost:hover {
+  background: rgb(255 255 255 / 5%);
+}
+
+[data-theme="dark"] .c-btn.c-btn--ghost.is-active,
+[data-theme="dark"] .c-btn.c-btn--ghost[aria-pressed='true'] {
+  background: rgb(255 255 255 / 10%);
+  border-color: rgb(255 255 255 / 40%);
+}
+
+[data-theme="dark"] .c-btn--solid {
+  background: var(--white);
+  color: var(--black);
+  border-color: var(--white);
+}
+
+[data-theme="dark"] .c-btn--solid:visited {
+  color: var(--black);
+}
+
+[data-theme="dark"] .c-social-link:hover,
+[data-theme="dark"] .c-social-link:focus-visible {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .c-header__logo {
+  filter: brightness(1.1) contrast(1.05);
 }

@@ -15,7 +15,12 @@ export default [
         fetch: 'readonly',
         console: 'readonly',
         performance: 'readonly',
-        requestAnimationFrame: 'readonly'
+        requestAnimationFrame: 'readonly',
+        localStorage: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        navigator: 'readonly',
+        DOMParser: 'readonly'
       }
     },
     rules: {

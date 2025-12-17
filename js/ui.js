@@ -75,10 +75,20 @@ export const initScrollHeader = (header) => {
 
 export const initThemeToggle = (node) => {
   const root = document.documentElement;
+  
+  const updateAriaLabel = (theme) => {
+    node.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+  };
+  
+  // Initialize aria-label based on current theme
+  updateAriaLabel(root.getAttribute('data-theme') || 'dark');
+  
   node.addEventListener('click', () => {
-    const theme = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-    root.setAttribute('data-theme', theme);
-    node.textContent = theme === 'light' ? 'Dark mode' : 'Light mode';
+    const currentTheme = root.getAttribute('data-theme') || 'dark';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', newTheme);
+    localStorage.setItem('ultrathink-theme', newTheme);
+    updateAriaLabel(newTheme);
   });
 };
 
@@ -871,7 +881,7 @@ export const initPostEnhancements = () => {
 
   headings.forEach((heading) => {
     if (!heading.id) {
-      let baseId = slugify(heading.textContent);
+      const baseId = slugify(heading.textContent);
       let uniqueId = baseId;
       let suffix = 1;
       while (usedIds.has(uniqueId)) {

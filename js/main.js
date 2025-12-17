@@ -1,14 +1,36 @@
 import { initComponents } from './components.js';
 import { initMathAnimation } from './math-animation.js';
-import { initBlogSort, initPostEnhancements } from './ui.js';
+import { initBlogSort, initPostEnhancements, initThemeToggle } from './ui.js';
+
+// Initialize theme before render to prevent flash
+const initTheme = () => {
+  const root = document.documentElement;
+  const savedTheme = localStorage.getItem('ultrathink-theme');
+
+  if (savedTheme) {
+    root.setAttribute('data-theme', savedTheme);
+  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    root.setAttribute('data-theme', 'light');
+  } else {
+    root.setAttribute('data-theme', 'dark');
+  }
+};
+
+// Run theme init immediately to prevent flash
+initTheme();
 
 const boot = async () => {
   try {
-    document.documentElement.setAttribute('data-theme', 'dark');
     await initComponents();
     initBlogSort();
     initPostEnhancements();
     initMathAnimation();
+
+    // Initialize theme toggle button
+    const themeToggle = document.querySelector('[data-theme-toggle]');
+    if (themeToggle) {
+      initThemeToggle(themeToggle);
+    }
   } catch (error) {
     console.error('Main.js: Error in boot', error);
   }

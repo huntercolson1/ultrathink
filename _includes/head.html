@@ -1,26 +1,26 @@
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="{{ page.description | default: site.description }}">
-  <meta name="author" content="Hunter Colson">
-  <meta name="google-site-verification" content="UPOuYG3sSrjmcSLgLq32KFkHZHHUhdCEZHwaNJ34Td4" />
-  <title>{{ page.title | default: site.title }}</title>
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="{{ site.url }}{{ site.baseurl }}{{ page.url }}">
-  <meta property="og:title" content="{{ page.title | default: site.title }}">
-  <meta property="og:description" content="{{ page.description | default: site.description }}">
-  <meta property="og:image" content="{{ site.url }}{{ site.baseurl }}/assets/icons/ultrathink-mobius.png">
-  <meta property="og:logo" content="{{ site.url }}{{ site.baseurl }}/assets/icons/ultrathink-mobius.png">
-  
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="{{ page.title | default: site.title }}">
-  <meta name="twitter:description" content="{{ page.description | default: site.description }}">
-  <meta name="twitter:image" content="{{ site.url }}{{ site.baseurl }}/assets/icons/ultrathink-mobius.png">
-  
-  <!-- Organization structured data for Google Knowledge Graph -->
-  <script type="application/ld+json">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="{{ page.description | default: site.description }}">
+<meta name="author" content="Hunter Colson">
+<meta name="google-site-verification" content="UPOuYG3sSrjmcSLgLq32KFkHZHHUhdCEZHwaNJ34Td4" />
+<title>{{ page.title | default: site.title }}</title>
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ site.url }}{{ site.baseurl }}{{ page.url }}">
+<meta property="og:title" content="{{ page.title | default: site.title }}">
+<meta property="og:description" content="{{ page.description | default: site.description }}">
+<meta property="og:image" content="{{ site.url }}{{ site.baseurl }}/assets/icons/ultrathink-mobius.png">
+<meta property="og:logo" content="{{ site.url }}{{ site.baseurl }}/assets/icons/ultrathink-mobius.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page.title | default: site.title }}">
+<meta name="twitter:description" content="{{ page.description | default: site.description }}">
+<meta name="twitter:image" content="{{ site.url }}{{ site.baseurl }}/assets/icons/ultrathink-mobius.png">
+
+<!-- Organization structured data for Google Knowledge Graph -->
+<script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -31,91 +31,110 @@
     "sameAs": []
   }
   </script>
-  
-  <!-- Canonical URL -->
-  <link rel="canonical" href="{{ site.url }}{{ site.baseurl }}{{ page.url }}">
-  
-  <!-- Sitemap -->
-  <link rel="sitemap" type="application/xml" href="{{ '/sitemap.xml' | relative_url }}">
-  
-  <link rel="icon" type="image/png" href="{{ '/assets/icons/ultrathink-mobius.png' | relative_url }}">
-  <link rel="apple-touch-icon" href="{{ '/assets/icons/ultrathink-mobius.png' | relative_url }}">
-  <link rel="preload" href="{{ '/assets/fonts/space-grotesk-v22-latin-regular.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="{{ '/css/theme.css' | relative_url }}">
-  <link rel="stylesheet" href="{{ '/css/base.css' | relative_url }}">
-  <link rel="stylesheet" href="{{ '/css/layout.css' | relative_url }}">
-  <link rel="stylesheet" href="{{ '/css/components.css' | relative_url }}">
-  <link rel="stylesheet" href="{{ '/css/utilities.css' | relative_url }}">
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
 
-  <!-- MathJax for LaTeX math rendering -->
-  <script>
-    MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        processEscapes: true,
-        processEnvironments: true
-      },
-      options: {
-        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-      }
-    };
-  </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ site.url }}{{ site.baseurl }}{{ page.url }}">
 
-  <!-- Mermaid for diagram rendering -->
-  <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-    
-    const initMermaid = () => {
-      mermaid.initialize({ 
-        startOnLoad: true,
-        theme: 'dark',
-        themeVariables: {
-          primaryColor: '#fff',
-          primaryTextColor: '#fff',
-          primaryBorderColor: '#888',
-          lineColor: '#444',
-          secondaryColor: '#111',
-          tertiaryColor: '#222',
-          background: '#000',
-          mainBkg: '#111',
-          secondBkg: '#161616',
-          textColor: '#fff',
-          secondaryTextColor: '#888',
-          tertiaryTextColor: '#444',
-          noteBkgColor: '#161616',
-          noteTextColor: '#fff',
-          noteBorderColor: '#444',
-          actorBorder: '#444',
-          actorBkg: '#111',
-          actorTextColor: '#fff',
-          actorLineColor: '#888',
-          signalColor: '#fff',
-          signalTextColor: '#fff',
-          labelBoxBkgColor: '#111',
-          labelBoxBorderColor: '#444',
-          labelTextColor: '#fff',
-          loopTextColor: '#fff',
-          activationBorderColor: '#444',
-          activationBkgColor: '#222',
-          sequenceNumberColor: '#000'
-        },
-        securityLevel: 'loose',
-        flowchart: {
-          useMaxWidth: true,
-          htmlLabels: true,
-          curve: 'basis'
-        }
-      });
-      window.mermaid = mermaid;
-    };
+<!-- Sitemap -->
+<link rel="sitemap" type="application/xml" href="{{ '/sitemap.xml' | relative_url }}">
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initMermaid);
-    } else {
-      initMermaid();
+<link rel="icon" type="image/png" href="{{ '/assets/icons/ultrathink-mobius.png' | relative_url }}">
+<link rel="apple-touch-icon" href="{{ '/assets/icons/ultrathink-mobius.png' | relative_url }}">
+<link rel="preload" href="{{ '/assets/fonts/space-grotesk-v22-latin-regular.woff2' | relative_url }}" as="font"
+  type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{ '/css/theme.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/css/base.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/css/layout.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/css/components.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/css/utilities.css' | relative_url }}">
+<link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
+
+<!-- MathJax for LaTeX math rendering -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
     }
-  </script>
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+<!-- Mermaid for diagram rendering -->
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+  const getMermaidConfig = (isDark) => ({
+    startOnLoad: true,
+    theme: isDark ? 'dark' : 'default',
+    themeVariables: isDark ? {
+      primaryColor: '#fff',
+      primaryTextColor: '#fff',
+      primaryBorderColor: '#888',
+      lineColor: '#444',
+      secondaryColor: '#111',
+      tertiaryColor: '#222',
+      background: '#000',
+      mainBkg: '#111',
+      secondBkg: '#161616',
+      textColor: '#fff',
+      secondaryTextColor: '#888',
+      tertiaryTextColor: '#444',
+      noteBkgColor: '#161616',
+      noteTextColor: '#fff',
+      noteBorderColor: '#444',
+      actorBorder: '#444',
+      actorBkg: '#111',
+      actorTextColor: '#fff',
+      actorLineColor: '#888',
+      signalColor: '#fff',
+      signalTextColor: '#fff',
+      labelBoxBkgColor: '#111',
+      labelBoxBorderColor: '#444',
+      labelTextColor: '#fff',
+      loopTextColor: '#fff',
+      activationBorderColor: '#444',
+      activationBkgColor: '#222',
+      sequenceNumberColor: '#000'
+    } : {
+      primaryColor: '#333',
+      primaryTextColor: '#333',
+      primaryBorderColor: '#666',
+      lineColor: '#999',
+      secondaryColor: '#f4f4f4',
+      tertiaryColor: '#e0e0e0',
+      background: '#fff',
+      mainBkg: '#f4f4f4',
+      secondBkg: '#e8e8e8',
+      textColor: '#333',
+      secondaryTextColor: '#666',
+      tertiaryTextColor: '#888',
+      noteBkgColor: '#f4f4f4',
+      noteTextColor: '#333',
+      noteBorderColor: '#999'
+    },
+    securityLevel: 'loose',
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis'
+    }
+  });
+
+  const initMermaid = () => {
+    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+    mermaid.initialize(getMermaidConfig(isDark));
+    window.mermaid = mermaid;
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMermaid);
+  } else {
+    initMermaid();
+  }
+</script>
