@@ -832,31 +832,3 @@ footer {
     gap: var(--space-sm) !important;
   }
 }
-
-/* Dark Theme Border Overrides */
-[data-theme="dark"] .post-card {
-  border-color: rgb(255 255 255 / 15%);
-  box-shadow: 0 10px 20px rgb(0 0 0 / 30%);
-}
-
-[data-theme="dark"] .panel {
-  background: rgb(255 255 255 / 4%);
-  border-color: rgb(255 255 255 / 12%);
-}
-
-[data-theme="dark"] footer {
-  border-top-color: rgb(255 255 255 / 15%);
-}
-
-[data-theme="dark"] .post-footer {
-  border-top-color: rgb(255 255 255 / 15%);
-}
-
-[data-theme="dark"] h2 {
-  border-bottom-color: rgb(255 255 255 / 80%);
-}
-
-[data-theme="dark"] .section[data-section-tone='sunken'],
-[data-theme="dark"] .section[data-section-tone='raised'] {
-  background: rgb(255 255 255 / 3%);
-}
