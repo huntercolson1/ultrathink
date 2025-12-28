@@ -132,7 +132,7 @@
 
 .post-card {
   background: var(--bg-color);
-  border: 1px solid rgb(0 0 0 / 12%);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
   backdrop-filter: blur(6px);
@@ -620,7 +620,7 @@
 }
 
 .post-footer {
-  border-top: 1px solid rgb(255 255 255 / 8%);
+  border-top: 1px solid var(--border-color);
   padding-top: var(--space-lg);
 }
 
@@ -726,7 +726,7 @@ main {
 
 footer {
   padding-block: var(--space-lg);
-  border-top: 1px solid rgb(0 0 0 / 10%);
+  border-top: 1px solid var(--border-color);
 }
 
 @media (width <=1024px) {

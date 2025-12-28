@@ -8,7 +8,7 @@ permalink: /pages/blog/
 <section class="section" style="padding-top: var(--space-xl);">
   <div class="container stack" style="gap: var(--space-lg); max-width: 800px; margin: 0 auto;">
     <header class="stack"
-      style="gap: var(--space-md); border-bottom: 2px solid var(--black); padding-bottom: var(--space-lg);">
+      style="gap: var(--space-md); border-bottom: 2px solid var(--border-color); padding-bottom: var(--space-lg);">
       <p class="u-text-mono" style="font-size: 0.9rem; opacity: 0.6;">// BLOG</p>
       <h1 class="u-text-display"
         style="font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1.1; text-transform: uppercase;">Essays & Notes</h1>
@@ -22,7 +22,7 @@ permalink: /pages/blog/
 {% if latest_post %}
 <section class="section" data-section-tone="base">
   <div class="container stack" style="max-width: 800px; margin: 0 auto;">
-    <article class="stack" style="gap: var(--space-md); padding: var(--space-lg); border: 1px solid var(--black);">
+    <article class="stack" style="gap: var(--space-md); padding: var(--space-lg); border: 1px solid var(--border-color);">
       <div class="cluster" style="justify-content: space-between; align-items: baseline;">
         <span class="u-text-mono"
           style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em;">Latest</span>
@@ -33,7 +33,7 @@ permalink: /pages/blog/
       <p class="u-text-mono" style="opacity: 0.7;">{{ latest_post.subtitle | default: latest_post.description }}</p>
       {% endif %}
       <a href="{{ latest_post.url | relative_url }}"
-        style="display: inline-block; padding: 0.75rem 1.5rem; border: 1px solid var(--black); text-decoration: none; font-family: var(--font-mono); font-size: 0.9rem;">Read
+        style="display: inline-block; padding: 0.75rem 1.5rem; border: 1px solid var(--border-color); text-decoration: none; font-family: var(--font-mono); font-size: 0.9rem;">Read
         Post →</a>
     </article>
   </div>
@@ -43,7 +43,7 @@ permalink: /pages/blog/
 <section class="section" data-section-tone="base">
   <div class="container stack" style="gap: var(--space-lg); max-width: 800px; margin: 0 auto;">
     <div class="u-text-mono"
-      style="font-size: 0.85rem; opacity: 0.6; border-bottom: 1px solid rgb(0 0 0 / 10%); padding-bottom: var(--space-sm);">
+      style="font-size: 0.85rem; opacity: 0.6; border-bottom: 1px solid var(--border-color); padding-bottom: var(--space-sm);">
       > ALL_POSTS</div>
 
     <div class="blog-feed stack" id="blog-feed" style="gap: var(--space-lg);">
@@ -52,7 +52,7 @@ permalink: /pages/blog/
       {% else %}
       {% for post in site.posts %}
       <article class="stack"
-        style="gap: var(--space-sm); padding-bottom: var(--space-lg); border-bottom: 1px solid rgb(0 0 0 / 10%);">
+        style="gap: var(--space-sm); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--border-color);">
         <div class="cluster" style="justify-content: space-between; align-items: baseline;">
           <span class="u-text-mono" style="font-size: 0.85rem;">{{ post.date | date: "%Y-%m-%d" }}</span>
           {% if post.tags %}

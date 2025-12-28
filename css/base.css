@@ -148,8 +148,8 @@ li {
 .mermaid {
   margin: var(--space-lg) 0;
   text-align: center;
-  background: rgb(0 0 0 / 40%);
-  border: 1px solid rgb(255 255 255 / 10%);
+  background: var(--code-bg);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
   overflow-x: auto;
@@ -165,7 +165,7 @@ code {
   font-family: var(--font-mono, Monaco, Menlo, monospace);
   font-size: 0.9em;
   padding: 0.2em 0.4em;
-  background: rgb(0 0 0 / 5%);
+  background: var(--code-bg);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
 }
@@ -173,8 +173,8 @@ code {
 pre {
   margin: 0.75em 0;
   padding: var(--space-lg);
-  background: var(--grey-light, #f4f4f4);
-  border: 1px solid var(--border-color, #000);
+  background: var(--code-bg);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   overflow-x: auto;
   line-height: 1.6;
@@ -196,8 +196,8 @@ pre code {
 .highlight pre {
   margin: 0;
   padding: var(--space-lg);
-  background: var(--grey-light, #f4f4f4);
-  border: 1px solid var(--border-color, #000);
+  background: var(--code-bg);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
 }
 
@@ -210,7 +210,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin: var(--space-lg) 0;
-  border: 1px solid rgb(255 255 255 / 20%);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   overflow: hidden;
 }
@@ -224,12 +224,12 @@ th {
   text-align: left;
   font-weight: 600;
   color: var(--text-primary);
-  border-bottom: 2px solid rgb(255 255 255 / 20%);
+  border-bottom: 2px solid var(--border-color);
 }
 
 td {
   padding: var(--space-md);
-  border-bottom: 1px solid rgb(255 255 255 / 10%);
+  border-bottom: 1px solid color-mix(in srgb, var(--border-color) 30%, transparent);
   color: var(--text-secondary);
 }
 
@@ -246,7 +246,7 @@ blockquote {
   margin: 0.75em 0;
   padding: 0;
   padding-left: 1.5em;
-  border-left: 3px solid rgb(255 255 255 / 20%);
+  border-left: 3px solid var(--border-color);
   background: transparent;
   border-radius: 0;
   color: var(--text-secondary);
@@ -275,7 +275,7 @@ blockquote> :last-child {
 /* Horizontal rules (section dividers) */
 hr {
   border: none;
-  border-top: 1px solid rgb(255 255 255 / 10%);
+  border-top: 1px solid var(--border-color);
   margin: 2em 0;
   width: 100%;
 }
