@@ -72,6 +72,10 @@
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-med: 200ms ease;
+
+  /* Z-index layers */
+  --z-nav: 100;
+  --z-overlay: 200;
 }
 
 /* Light theme (default) */
