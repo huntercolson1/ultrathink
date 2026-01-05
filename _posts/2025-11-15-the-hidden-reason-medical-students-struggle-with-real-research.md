@@ -13,13 +13,11 @@ tags:
 
 ## The Research Arms Race Is Changing, Not Ending
 
-Research has become one of the main ways to strengthen a residency application, especially now that Step 1 and many preclinical curriculums are pass/fail. Students know this, so they chase “research productivity” to stand out.
+Research has become one of the main ways to strengthen a residency application, especially now that Step 1 and many preclinical curriculums are pass/fail. Students know this, so they chase "research productivity" to stand out.
 
 You can see how that plays out on ERAS: long lists of case reports, low-effort projects, and the same poster copy-pasted across multiple conferences.
 
 The problem is that the rules are changing. The research arms race is shifting away from raw volume and toward real, defensible work. Program directors are not impressed by noise, and ERAS is starting to close the loopholes that made that noise so easy to generate.
-
----
 
 ## How ERAS Is Changing the Game
 
@@ -32,8 +30,6 @@ Starting in the 2027 cycle, [ERAS](https://vimeo.com/1129670590?share=copy&fl=sv
 **One product gets one line.** A single poster presented at four conferences is not four achievements. It is one product with multiple venues. ERAS now enforces this through a "Scholarly Collections" structure.
 
 Together, these changes push the culture away from superficial productivity and toward work that is peer-reviewed, reproducible, and intellectually honest. The arms race is not ending. It is shifting.
-
----
 
 ## Why So Many Students Feel Stuck
 
@@ -53,8 +49,6 @@ Inferential work asks, "What can I conclude and how confident am I?"
 
 Once you see the difference, the bottleneck becomes obvious.
 
----
-
 ## The Real Skill Is Reasoning, Not Writing
 
 Case reports mostly ask you to recount what happened. But inferential research asks you to define outcomes, decide which variables matter, choose a model that actually matches the question, check assumptions, and iterate when the model does not behave.
@@ -62,8 +56,6 @@ Case reports mostly ask you to recount what happened. But inferential research a
 The skill required to do independent research is reasoning. Medical education trains recall, not reasoning, which explains why this transition feels difficult.
 
 This is also where the tools matter. If your tools hide assumptions, make it hard to rerun analyses, or force you into trial-and-error menus, you will feel stuck even if you are capable of learning the underlying concepts.
-
----
 
 ## Why Excel Holds Students Back
 
@@ -75,8 +67,6 @@ A sort breaks your dataset. A filter hides half your rows. Someone forgets which
 
 Excel is great for small personal tasks, but it collapses once you need a reproducible and transparent workflow.
 
----
-
 ## SPSS and R: Powerful, But Not Friendly
 
 Students often move to SPSS next. It can run real analyses, but everything happens through menus. Unless you build a syntax file on your own, there is no clear log of your decisions, which makes it hard to collaborate or revisit your work later.
@@ -84,8 +74,6 @@ Students often move to SPSS next. It can run real analyses, but everything happe
 R sits at the other extreme. It is powerful and integrates beautifully with Quarto, but the language itself has a steeper learning curve for beginners. Without formal training or someone to guide you through RStudio and the surrounding ecosystem, it often feels like a wall of unfamiliar syntax. Most medical students never get that early support, so R ends up feeling more frustrating than enabling.
 
 The result is predictable: SPSS feels opaque, and R feels intimidating. Neither is a natural entry point for a busy medical student.
-
----
 
 ## A Better Starting Point: Python Scripts, Quarto, and an AI Copilot
 
@@ -99,8 +87,6 @@ You write your analysis in modular Python scripts. Those scripts generate the ta
 
 It is simple, transparent, and scalable.
 
----
-
 ## Why This Structure Works
 
 Python scripts encourage the habits large projects require: modular code, explicit steps, and named functions that you can run, test, and reuse. Instead of stacking work inside an ad hoc interactive session, you build a toolkit you can extend over time.
@@ -108,8 +94,6 @@ Python scripts encourage the habits large projects require: modular code, explic
 Quarto becomes the reasoning and communication layer. You write your interpretation the same way you would in a normal document, but you can embed figures, tables, and results directly from your scripts. It eliminates the screenshot problem, the lost-file problem, and the "I forget what I clicked" problem all at once.
 
 If your dataset updates, you rerun your scripts. Quarto refreshes the document. Everything stays consistent.
-
----
 
 ## Where AI Actually Helps
 
@@ -123,8 +107,6 @@ An AI copilot drafts the skeleton. You run it, inspect the output, ask questions
 
 The AI is not doing the reasoning for you. It is removing the friction so you can focus on the reasoning.
 
----
-
 ## A Concrete Example
 
 Imagine a dataset of 500 heart failure patients.
@@ -134,8 +116,6 @@ In SPSS, you would click through menus and hope you clicked the same boxes as la
 In a Python script, you load the file, clean it, run the model, and generate a plot. Every step is explicit, transparent, and reproducible.
 
 Your AI copilot helps you write the code. Your scripts keep the logic organized. Quarto pulls everything into one narrative. The result is a pipeline you can extend, rerun, or hand off without losing clarity.
-
----
 
 ## Where This Is Going on Ultrathink
 
