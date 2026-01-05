@@ -26,6 +26,14 @@
   background: var(--grey-light);
 }
 
+[data-theme="dark"] .section[data-section-tone='raised'] {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+[data-theme="dark"] .section[data-section-tone='sunken'] {
+  background: rgba(0, 0, 0, 0.3);
+}
+
 .pin-nav {
   position: sticky;
   top: 0;
@@ -711,9 +719,23 @@
 
 .panel {
   background: var(--grey-light);
-  border: 1px solid rgb(0 0 0 / 8%);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
+}
+
+/* Dark mode panel styling */
+[data-theme="dark"] .panel {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .panel h3 {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] [data-section-tone="raised"] {
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .panel--dense {

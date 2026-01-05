@@ -216,7 +216,7 @@ table {
 }
 
 thead {
-  background: rgb(255 255 255 / 5%);
+  background: rgba(128, 128, 128, 0.1);
 }
 
 th {
@@ -238,7 +238,7 @@ tbody tr:last-child td {
 }
 
 tbody tr:hover {
-  background: rgb(255 255 255 / 3%);
+  background: rgba(128, 128, 128, 0.05);
 }
 
 /* Blockquotes - Notion style */

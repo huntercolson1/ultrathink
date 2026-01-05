@@ -25,14 +25,11 @@ The problem is that the rules are changing. The research arms race is shifting a
 
 Starting in the 2027 cycle, [ERAS](https://vimeo.com/1129670590?share=copy&fl=sv&fe=ci) is rolling out several changes that directly target research padding.
 
-**Peer review now defines what counts as scholarship.**  
-If a piece of work has not gone through formal peer review, it does not belong in the Scholarly Work section. Letters to the editor, blog posts, informal talks, even high-effort opinion pieces all move under Experiences instead of functioning as research placeholders.
+**Peer review now defines what counts as scholarship.** If a piece of work has not gone through formal peer review, it does not belong in the Scholarly Work section. Letters to the editor, blog posts, informal talks, even high-effort opinion pieces all move under Experiences instead of functioning as research placeholders.
 
-**Applicants must choose three meaningful scholarly works.**  
-Programs will judge applicants based on what they present as their top work. If your flagship items are low-impact case reports or recycled posters, that signals something about your research development.
+**Applicants must choose three meaningful scholarly works.** Programs will judge applicants based on what they present as their top work. If your flagship items are low-impact case reports or recycled posters, that signals something about your research development.
 
-**One product gets one line.**  
-A single poster presented at four conferences is not four achievements. It is one product with multiple venues. ERAS now enforces this through a "Scholarly Collections" structure.
+**One product gets one line.** A single poster presented at four conferences is not four achievements. It is one product with multiple venues. ERAS now enforces this through a "Scholarly Collections" structure.
 
 Together, these changes push the culture away from superficial productivity and toward work that is peer-reviewed, reproducible, and intellectually honest. The arms race is not ending. It is shifting.
 
