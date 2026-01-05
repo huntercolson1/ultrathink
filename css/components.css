@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: space-between;
   padding-block: var(--space-md);
-  padding-inline: clamp(var(--space-lg), 4vw, var(--space-xl));
+  padding-inline: clamp(var(--space-md), 3vw, var(--space-lg));
   border-bottom: 1px solid rgb(0 0 0 / 10%);
   transition: padding var(--transition-fast),
     background var(--transition-fast), border-color var(--transition-fast);
