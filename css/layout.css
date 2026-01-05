@@ -27,7 +27,7 @@
 }
 
 [data-theme="dark"] .section[data-section-tone='raised'] {
-  background: rgba(255, 255, 255, 0.02);
+  background: #141414;
 }
 
 [data-theme="dark"] .section[data-section-tone='sunken'] {
@@ -726,8 +726,8 @@
 
 /* Dark mode panel styling */
 [data-theme="dark"] .panel {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
+  background: #1a1a1a;
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 [data-theme="dark"] .panel h3,
