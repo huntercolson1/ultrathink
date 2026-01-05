@@ -4,6 +4,13 @@
   min-height: 100svh; /* Prefer small viewport to avoid bottom overscroll on mobile */
   display: flex;
   flex-direction: column;
+  padding-top: 80px; /* Offset for fixed header */
+}
+
+@media (width <= 600px) {
+  .main-shell {
+    padding-top: 64px; /* Smaller header on mobile */
+  }
 }
 
 main {
@@ -41,10 +48,11 @@ main {
 }
 
 .pin-nav {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: var(--z-nav);
-  backdrop-filter: blur(12px);
   background-color: var(--bg-color);
   width: 100%;
 }
