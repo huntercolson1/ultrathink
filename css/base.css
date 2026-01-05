@@ -65,9 +65,10 @@ html {
 }
 
 body {
-  /* Use dynamic viewport units to avoid extra scroll space on mobile */
+  /* Prefer small viewport height to avoid extra scroll space on mobile */
   min-height: 100vh;
   min-height: 100dvh;
+  min-height: 100svh;
   overflow-y: auto;
   overflow-x: hidden;
   background-color: var(--bg-color);

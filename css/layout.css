@@ -1,6 +1,7 @@
 .main-shell {
   min-height: 100vh;
   min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
+  min-height: 100svh; /* Prefer small viewport to avoid bottom overscroll on mobile */
   display: flex;
   flex-direction: column;
 }
