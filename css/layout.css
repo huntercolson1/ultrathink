@@ -730,8 +730,9 @@
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-[data-theme="dark"] .panel h3 {
-  color: var(--text-primary);
+[data-theme="dark"] .panel h3,
+[data-theme="dark"] .section[data-section-tone="raised"] h3 {
+  color: #f0f0f0 !important;
 }
 
 [data-theme="dark"] [data-section-tone="raised"] {
