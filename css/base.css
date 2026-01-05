@@ -61,16 +61,19 @@ button {
 html {
   font-size: 100%;
   scroll-behavior: smooth;
+  height: 100%;
+  overscroll-behavior: none;
 }
 
 body {
-  min-height: 100vh;
+  min-height: 100%;
   background-color: var(--bg-color);
   color: var(--text-primary);
   font-family: var(--font-body, var(--font-sans));
   line-height: 1.7;
   font-size: 1rem;
   -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
 }
 
 p {
