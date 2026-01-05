@@ -61,12 +61,14 @@ button {
 html {
   font-size: 100%;
   scroll-behavior: smooth;
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%;
+  overflow-x: hidden;
 }
 
 body {
-  height: 100%;
+  /* Use dynamic viewport units to avoid extra scroll space on mobile */
+  min-height: 100vh;
+  min-height: 100dvh;
   overflow-y: auto;
   overflow-x: hidden;
   background-color: var(--bg-color);
