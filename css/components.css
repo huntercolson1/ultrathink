@@ -1,11 +1,10 @@
 /* Header & Navigation */
-.c-header,
-.pin-nav .c-header {
+.c-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-block: var(--space-md);
-  padding-inline: clamp(var(--space-sm), 2vw, var(--space-md));
+  padding-inline: clamp(var(--space-lg), 4vw, var(--space-xl));
   border-bottom: 1px solid rgb(0 0 0 / 10%);
   transition: padding var(--transition-fast),
     background var(--transition-fast), border-color var(--transition-fast);
@@ -1251,7 +1250,6 @@
 [data-theme="dark"] .c-social-link:focus-visible {
   color: var(--text-primary);
 }
-
 [data-theme="dark"] .c-header__logo {
-  filter: brightness(1.1) contrast(1.05);
+  filter: grayscale(1) contrast(1.5) brightness(1.05);
 }
