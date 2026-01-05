@@ -1,5 +1,6 @@
 /* Header & Navigation */
-.c-header {
+.c-header,
+.pin-nav .c-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
