@@ -1253,3 +1253,133 @@
 [data-theme="dark"] .c-header__logo {
   filter: grayscale(1) contrast(1.5) brightness(1.05);
 }
+
+/* Blog tag panel */
+.blog-tags {
+  border: 1px solid var(--border-color);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  background: color-mix(in srgb, var(--bg-color) 92%, var(--text-primary) 8%);
+}
+
+.blog-tags__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-md);
+}
+
+.blog-tags__title {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.75rem;
+  opacity: 0.75;
+  margin: 0;
+}
+
+.blog-tags__summary {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin: 0;
+}
+
+.blog-tags__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.blog-tags__label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.7;
+}
+
+.blog-tags__sort {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.blog-tags__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  border: 1px solid var(--border-color);
+  background: transparent;
+  padding: 0.35rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: background var(--transition-fast), color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.tag-pill__count {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.tag-pill.is-active {
+  background: var(--text-primary);
+  color: var(--bg-color);
+}
+
+.tag-pill.is-active .tag-pill__count {
+  opacity: 0.9;
+}
+
+.tag-pill:hover,
+.tag-pill:focus-visible {
+  background: var(--text-primary);
+  color: var(--bg-color);
+}
+
+.tag-pill:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+.tag-pill--ghost {
+  background: transparent;
+  opacity: 0.7;
+}
+
+.tag-pill--ghost:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.blog-tag-link {
+  text-decoration: none;
+}
+
+.blog-tag-link:hover,
+.blog-tag-link:focus-visible {
+  text-decoration: underline;
+  text-decoration-color: var(--text-primary);
+}
+
+@media (width <= 720px) {
+  .blog-tags__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
