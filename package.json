@@ -9,7 +9,8 @@
     "lint:css": "stylelint \"css/**/*.css\"",
     "lint:js": "eslint \"js/**/*.js\"",
     "lint:html": "htmlhint \"*.html\" \"pages/**/*.html\"",
-    "test": "npm run lint:css && npm run lint:js && npm run lint:html",
+    "test:tags": "node tests/tag-utils.test.js && node tests/tag-index.test.js",
+    "test": "npm run lint:css && npm run lint:js && npm run lint:html && npm run test:tags",
     "deploy": "npm run build:css && npm run test"
   },
   "repository": {

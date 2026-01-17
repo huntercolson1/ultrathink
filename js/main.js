@@ -1,5 +1,6 @@
 import { initComponents } from './components.js';
 import { initMathAnimation } from './math-animation.js';
+import { initBlogTags } from './blog-tags.js';
 import { initBlogSort, initPostEnhancements, initThemeToggle } from './ui.js';
 
 // Initialize theme before render to prevent flash
@@ -22,6 +23,7 @@ initTheme();
 const boot = async () => {
   try {
     await initComponents();
+    initBlogTags();
     initBlogSort();
     initPostEnhancements();
     initMathAnimation();
