@@ -1,12 +1,12 @@
 title: ULTRATHINK — Projects, Experiments, and Ideas by Hunter Colson
 description: Medical student, engineer, and AI enthusiast. Projects, experiments, and ideas in AI, medicine, and technology.
-# For GitHub Pages subdomain:
-url: "https://huntercolson1.github.io"
-baseurl: "/ultrathink"
+# Custom domain configuration
+url: "https://huntercolson.dev"
+baseurl: ""
 
-# For custom domain (if you buy ultrathink.studio later), use:
-# url: "https://ultrathink.studio"
-# baseurl: ""
+# Note: Site also works on GitHub Pages at:
+# https://huntercolson1.github.io/ultrathink
+# (GitHub Pages will automatically redirect custom domain to root)
 
 permalink: /blog/:slug/
 

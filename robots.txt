@@ -1,5 +1,8 @@
+---
+layout: null
+---
 User-agent: *
 Allow: /
 
-Sitemap: https://huntercolson1.github.io/ultrathink/sitemap.xml
+Sitemap: {{ site.url }}{{ site.baseurl }}/sitemap.xml
 

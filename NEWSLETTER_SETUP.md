@@ -15,7 +15,7 @@ This site includes an email newsletter signup form that sends notifications when
 
 4. **Set up RSS-to-Email**:
    - In Buttondown dashboard, go to Settings → RSS
-   - Add your RSS feed URL: `https://huntercolson1.github.io/ultrathink/feed.xml`
+   - Add your RSS feed URL: `https://huntercolson.dev/feed.xml` (or `https://huntercolson1.github.io/ultrathink/feed.xml` for GitHub Pages)
    - Configure email frequency (immediate, daily digest, weekly digest)
    - Buttondown will automatically check your RSS feed and send emails when new posts are published
 
