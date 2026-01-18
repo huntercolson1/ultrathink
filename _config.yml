@@ -22,8 +22,7 @@ defaults:
     values:
       layout: post
   - scope:
-      path: ""
-      type: "pages"
+      path: "pages"
     values:
       layout: default
 
