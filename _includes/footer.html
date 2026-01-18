@@ -1,13 +1,12 @@
 <footer class="container c-footer" role="contentinfo">
   <div>
-    <p class="c-header__brand">ULTRATHINK</p>
+    <p class="c-header__brand">ULTRATHINK · by Hunter Colson</p>
     <p class="u-text-muted">Projects, experiments, and ideas in AI, medicine, and whatever else I'm curious about.</p>
   </div>
   <div class="c-footer__links" aria-label="Utility links">
     {% for item in site.data.nav %}
-      {% assign item_url = item.url | relative_url %}
-      <a href="{{ item_url }}">{{ item.title }}</a>
+    {% assign item_url = item.url | relative_url %}
+    <a href="{{ item_url }}">{{ item.title }}</a>
     {% endfor %}
   </div>
 </footer>
-
