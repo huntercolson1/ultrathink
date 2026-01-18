@@ -55,7 +55,7 @@ layout: default
           {% if page.tags %}
           {% for tag in page.tags %}
           {% assign tag_clean = tag | downcase | strip %}
-          <a href="{{ '/pages/blog/' | relative_url }}?tag={{ tag_clean | uri_escape }}" class="u-text-contrast">#{{
+          <a href="{{ '/blog/' | relative_url }}?tag={{ tag_clean | uri_escape }}" class="u-text-contrast">#{{
             tag_clean }}</a>{% unless
           forloop.last %}, {% endunless %}
           {% endfor %}
@@ -63,7 +63,7 @@ layout: default
           <span>Notes</span>
           {% endif %}
         </span>
-        <a class="c-btn c-btn--ghost" href="{{ '/pages/blog/' | relative_url }}">← Back to blog</a>
+        <a class="c-btn c-btn--ghost" href="{{ '/blog/' | relative_url }}">← Back to blog</a>
       </div>
     </div>
   </article>

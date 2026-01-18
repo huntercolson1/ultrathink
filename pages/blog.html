@@ -2,7 +2,7 @@
 layout: default
 title: Blog — Ultrathink
 description: Ultrathink blog — essays and notes.
-permalink: /pages/blog/
+permalink: /blog/
 ---
 
 <section class="section" style="padding-top: var(--space-xl);">
@@ -87,7 +87,7 @@ permalink: /pages/blog/
             {% for tag in post.tags %}
             {% assign tag_clean = tag | downcase | strip %}
             <a class="u-text-mono blog-tag-link" style="font-size: 0.75rem; opacity: 0.6;"
-              href="{{ '/pages/blog/' | relative_url }}?tag={{ tag_clean | uri_escape }}">#{{ tag_clean }}</a>
+              href="{{ '/blog/' | relative_url }}?tag={{ tag_clean | uri_escape }}">#{{ tag_clean }}</a>
             {% endfor %}
           </div>
           {% endif %}
