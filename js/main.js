@@ -20,12 +20,48 @@ const initTheme = () => {
 // Run theme init immediately to prevent flash
 initTheme();
 
+const initExternalLinksInMain = () => {
+  const main = document.querySelector('main');
+  if (!main) return;
+
+  const links = main.querySelectorAll('a[href]');
+  links.forEach((link) => {
+    const href = link.getAttribute('href');
+    if (!href || href.startsWith('#')) return;
+
+    let parsed;
+    try {
+      parsed = new window.URL(href, window.location.href);
+    } catch {
+      return;
+    }
+
+    if (!['http:', 'https:'].includes(parsed.protocol)) return;
+    if (parsed.origin === window.location.origin) return;
+
+    if (link.getAttribute('target') !== '_blank') {
+      link.setAttribute('target', '_blank');
+    }
+
+    const relValues = new Set(
+      (link.getAttribute('rel') || '')
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((value) => value.toLowerCase())
+    );
+    relValues.add('noopener');
+    relValues.add('noreferrer');
+    link.setAttribute('rel', Array.from(relValues).join(' '));
+  });
+};
+
 const boot = async () => {
   try {
     await initComponents();
     initBlogTags();
     initBlogSort();
     initPostEnhancements();
+    initExternalLinksInMain();
     initMathAnimation();
 
     // Initialize theme toggle button

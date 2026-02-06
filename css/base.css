@@ -25,28 +25,33 @@ object {
   max-width: 100%;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 a {
-  color: var(--text-primary);
+  color: var(--link-color, var(--text-primary));
   text-decoration: underline;
-  text-decoration-color: transparent;
+  text-decoration-color: var(--link-underline, currentcolor);
   text-underline-offset: 0.2em;
-  transition: text-decoration-color var(--transition-fast);
+  transition: color var(--transition-fast), text-decoration-color var(--transition-fast);
 }
 
 a:hover,
 a:focus-visible {
-  color: var(--text-primary);
-  text-decoration-color: var(--text-primary);
+  color: var(--link-color, var(--text-primary));
+  text-decoration-color: currentcolor;
 }
 
 a:visited {
-  color: var(--text-secondary);
+  color: var(--link-color, var(--text-primary));
+  text-decoration-color: var(--link-underline, currentcolor);
 }
 
 a:visited:hover,
 a:visited:focus-visible {
-  color: var(--text-primary);
-  text-decoration-color: var(--text-primary);
+  color: var(--link-color, var(--text-primary));
+  text-decoration-color: currentcolor;
 }
 
 button {

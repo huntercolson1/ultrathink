@@ -10,7 +10,7 @@
       <ul class="c-nav__list u-text-mono" style="font-size: 0.9rem; gap: 1rem;">
         {% for item in site.data.nav %}
         <li>
-          <a href="{{ item.url | relative_url }}" style="text-transform: lowercase;">{{ item.title }}</a>
+          <a class="c-nav__link" href="{{ item.url | relative_url }}" style="text-transform: lowercase;">{{ item.title }}</a>
         </li>
         {% unless forloop.last %}
         <li aria-hidden="true" style="opacity: 0.3;">/</li>
