@@ -61,7 +61,8 @@ button {
 html {
   font-size: 100%;
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow: auto hidden;
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -69,15 +70,12 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   min-height: 100svh;
-  overflow-y: auto;
-  overflow-x: hidden;
   background-color: var(--bg-color);
   color: var(--text-primary);
   font-family: var(--font-body, var(--font-sans));
   line-height: 1.7;
   font-size: 1rem;
   -webkit-font-smoothing: antialiased;
-  overscroll-behavior-y: none;
   -webkit-overflow-scrolling: touch;
 }
 

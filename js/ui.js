@@ -969,14 +969,14 @@ export const initPostEnhancements = () => {
     if (tocDesktopDrawer) {
       tocDesktopDrawer.removeAttribute('hidden');
       tocDesktopDrawer.setAttribute('data-toc-desktop-open', '');
-      document.body.style.overflow = 'hidden';
+      lockScroll(true);
     }
   };
 
   const closeDesktopDrawer = () => {
     if (tocDesktopDrawer) {
       tocDesktopDrawer.removeAttribute('data-toc-desktop-open');
-      document.body.style.overflow = '';
+      lockScroll(false);
       // Wait for animation to complete before hiding
       setTimeout(() => {
         if (!tocDesktopDrawer.hasAttribute('data-toc-desktop-open')) {
@@ -1016,14 +1016,14 @@ export const initPostEnhancements = () => {
     if (tocMobileDrawer) {
       tocMobileDrawer.removeAttribute('hidden');
       tocMobileDrawer.setAttribute('data-toc-mobile-open', '');
-      document.body.style.overflow = 'hidden';
+      lockScroll(true);
     }
   };
 
   const closeMobileDrawer = () => {
     if (tocMobileDrawer) {
       tocMobileDrawer.removeAttribute('data-toc-mobile-open');
-      document.body.style.overflow = '';
+      lockScroll(false);
       // Wait for animation to complete before hiding
       setTimeout(() => {
         if (!tocMobileDrawer.hasAttribute('data-toc-mobile-open')) {

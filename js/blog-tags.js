@@ -1,4 +1,4 @@
-import { buildTagIndex, normalizeTag } from './utils/tag-utils.js';
+import { buildTagIndex, normalizeTag, normalizeTags } from './utils/tag-utils.js';
 
 const TAG_PARAM = 'tag';
 
@@ -14,12 +14,12 @@ const getPostsData = () => {
 };
 
 const getSelectedTag = () => {
-  const params = new URLSearchParams(window.location.search);
+  const params = new window.URLSearchParams(window.location.search);
   return normalizeTag(params.get(TAG_PARAM));
 };
 
 const updateUrl = (tag) => {
-  const url = new URL(window.location.href);
+  const url = new window.URL(window.location.href);
   if (tag) {
     url.searchParams.set(TAG_PARAM, tag);
   } else {
@@ -39,6 +39,18 @@ const sortTags = (entries, mode) => {
   });
 };
 
+const normalizePostPath = (urlValue) => {
+  if (!urlValue) return '';
+  try {
+    const parsed = new window.URL(urlValue, window.location.origin);
+    const pathname = parsed.pathname || '';
+    if (!pathname) return '';
+    return pathname.replace(/\/+$/, '') || '/';
+  } catch {
+    return '';
+  }
+};
+
 export const initBlogTags = () => {
   const panel = document.querySelector('[data-tag-panel]');
   if (!panel) return;
@@ -55,16 +67,36 @@ export const initBlogTags = () => {
 
   const postNodes = Array.from(feed.querySelectorAll('[data-blog-post]'));
   const postsData = getPostsData();
-  const tagIndex = buildTagIndex(postsData);
-
-  const tagsFromDom = new Map();
-  postNodes.forEach((node) => {
-    const tags = (node.dataset.tags || '')
-      .split('|')
-      .map((tag) => tag.trim())
-      .filter(Boolean);
-    tagsFromDom.set(node, tags);
+  const postsByPath = new Map();
+  postsData.forEach((post) => {
+    const path = normalizePostPath(post.url || post.slug || '');
+    if (path) {
+      postsByPath.set(path, post);
+    }
   });
+
+  const postItems = postNodes.map((node) => {
+    const href =
+      node.querySelector('a[href]')?.getAttribute('href') ||
+      node.querySelector('a[href]')?.href ||
+      '';
+    const matchedPost = postsByPath.get(normalizePostPath(href));
+    const domTags = normalizeTags((node.dataset.tags || '').split('|'));
+    const tags = domTags.length ? domTags : normalizeTags(matchedPost?.tags || []);
+    const publishedRaw = node.dataset.published || matchedPost?.date || '';
+    const publishedAt = Number(new Date(publishedRaw));
+    const title = node.querySelector('h2, h3, h4')?.textContent?.trim() || '';
+    return {
+      node,
+      tags,
+      title,
+      date: publishedRaw,
+      url: href,
+      publishedAt: Number.isFinite(publishedAt) ? publishedAt : 0
+    };
+  });
+
+  const tagIndex = buildTagIndex(postItems);
 
   let currentSort = 'count';
   let activeTag = getSelectedTag();
@@ -89,17 +121,26 @@ export const initBlogTags = () => {
 
   const applyFilter = (tag) => {
     activeTag = normalizeTag(tag);
-    let visibleCount = 0;
+    const visibleItems = activeTag
+      ? postItems.filter((item) => item.tags.includes(activeTag))
+      : postItems.slice();
 
-    postNodes.forEach((node) => {
-      const tags = tagsFromDom.get(node) || [];
-      const matches = !activeTag || tags.includes(activeTag);
-      node.hidden = !matches;
-      node.setAttribute('aria-hidden', matches ? 'false' : 'true');
-      if (matches) visibleCount += 1;
+    visibleItems.sort((a, b) => b.publishedAt - a.publishedAt);
+    const visibleNodes = new Set(visibleItems.map((item) => item.node));
+
+    postItems.forEach((item) => {
+      const matches = visibleNodes.has(item.node);
+      item.node.hidden = !matches;
+      item.node.setAttribute('aria-hidden', matches ? 'false' : 'true');
     });
 
-    renderSummary(visibleCount, postNodes.length);
+    visibleItems.forEach((item) => {
+      feed.appendChild(item.node);
+    });
+
+    const visibleCount = visibleItems.length;
+
+    renderSummary(visibleCount, postItems.length);
     updateEmptyState(visibleCount);
     updateTagButtons();
     if (clearButton) {
@@ -123,7 +164,7 @@ export const initBlogTags = () => {
     tagList.innerHTML = '';
 
     const entries = sortTags(Object.entries(tagIndex), currentSort);
-    const totalPosts = postNodes.length;
+    const totalPosts = postItems.length;
 
     const allItem = document.createElement('li');
     const allButton = document.createElement('button');
