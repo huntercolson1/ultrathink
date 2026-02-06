@@ -61,7 +61,8 @@ button {
 html {
   font-size: 100%;
   scroll-behavior: smooth;
-  overflow: auto hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   overscroll-behavior-y: none;
 }
 
