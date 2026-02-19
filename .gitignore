@@ -38,3 +38,4 @@ __pycache__/
 # IDE
 *.sublime-project
 *.sublime-workspace
+output/
