@@ -6,8 +6,19 @@ layout: default
 {% assign reading_minutes = word_count | plus: 199 | divided_by: 200 %}
 {% if reading_minutes < 1 %} {% assign reading_minutes=1 %} {% endif %} {% assign post_absolute_url=page.url |
   absolute_url %} {% assign share_url_encoded=post_absolute_url | uri_escape %} {% assign share_title_encoded=page.title
-  | uri_escape %} <section class="section" style="padding-top: var(--space-xl);">
-  <div class="container stack" style="gap: var(--space-lg);">
+  | uri_escape %}
+{% assign is_tutorial_post = false %}
+{% if page.collection == "tutorials" or page.url contains "/tutorials/" %}
+{% assign is_tutorial_post = true %}
+{% endif %}
+{% assign post_index_url = "/blog/" %}
+{% assign post_index_label = "Back to blog" %}
+{% if is_tutorial_post %}
+{% assign post_index_url = "/tutorials/" %}
+{% assign post_index_label = "Back to tutorials" %}
+{% endif %}
+<section class="section post-hero" style="padding-top: var(--space-xl);">
+  <div class="container stack post-hero__container" style="gap: var(--space-lg);">
     <header class="stack"
       style="gap: var(--space-md); border-bottom: 4px solid var(--border-color); padding-bottom: var(--space-lg);">
       <div class="cluster"
@@ -44,18 +55,33 @@ layout: default
         </div>
       </div>
 
+      <button class="post-toc__desktop-btn" type="button" aria-label="Open contents" aria-expanded="false"
+        aria-controls="post-desktop-toc" data-toc-desktop-btn hidden>
+        <span class="post-toc__desktop-btn-text">INDEX</span>
+      </button>
+
       <!-- Main Content Area: Monospace Laboratory Style -->
       <div class="post-grid">
         <div class="post-main post-content u-text-mono" style="font-size: 1.05rem;">
           {{ content }}
         </div>
+        <aside class="post-aside" id="post-desktop-toc" aria-label="Table of contents" data-post-toc-aside hidden>
+          <div class="post-card">
+            <div class="post-toc__desktop-header">
+              <p class="post-card__label">INDEX</p>
+              <button class="post-toc__desktop-close" type="button" aria-label="Collapse index"
+                data-toc-desktop-close>X</button>
+            </div>
+            <ol class="post-toc__list post-toc__list--desktop" data-post-toc-list></ol>
+          </div>
+        </aside>
       </div>
       <div class="post-footer cluster" style="justify-content: space-between;">
         <span class="u-text-muted">Filed under:
           {% if page.tags %}
           {% for tag in page.tags %}
           {% assign tag_clean = tag | downcase | strip %}
-          <a href="{{ '/blog/' | relative_url }}?tag={{ tag_clean | uri_escape }}" class="u-text-contrast">#{{
+          <a href="{{ post_index_url | relative_url }}?tag={{ tag_clean | uri_escape }}" class="u-text-contrast">#{{
             tag_clean }}</a>{% unless
           forloop.last %}, {% endunless %}
           {% endfor %}
@@ -63,7 +89,7 @@ layout: default
           <span>Notes</span>
           {% endif %}
         </span>
-        <a class="c-btn c-btn--ghost" href="{{ '/blog/' | relative_url }}">← Back to blog</a>
+        <a class="c-btn c-btn--ghost" href="{{ post_index_url | relative_url }}">← {{ post_index_label }}</a>
       </div>
     </div>
   </article>
