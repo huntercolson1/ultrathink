@@ -828,13 +828,13 @@ export const initSearch = async (form) => {
 };
 
 export const initPostEnhancements = () => {
+  const postShell = document.querySelector('.post-shell');
   const post = document.querySelector('.post-content');
+  const tocAside = document.querySelector('[data-post-toc-aside]');
+  const tocDesktopBtn = document.querySelector('[data-toc-desktop-btn]');
+  const tocDesktopClose = document.querySelector('[data-toc-desktop-close]');
   const tocList = document.querySelector('[data-post-toc-list]');
   const tocMobileList = document.querySelector('[data-post-toc-list-mobile]');
-  const tocDesktopBtn = document.querySelector('[data-toc-desktop-btn]');
-  const tocDesktopDrawer = document.querySelector('[data-toc-desktop-drawer]');
-  const tocDesktopOverlay = document.querySelector('[data-toc-desktop-overlay]');
-  const tocDesktopClose = document.querySelector('[data-toc-desktop-close]');
   const tocMobileBtn = document.querySelector('[data-toc-mobile-btn]');
   const tocMobileDrawer = document.querySelector('[data-toc-mobile-drawer]');
   const tocMobileOverlay = document.querySelector('[data-toc-mobile-overlay]');
@@ -855,14 +855,17 @@ export const initPostEnhancements = () => {
     heading.textContent.trim().length
   );
 
-  if (!tocList) return;
+  if (!tocList && !tocMobileList) return;
 
   if (headings.length === 0) {
     if (tocMobileBtn) tocMobileBtn.setAttribute('hidden', '');
+    if (tocAside) tocAside.setAttribute('hidden', '');
     if (tocDesktopBtn) tocDesktopBtn.setAttribute('hidden', '');
+    if (postShell) postShell.classList.remove('post-shell--toc-open');
     return;
   }
 
+  const desktopMediaQuery = window.matchMedia('(min-width: 1440px)');
   const slugify = (text) =>
     text
       .toLowerCase()
@@ -928,8 +931,86 @@ export const initPostEnhancements = () => {
   if (tocMobileBtn) {
     tocMobileBtn.removeAttribute('hidden');
   }
+  if (tocAside) {
+    tocAside.removeAttribute('hidden');
+  }
+
+  const desktopCollapseKey = 'ultrathink-toc-collapsed';
+  const getSavedCollapsedState = () => {
+    try {
+      return window.localStorage.getItem(desktopCollapseKey) === 'true';
+    } catch {
+      return false;
+    }
+  };
+
+  const saveCollapsedState = (isCollapsed) => {
+    try {
+      window.localStorage.setItem(desktopCollapseKey, isCollapsed ? 'true' : 'false');
+    } catch {
+      // Ignore storage failures (private mode, blocked storage, etc.).
+    }
+  };
+
+  const setDesktopCollapsed = (isCollapsed) => {
+    if (!tocAside) return;
+    if (isCollapsed) {
+      tocAside.setAttribute('data-toc-collapsed', 'true');
+      if (postShell) {
+        postShell.classList.remove('post-shell--toc-open');
+      }
+      if (tocDesktopBtn) {
+        tocDesktopBtn.removeAttribute('hidden');
+        tocDesktopBtn.setAttribute('aria-expanded', 'false');
+      }
+    } else {
+      tocAside.removeAttribute('data-toc-collapsed');
+      if (postShell) {
+        if (desktopMediaQuery.matches) {
+          postShell.classList.add('post-shell--toc-open');
+        } else {
+          postShell.classList.remove('post-shell--toc-open');
+        }
+      }
+      if (tocDesktopBtn) {
+        tocDesktopBtn.setAttribute('hidden', '');
+        tocDesktopBtn.setAttribute('aria-expanded', 'true');
+      }
+    }
+  };
+
+  const syncDesktopMode = () => {
+    if (!desktopMediaQuery.matches) {
+      if (postShell) {
+        postShell.classList.remove('post-shell--toc-open');
+      }
+      if (tocDesktopBtn) {
+        tocDesktopBtn.setAttribute('hidden', '');
+      }
+      return;
+    }
+    setDesktopCollapsed(getSavedCollapsedState());
+  };
+
+  syncDesktopMode();
+  if (desktopMediaQuery.addEventListener) {
+    desktopMediaQuery.addEventListener('change', syncDesktopMode);
+  } else if (desktopMediaQuery.addListener) {
+    desktopMediaQuery.addListener(syncDesktopMode);
+  }
+
   if (tocDesktopBtn) {
-    tocDesktopBtn.removeAttribute('hidden');
+    tocDesktopBtn.addEventListener('click', () => {
+      setDesktopCollapsed(false);
+      saveCollapsedState(false);
+    });
+  }
+
+  if (tocDesktopClose) {
+    tocDesktopClose.addEventListener('click', () => {
+      setDesktopCollapsed(true);
+      saveCollapsedState(true);
+    });
   }
 
   // Get all TOC links (both desktop and mobile)
@@ -948,68 +1029,54 @@ export const initPostEnhancements = () => {
     });
   };
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveLink(entry.target.id);
-        }
-      });
-    },
-    {
-      rootMargin: '-40% 0px -50% 0px',
-      threshold: 0
-    }
-  );
-
-  headings.forEach((heading) => observer.observe(heading));
-
-  // Desktop drawer functionality
-  const openDesktopDrawer = () => {
-    if (tocDesktopDrawer) {
-      tocDesktopDrawer.removeAttribute('hidden');
-      tocDesktopDrawer.setAttribute('data-toc-desktop-open', '');
-      lockScroll(true);
-    }
+  const getAnchorOffset = () => {
+    const nav = document.querySelector('.pin-nav');
+    const navHeight = nav ? nav.getBoundingClientRect().height : 80;
+    return navHeight + 24;
   };
 
-  const closeDesktopDrawer = () => {
-    if (tocDesktopDrawer) {
-      tocDesktopDrawer.removeAttribute('data-toc-desktop-open');
-      lockScroll(false);
-      // Wait for animation to complete before hiding
-      setTimeout(() => {
-        if (!tocDesktopDrawer.hasAttribute('data-toc-desktop-open')) {
-          tocDesktopDrawer.setAttribute('hidden', '');
-        }
-      }, 200);
-    }
-  };
+  const resolveActiveHeadingId = () => {
+    if (headings.length === 0) return null;
+    const threshold = window.scrollY + getAnchorOffset();
+    let activeHeading = headings[0];
 
-  if (tocDesktopBtn) {
-    tocDesktopBtn.addEventListener('click', openDesktopDrawer);
-  }
-
-  if (tocDesktopClose) {
-    tocDesktopClose.addEventListener('click', closeDesktopDrawer);
-  }
-
-  if (tocDesktopOverlay) {
-    tocDesktopOverlay.addEventListener('click', closeDesktopDrawer);
-  }
-
-  // Close desktop drawer when clicking on a TOC link
-  if (tocList) {
-    tocList.addEventListener('click', (e) => {
-      const link = e.target.closest('a[data-toc-link]');
-      if (link) {
-        // Small delay to allow smooth scroll
-        setTimeout(() => {
-          closeDesktopDrawer();
-        }, 100);
+    headings.forEach((heading) => {
+      if (heading.offsetTop <= threshold) {
+        activeHeading = heading;
       }
     });
-  }
+
+    return activeHeading?.id || null;
+  };
+
+  const syncActiveHeading = () => {
+    const activeId = resolveActiveHeadingId();
+    if (activeId) setActiveLink(activeId);
+  };
+
+  let activeSyncFrame = null;
+  const queueActiveHeadingSync = () => {
+    if (activeSyncFrame !== null) return;
+    activeSyncFrame = window.requestAnimationFrame(() => {
+      activeSyncFrame = null;
+      syncActiveHeading();
+    });
+  };
+
+  allLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      const targetId = link.dataset.tocLink;
+      if (targetId) {
+        setActiveLink(targetId);
+      }
+      window.setTimeout(syncActiveHeading, 180);
+    });
+  });
+
+  window.addEventListener('scroll', queueActiveHeadingSync, { passive: true });
+  window.addEventListener('resize', queueActiveHeadingSync);
+  window.addEventListener('hashchange', queueActiveHeadingSync);
+  syncActiveHeading();
 
   // Mobile drawer functionality
   const openMobileDrawer = () => {
@@ -1058,13 +1125,14 @@ export const initPostEnhancements = () => {
     });
   }
 
-  // Close mobile drawer on Escape key (only if desktop drawer is not open)
+  // Close mobile drawer on Escape key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       if (tocMobileDrawer?.hasAttribute('data-toc-mobile-open')) {
         closeMobileDrawer();
-      } else if (tocDesktopDrawer?.hasAttribute('data-toc-desktop-open')) {
-        closeDesktopDrawer();
+      } else if (tocAside && !tocAside.hasAttribute('data-toc-collapsed')) {
+        setDesktopCollapsed(true);
+        saveCollapsedState(true);
       }
     }
   });

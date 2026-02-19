@@ -11,18 +11,6 @@ tags:
   - excel
 ---
 
-**Logistic Regression**
-
-**From Scratch**
-
-An Interactive Excel Tutorial
-
-*Learn how a machine learning model learns to classify data,*
-
-*one spreadsheet cell at a time.*
-
-Companion document for Logistic_Regression_Tutorial.xlsx
-
 ## Introduction: What Is Machine Learning?
 
 Imagine you are a doctor examining tumor biopsies. After years of experience, you develop an intuition: larger, rougher tumors tend to be malignant. You cannot write down an exact rule, but you have learned patterns from hundreds of past cases.

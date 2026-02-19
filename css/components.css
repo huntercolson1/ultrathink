@@ -242,7 +242,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: 0.35rem;
 }
 
 .c-drawer__item {
@@ -251,24 +251,31 @@
 
 .c-drawer__link {
   display: block;
-  padding-block: var(--space-sm);
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
   font-size: 1.05rem;
   font-weight: 500;
+  font-family: var(--font-mono);
+  letter-spacing: 0.01em;
   text-decoration: none;
   color: var(--text-primary);
+  border: 1px solid transparent;
+  background: transparent;
   border-radius: var(--radius-sm);
   transition: background var(--transition-fast), color var(--transition-fast),
-    transform var(--transition-fast);
+    border-color var(--transition-fast);
 }
 
 .c-drawer__link:hover,
 .c-drawer__link:focus-visible {
-  background: rgb(0 0 0 / 5%);
+  background: var(--grey-light);
+  border-color: var(--border-color);
   color: var(--text-primary);
 }
 
 .c-drawer__link[aria-current='page'] {
-  background: rgb(0 0 0 / 8%);
+  background: var(--code-bg);
+  border-color: var(--border-color);
   color: var(--text-primary);
 }
 
@@ -286,14 +293,20 @@
   position: relative;
 }
 
-.c-drawer__close:hover {
+.c-drawer__close:hover,
+.c-drawer__close:focus-visible {
   background: rgb(0 0 0 / 10%);
   border-color: rgb(0 0 0 / 25%);
+  transform: translateY(-1px);
 }
 
 .c-drawer__close:focus-visible {
   outline: 2px solid rgb(0 0 0 / 80%);
   outline-offset: 3px;
+}
+
+.c-drawer__close:active {
+  transform: translateY(0);
 }
 
 .c-drawer__close::before,
@@ -920,7 +933,7 @@
 
   .c-drawer__link {
     font-size: 1rem;
-    padding-block: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
   }
 
   .c-footer {
@@ -1204,11 +1217,13 @@
 
 [data-theme="dark"] .c-drawer__link:hover,
 [data-theme="dark"] .c-drawer__link:focus-visible {
-  background: rgb(255 255 255 / 5%);
+  background: rgb(255 255 255 / 8%);
+  border-color: rgb(255 255 255 / 22%);
 }
 
 [data-theme="dark"] .c-drawer__link[aria-current='page'] {
-  background: rgb(255 255 255 / 8%);
+  background: rgb(255 255 255 / 10%);
+  border-color: rgb(255 255 255 / 22%);
 }
 
 [data-theme="dark"] .c-drawer__close {
@@ -1216,7 +1231,8 @@
   background: rgb(255 255 255 / 4%);
 }
 
-[data-theme="dark"] .c-drawer__close:hover {
+[data-theme="dark"] .c-drawer__close:hover,
+[data-theme="dark"] .c-drawer__close:focus-visible {
   background: rgb(255 255 255 / 10%);
   border-color: rgb(255 255 255 / 25%);
 }
@@ -1253,6 +1269,7 @@
 [data-theme="dark"] .c-social-link:focus-visible {
   color: var(--text-primary);
 }
+
 [data-theme="dark"] .c-header__logo {
   filter: grayscale(1) contrast(1.5) brightness(1.05);
 }

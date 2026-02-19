@@ -6,8 +6,8 @@ layout: default
 {% assign reading_minutes = word_count | plus: 199 | divided_by: 200 %}
 {% if reading_minutes < 1 %} {% assign reading_minutes=1 %} {% endif %} {% assign post_absolute_url=page.url |
   absolute_url %} {% assign share_url_encoded=post_absolute_url | uri_escape %} {% assign share_title_encoded=page.title
-  | uri_escape %} <section class="section" style="padding-top: var(--space-xl);">
-  <div class="container stack" style="gap: var(--space-lg);">
+  | uri_escape %} <section class="section post-hero" style="padding-top: var(--space-xl);">
+  <div class="container stack post-hero__container" style="gap: var(--space-lg);">
     <header class="stack"
       style="gap: var(--space-md); border-bottom: 4px solid var(--border-color); padding-bottom: var(--space-lg);">
       <div class="cluster"
@@ -44,11 +44,26 @@ layout: default
         </div>
       </div>
 
+      <button class="post-toc__desktop-btn" type="button" aria-label="Open contents" aria-expanded="false"
+        aria-controls="post-desktop-toc" data-toc-desktop-btn hidden>
+        <span class="post-toc__desktop-btn-text">INDEX</span>
+      </button>
+
       <!-- Main Content Area: Monospace Laboratory Style -->
       <div class="post-grid">
         <div class="post-main post-content u-text-mono" style="font-size: 1.05rem;">
           {{ content }}
         </div>
+        <aside class="post-aside" id="post-desktop-toc" aria-label="Table of contents" data-post-toc-aside hidden>
+          <div class="post-card">
+            <div class="post-toc__desktop-header">
+              <p class="post-card__label">INDEX</p>
+              <button class="post-toc__desktop-close" type="button" aria-label="Collapse index"
+                data-toc-desktop-close>X</button>
+            </div>
+            <ol class="post-toc__list post-toc__list--desktop" data-post-toc-list></ol>
+          </div>
+        </aside>
       </div>
       <div class="post-footer cluster" style="justify-content: space-between;">
         <span class="u-text-muted">Filed under:
