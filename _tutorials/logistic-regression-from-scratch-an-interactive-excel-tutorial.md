@@ -1,5 +1,5 @@
 ---
-title: Logistic Regression From Scratch — An Interactive Excel Tutorial
+title: Logistic Regression From Scratch
 date: 2026-02-19
 author: Hunter Colson
 subtitle: Learn how a machine learning model learns to classify data, one spreadsheet cell at a time.
@@ -19,26 +19,30 @@ Machine learning automates this process. Instead of a human learning patterns fr
 
 In this tutorial, you will play the role of that computer. You will manually perform every step of the learning process inside an Excel spreadsheet, with every calculation visible and inspectable. By the end, you will understand the fundamental mechanism behind how machines learn.
 
+<div style="margin: var(--space-lg) 0; padding: var(--space-md) var(--space-lg); border: 1px solid var(--border-color); border-left: 4px solid var(--text-primary); display: flex; align-items: center; justify-content: space-between; gap: var(--space-lg); flex-wrap: wrap;">
+  <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+    <span style="font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-secondary);">Companion File</span>
+    <span style="font-family: var(--font-mono); font-size: 1rem; font-weight: 600;">Logistic_Regression_Tutorial.xlsx</span>
+    <span style="font-size: 0.85rem; color: var(--text-secondary);">The Excel workbook used throughout this tutorial. Download it before you begin.</span>
+  </div>
+  <a href="/assets/downloads/Logistic_Regression_Tutorial.xlsx" download class="c-btn c-btn--solid" style="white-space: nowrap; flex-shrink: 0; font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.05em;">↓ Download</a>
+</div>
+
 ### What You Will Build
 
 You will build a logistic regression model. This is one of the simplest and most important models in all of machine learning. It takes in measurements (numbers describing something) and outputs a probability: how likely is it that this thing belongs to a particular category?
 
-Specifically, your model will take two measurements of a breast tumor (its radius and its texture) and output a probability that the tumor is malignant. If the probability is above 50%, the model predicts malignant. If below 50%, it predicts benign.
+Specifically, your model will take two measurements from a breast tumor biopsy (the mean nuclear radius and nuclear texture of the sampled cells) and output a probability that the tumor is malignant. If the probability is above 50%, the model predicts malignant. If below 50%, it predicts benign.
 
 ### What You Will Learn
 
 This tutorial is designed for someone with no prior machine learning experience. By working through it, you will develop an intuitive understanding of:
 
 - How a model represents its knowledge as a small set of numbers (weights and a bias)
-
 - How a model converts input features into a probability (the sigmoid function)
-
 - How we measure whether the model is right or wrong (the loss function)
-
 - How the model figures out which direction to adjust its numbers (gradients)
-
 - How repeatedly adjusting those numbers makes the model better (gradient descent)
-
 - Why some features matter more than others (learned weights)
 
 ### Prerequisites
@@ -47,7 +51,7 @@ You need basic familiarity with Excel (opening files, editing cells, copying and
 
 ## The Dataset: Breast Tumor Measurements
 
-Our dataset comes from the Breast Cancer Wisconsin (Diagnostic) dataset, one of the most widely used datasets in machine learning education. It was created by researchers at the University of Wisconsin who used a fine needle aspirate (FNA) procedure to extract cell samples from breast masses. They then digitized images of those cells and measured various geometric properties of the cell nuclei.
+Our dataset comes from the [Breast Cancer Wisconsin (Diagnostic) dataset](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic), a popular dataset in machine learning education. It was created by researchers at the University of Wisconsin who used a fine needle aspirate (FNA) procedure to extract cell samples from breast masses. They then digitized images of those cells and measured various geometric properties of the cell nuclei.
 
 We use a subset of 150 samples with two features and one label:
 
@@ -59,7 +63,7 @@ We use a subset of 150 samples with two features and one label:
 
 ### The Prediction Task
 
-**Given a tumor's radius and texture, predict whether it is malignant or benign.** This is called **binary classification** because there are exactly two possible outcomes (malignant or benign, encoded as 1 or 0).
+**Given measurements of cell nuclei from a breast tumor biopsy, predict whether the tumor is malignant or benign.** This is called **binary classification** because there are exactly two possible outcomes (malignant or benign, encoded as 1 or 0).
 
 ### Why These Features?
 
@@ -107,7 +111,7 @@ Here, x1 is the normalized radius and x2 is the normalized texture. The model mu
 
 Think of z as a score. A positive z means the model is leaning toward predicting malignant. A negative z means the model leans toward benign. A z near zero means the model is uncertain. The larger the absolute value of z, the more confident the model is.
 
-**Example:** If w1 = 2.0, w2 = 0.5, b = -0.3, and a sample has x1 = 1.5 (large radius) and x2 = 0.8 (above-average texture), then z = 2.0*1.5 + 0.5*0.8 + (-0.3) = 3.0 + 0.4 - 0.3 = 3.1. This is a confident positive score, suggesting malignant.
+**Example:** If w1 = 2.0, w2 = 0.5, b = -0.3, and a sample has x1 = 1.5 (large radius) and x2 = 0.8 (above-average texture), then z = 2.0\*1.5 + 0.5\*0.8 + (-0.3) = 3.0 + 0.4 - 0.3 = 3.1. This is a confident positive score, suggesting malignant.
 
 In the Training sheet, column E shows the z value for every sample. When all weights are zero (before training), every z equals zero.
 
@@ -209,10 +213,8 @@ $$
 
 This is remarkably simple. It is just the predicted probability minus the true label. Let us think about what it means:
 
-- **Malignant tumor (y=1), model predicts p=0.3:** error = 0.3 - 1.0 = -0.7. The error is negative, meaning the model needs to push its prediction higher.
-
-- **Benign tumor (y=0), model predicts p=0.8:** error = 0.8 - 0.0 = 0.8. The error is positive, meaning the model needs to push its prediction lower.
-
+- **Malignant tumor (y = 1), model predicts p = 0.3:** error = 0.3 - 1.0 = -0.7. The error is negative, meaning the model needs to push its prediction higher.
+- **Benign tumor (y = 0), model predicts p = 0.8:** error = 0.8 - 0.0 = 0.8. The error is positive, meaning the model needs to push its prediction lower.
 - **Perfect prediction (p equals y):** error = 0. No adjustment needed.
 
 The sign of the error tells us the direction of the needed correction. The magnitude tells us how large the correction should be. In the Training sheet, column H shows this error for every sample.
@@ -349,7 +351,7 @@ This is the computational heart of the workbook. Every intermediate calculation 
 | B | x1 | Normalized Radius, pulled from the Data sheet via formula |
 | C | x2 | Normalized Texture, pulled from the Data sheet via formula |
 | D | y | True label (0 or 1), pulled from the Data sheet |
-| E | z | Linear activation: w1*x1 + w2*x2 + bias. This is the raw score before sigmoid. |
+| E | z | Linear activation: w1\*x1 + w2\*x2 + bias. This is the raw score before sigmoid. |
 | F | p | Predicted probability: sigmoid(z) = 1/(1+exp(-z)). Always between 0 and 1. |
 | G | Loss | Binary cross-entropy loss for this one sample. Measures how wrong this prediction is. |
 | H | Error | p - y. The direction and magnitude of the mistake. Used to compute gradients. |
@@ -376,35 +378,36 @@ If you want to continue training beyond iteration 100, empty rows are provided b
 
 ### Visualizations Sheet
 
-This sheet contains seven charts. Charts 1, 2, and 3 update automatically when you change parameters. Charts 4 through 7 are static reference charts.
+This sheet contains seven charts: a 2×3 grid with a full-width chart at the bottom. Charts 5 and 7 update automatically whenever you change parameters on the Parameters sheet. Charts 1, 2, 3, 4, and 6 draw from the pre-filled Iteration Log and static data, so they reflect the reference training run rather than your current parameter values.
 
 **Chart 1: Training Loss vs Iteration**
 
-This line chart plots the average loss at each iteration. You should see a curve that starts high (0.693) and decreases rapidly at first, then gradually levels off into a plateau around iteration 80 to 100. This shape is characteristic of gradient descent: early iterations make large improvements because the model is far from optimal, while later iterations make smaller improvements as the model approaches its best possible performance.
+This line chart plots the average loss at each iteration from the Iteration Log. You should see a curve that starts at 0.693 (the loss of a model that is purely guessing) and decreases rapidly at first, then gradually levels off into a plateau around iteration 80 to 100. This shape is characteristic of gradient descent: early iterations make large improvements because the model is far from optimal, while later iterations make smaller and smaller improvements as the model approaches the best it can do with two features and a linear decision boundary.
 
-**Chart 2: Feature Scatter Plot**
+**Chart 2: Classification Accuracy vs Iteration**
 
-This scatter chart plots each tumor sample as a point, with Radius on the horizontal axis and Texture on the vertical axis. Red circles represent malignant tumors, and blue triangles represent benign tumors. You can see that the two classes partially separate (malignant tumors cluster toward higher radius), but there is significant overlap, which is why the model cannot achieve 100% accuracy.
+This line chart plots the accuracy at each iteration from the Iteration Log. Notice the dramatic spike on iteration 1, where accuracy jumps from 38.7% to roughly 90%. After that initial jump, accuracy climbs more gradually and plateaus near the model's ceiling. Compare this directly with Chart 1: the loss curve is smooth while the accuracy curve is jagged and step-like. That contrast illustrates the fundamental difference between a continuous metric (loss) and a discrete one (accuracy).
 
-**Chart 3: Predicted Probability per Sample**
+**Chart 3: Weight Evolution During Training**
 
-This chart shows the model's current predicted probability for each sample. Before training, every dot is at exactly 0.5 (a horizontal line). As you train, the dots should spread apart: malignant samples should move toward 1.0 and benign samples should move toward 0.0. After sufficient training, you should see a clear separation between the two groups, though some samples near the decision boundary will remain close to 0.5.
+This line chart traces how all three learned parameters (w1 for Radius, w2 for Texture, and the bias) change across iterations. All three start at zero. w1 grows the fastest and reaches the highest final value (around 1.6 to 2.3), confirming that radius is the stronger predictor. w2 grows more slowly and stabilizes lower (around 0.5 to 0.7). The bias drifts negative (toward -0.4 to -0.5), reflecting the class imbalance: with more benign samples in the dataset, the model learns to start with a slight lean toward benign. All three curves flatten as the model converges.
 
-**Chart 4: The Sigmoid Function**
+**Chart 4: Feature Scatter Plot**
 
-This reference chart shows the S-shaped sigmoid curve. It helps you visualize how the linear activation z gets transformed into a probability p. Notice how the curve is steepest around z = 0 (where the model is most uncertain) and flattens out as z becomes very positive or very negative (where the model is very confident).
+This scatter chart plots each sample as a point with normalized radius on the horizontal axis and normalized texture on the vertical axis. Red circles represent malignant samples and blue triangles represent benign samples. You can see the two classes partially separate (malignant samples cluster toward higher radius values on the right), but there is significant overlap in the middle. That overlap is why the model cannot reach 100% accuracy: some samples cannot be separated by any straight line through this feature space.
 
-**Chart 5: Accuracy vs Iteration**
+**Chart 5: Predicted Probability per Sample**
 
-This line chart plots the classification accuracy at each iteration from the Iteration Log. You will notice a dramatic spike on iteration 1 (from 38.7% up to roughly 90%) followed by more gradual improvement. This is the accuracy jump explained in Section 7.2: a single small weight update shifts enough samples past the 0.5 decision threshold to cause a large, discrete jump in accuracy. After that initial spike, accuracy improvements become smaller and more incremental as the model fine-tunes near its performance ceiling.
+This scatter chart shows the model's current predicted probability for each of the 150 samples, split into two series: malignant (red) and benign (blue). The x-axis is the sample index and the y-axis is the predicted probability of malignancy. This chart updates automatically when you change parameters. Before any training, every dot sits at exactly 0.5 because all weights are zero. After one iteration, the dots spread dramatically. After full training, the red dots cluster near 1.0 and the blue dots cluster near 0.0, with a gap around 0.5 at the decision boundary. Samples that remain near 0.5 after training are the genuinely ambiguous cases the model is uncertain about.
 
-**Chart 6: Weight Evolution**
+**Chart 6: The Sigmoid Function**
 
-This chart traces how the two weights (w1 for Radius and w2 for Texture) evolve across training iterations. Both weights start at zero and grow as the model learns. Notice that w1 (Radius) grows faster and reaches a higher final value than w2 (Texture), visually confirming that radius is the stronger predictor. The curves typically level off around iteration 80 to 100, showing that the model has converged and additional training would produce diminishing returns.
+This reference chart shows the S-shaped sigmoid curve: the mathematical function that converts the raw linear score z into a probability between 0 and 1. The curve is steepest near z = 0, where the model is most uncertain and a small change in weights produces the largest change in output. As z becomes very positive or very negative, the curve flattens out where the model is confident. This chart is static and does not change with training.
 
-**Chart 7: Loss vs Accuracy (Combined View)**
+**Chart 7: All Predicted Probabilities**
 
-This full-width chart overlays both training loss and accuracy on the same axis, letting you directly compare how the two metrics evolve together. This is the chart that most clearly illustrates why loss and accuracy behave so differently: loss (the continuous curve) decreases smoothly while accuracy (the step-function curve) jumps sharply at first and then plateaus. The divergence between these two curves is a fundamental concept in machine learning: a model can continue to improve its confidence and calibration (reducing loss) even after accuracy has stopped increasing.
+This full-width chart at the bottom shows all 150 predicted probabilities in sample order. Unlike Chart 5, it does not separate samples by class; it shows the raw output of the current model for every input. Before training, it is a flat horizontal line at 0.5. After training, it shows a scattered pattern where samples the model classifies confidently are pulled toward 0 or 1, while samples near the decision boundary remain close to 0.5. This chart updates live and redraws every time you paste new parameters into the Parameters sheet.
+
 
 ## Hands-On: Running Training Iterations
 
@@ -412,19 +415,19 @@ This full-width chart overlays both training loss and accuracy on the same axis,
 
 Follow these steps to perform one complete training iteration:
 
-7.  Open the Parameters sheet. Note the current Average Loss in B12 and Accuracy in B13. Before any training, loss is 0.693 and accuracy is 38.7%. (Why 38.7% and not 50%? When all weights are zero, sigmoid(0) = 0.5 exactly, which the model rounds up to class 1 (malignant) for every sample. Since only 58 of 150 samples are actually malignant, the model is right 38.7% of the time purely by predicting malignant for everything.)
+1.  Open the Parameters sheet. Note the current Average Loss in B12 and Accuracy in B13. Before any training, loss is 0.693 and accuracy is 38.7%. (Why 38.7% and not 50%? When all weights are zero, sigmoid(0) = 0.5 exactly, which the model rounds up to class 1 (malignant) for every sample. Since only 58 of 150 samples are actually malignant, the model is right 38.7% of the time purely by predicting malignant for everything.)
 
-8.  Look at the red cells B22, B23, B24. These contain the NEW parameter values computed from one step of gradient descent.
+2.  Look at the red cells B22, B23, B24. These contain the NEW parameter values computed from one step of gradient descent.
 
-9.  Select cells B22, B23, and B24. Press Ctrl+C (or Cmd+C on Mac) to copy them.
+3.  Select cells B22, B23, and B24. Press Ctrl+C (or Cmd+C on Mac) to copy them.
 
-10. Click on cell B4. Right-click and choose "Paste Special," then select "Values Only." (On Windows you can press Ctrl+Alt+V and then choose Values; on Mac press Cmd+Ctrl+V.) This replaces the old parameters with the new ones. It is important to paste values, not formulas, because pasting the formulas would create a circular reference.
+4.  Click on cell B4. Right-click and choose "Paste Special," then select "Values Only." (On Windows you can press Ctrl+Alt+V and then choose Values; on Mac press Cmd+Ctrl+V.) This replaces the old parameters with the new ones. It is important to paste values, not formulas, because pasting the formulas would create a circular reference.
 
-11. The spreadsheet recalculates. Check B12: the loss should be lower. Check B13: the accuracy should be higher (or at least the same).
+5.  The spreadsheet recalculates. Check B12: the loss should be lower. Check B13: the accuracy should be higher (or at least the same).
 
-12. Optionally, go to the Iteration Log sheet to record your progress. The log is pre-filled for iterations 0 through 100 from a simulation run, so if you are continuing beyond iteration 100, find the first empty row (row 107 onward) and enter your current iteration number along with the loss, accuracy, w1, w2, and bias values from the Parameters sheet. If you want to start fresh from iteration 0, clear the pre-filled rows and enter your own values as you train.
+6.  Optionally, go to the Iteration Log sheet to record your progress. The log is pre-filled for iterations 0 through 100 from a simulation run. To continue from iteration 100, copy the w1, w2, and bias values from row 106 of the Iteration Log (columns D, E, and F) and paste them as Values Only into cells B4, B5, and B6 on the Parameters sheet. The spreadsheet automatically recalculates the loss, accuracy, and updated parameters. Then copy B12 (average loss), B13 (classification accuracy), B22 (new w1), B23 (new w2), and B24 (new bias) and paste them as Values Only into row 107 of the Iteration Log, along with the iteration number. To start fresh from iteration 0, clear the pre-filled rows, reset B4, B5, and B6 to 0, and log each update the same way as you train.
 
-13. Return to the Parameters sheet and repeat from step 2. Each cycle is one training iteration.
+7.  Return to the Parameters sheet and repeat from step 2 to perform another training iteration.
 
 ### What to Expect
 
@@ -470,7 +473,7 @@ This is the equation of a straight line in the feature space. Every point on one
 
 ### Why the Model Cannot Reach 100% Accuracy
 
-With only two features and a linear decision boundary, the model has limited expressive power. Some malignant and benign tumors have similar radius and texture values, making them impossible to separate with a straight line. This is not a failure of the model; it is a reflection of the data. To achieve higher accuracy, you would need more features, a more complex model (like a neural network), or both.
+With only two features and a linear decision boundary, the model has limited expressive power. Some malignant and benign samples have similar nuclear radius and texture values, making them impossible to separate with a straight line. This is not a failure of the model; it is a reflection of the data. To achieve higher accuracy, you would need more features, a more complex model (like a neural network), or both.
 
 > *This limitation is actually the key insight that motivates deep learning: by stacking many logistic regression units in layers (creating a neural network), you can learn curved, complex decision boundaries that separate data that a single straight line cannot.*
 

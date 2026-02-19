@@ -379,6 +379,7 @@
 
 .c-btn--solid:hover {
   background: var(--black);
+  color: var(--white);
   opacity: 0.9;
 }
 
@@ -1397,7 +1398,7 @@
   text-decoration-color: var(--text-primary);
 }
 
-@media (width <= 720px) {
+@media (width <=720px) {
   .blog-tags__header {
     flex-direction: column;
     align-items: flex-start;
