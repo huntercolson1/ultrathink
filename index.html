@@ -25,13 +25,14 @@ permalink: /
           > Blogs_And_Tutorials
         </h2>
 
-        <ul class="u-text-mono stack home-feed-list" style="gap: var(--space-xs);">
+        <ul class="u-text-mono stack home-feed-list" style="gap: var(--space-xs); list-style: none; padding: 0; margin: 0;">
           {% assign recent_writing = site.posts | concat: site.tutorials | sort: "date" | reverse %}
           {% for item in recent_writing limit:5 %}
           <li>
-            <a href="{{ item.url | relative_url }}" class="home-feed-list__link">
-              <span class="home-feed-list__date">{{ item.date | date: "%Y-%m-%d" }}</span>
-              <span class="home-feed-list__title">{{ item.title }}</span>
+            <a href="{{ item.url | relative_url }}" class="home-feed-list__link"
+              style="text-decoration: none; display: flex; gap: 1rem; align-items: flex-start;">
+              <span class="home-feed-list__date" style="opacity: 0.6;">{{ item.date | date: "%Y-%m-%d" }}</span>
+              <span class="home-feed-list__title" style="font-weight: 600;">{{ item.title }}</span>
             </a>
           </li>
           {% endfor %}
