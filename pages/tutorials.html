@@ -22,12 +22,50 @@ permalink: /tutorials/
       style="font-size: 0.85rem; opacity: 0.6; border-bottom: 1px solid var(--border-color); padding-bottom: var(--space-sm);">
       > TUTORIAL_INDEX</div>
 
-    <div class="stack" style="gap: var(--space-lg);">
+    <div class="blog-tags" data-tag-panel>
+      <div class="blog-tags__header">
+        <div class="stack" style="gap: var(--space-xs);">
+          <p class="u-text-mono blog-tags__title">Tags</p>
+          <p class="u-text-mono blog-tags__summary" data-tag-summary></p>
+        </div>
+        <button class="tag-pill tag-pill--ghost" type="button" data-tag-clear>Clear</button>
+      </div>
+      <div class="blog-tags__controls">
+        <span class="u-text-mono blog-tags__label">Sort</span>
+        <div class="blog-tags__sort" role="group" aria-label="Sort tags">
+          <button class="tag-pill is-active" type="button" data-tag-sort="count" aria-pressed="true">Popular</button>
+          <button class="tag-pill" type="button" data-tag-sort="alpha" aria-pressed="false">A–Z</button>
+        </div>
+      </div>
+      <ul class="blog-tags__list" data-tag-list role="list"></ul>
+    </div>
+
+    <div class="blog-feed" id="blog-feed" style="gap: var(--space-lg); display: flex; flex-direction: column; width: 100%;">
       {% if site.tutorials.size > 0 %}
       {% for tutorial in site.tutorials %}
+      {% assign normalized_tags = "" %}
+      {% if tutorial.tags %}
+      {% capture normalized_tags %}
+      {% for tag in tutorial.tags %}
+      {{ tag | downcase | strip }}{% unless forloop.last %}|{% endunless %}
+      {% endfor %}
+      {% endcapture %}
+      {% endif %}
       <article class="stack"
-        style="gap: var(--space-sm); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--border-color);">
-        <span class="u-text-mono" style="font-size: 0.85rem;">{{ tutorial.date | date: "%Y-%m-%d" }}</span>
+        style="gap: var(--space-sm); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--border-color);"
+        data-blog-post data-tags="{{ normalized_tags | strip | strip_newlines }}" data-published="{{ tutorial.date | date_to_xmlschema }}">
+        <div class="cluster" style="justify-content: space-between; align-items: baseline;">
+          <span class="u-text-mono" style="font-size: 0.85rem;">{{ tutorial.date | date: "%Y-%m-%d" }}</span>
+          {% if tutorial.tags %}
+          <div class="cluster" style="gap: var(--space-xs);">
+            {% for tag in tutorial.tags %}
+            {% assign tag_clean = tag | downcase | strip %}
+            <a class="u-text-mono blog-tag-link" style="font-size: 0.75rem; opacity: 0.6;"
+              href="{{ '/tutorials/' | relative_url }}?tag={{ tag_clean | uri_escape }}">#{{ tag_clean }}</a>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
         <a href="{{ tutorial.url | relative_url }}" style="text-decoration: none;">
           <h2 class="u-text-display" style="font-size: 1.25rem; margin: 0;">{{ tutorial.title }}</h2>
         </a>
@@ -36,9 +74,25 @@ permalink: /tutorials/
         {% endif %}
       </article>
       {% endfor %}
+      <p class="u-text-mono blog-feed__empty" style="opacity: 0.6;" data-blog-empty hidden>No tutorials match this tag.</p>
       {% else %}
       <p class="u-text-mono" style="opacity: 0.5;">Tutorials coming soon.</p>
       {% endif %}
     </div>
   </div>
 </section>
+
+<script type="application/json" id="blog-posts-data">
+[
+  {% for tutorial in site.tutorials %}
+  {
+    "title": {{ tutorial.title | jsonify }},
+    "date": "{{ tutorial.date | date: "%Y-%m-%d" }}",
+    "slug": {{ tutorial.slug | default: tutorial.url | jsonify }},
+    "url": {{ tutorial.url | relative_url | jsonify }},
+    "excerpt": {{ tutorial.excerpt | strip_html | strip_newlines | jsonify }},
+    "tags": [{% if tutorial.tags %}{% for tag in tutorial.tags %}{{ tag | downcase | strip | jsonify }}{% unless forloop.last %}, {% endunless %}{% endfor %}{% endif %}]
+  }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+]
+</script>
