@@ -1,15 +1,19 @@
 .main-shell {
   min-height: 100vh;
-  min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
-  min-height: 100svh; /* Prefer small viewport to avoid bottom overscroll on mobile */
+  min-height: 100dvh;
+  /* Dynamic viewport height for mobile browsers */
+  min-height: 100svh;
+  /* Prefer small viewport to avoid bottom overscroll on mobile */
   display: flex;
   flex-direction: column;
-  padding-top: 80px; /* Offset for fixed header */
+  padding-top: 80px;
+  /* Offset for fixed header */
 }
 
-@media (width <= 600px) {
+@media (width <=600px) {
   .main-shell {
-    padding-top: 64px; /* Smaller header on mobile */
+    padding-top: 64px;
+    /* Smaller header on mobile */
   }
 }
 
@@ -623,6 +627,7 @@ main {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .post-aside,
   .post-toc__desktop-btn,
   .post-toc__desktop-close,

@@ -235,14 +235,21 @@ th {
   padding: var(--space-md);
   text-align: left;
   font-weight: 600;
+  font-size: 1rem;
   color: var(--text-primary);
   border-bottom: 2px solid var(--border-color);
 }
 
 td {
   padding: var(--space-md);
+  font-size: 1rem;
   border-bottom: 1px solid color-mix(in srgb, var(--border-color) 30%, transparent);
   color: var(--text-secondary);
+}
+
+th strong,
+td strong {
+  font-size: inherit;
 }
 
 tbody tr:last-child td {
