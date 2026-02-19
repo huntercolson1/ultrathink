@@ -37,7 +37,7 @@ permalink: /blog/
       <ul class="blog-tags__list" data-tag-list role="list"></ul>
     </div>
 
-    <div class="blog-feed stack" id="blog-feed" style="gap: var(--space-lg);">
+    <div class="blog-feed" id="blog-feed" style="gap: var(--space-lg); display: flex; flex-direction: column; width: 100%;">
       {% if site.posts == empty %}
       <p class="u-text-mono" style="opacity: 0.5;">No posts yet.</p>
       {% else %}
