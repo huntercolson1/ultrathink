@@ -1,5 +1,5 @@
 ---
-title: Claude Cowork and the Quiet Shift toward AI Tools for Everyone
+title: Cowork Is Claude Code for the Rest of Us
 date: 2026-01-14
 author: Hunter Colson
 subtitle: Why the interface matters more than the intelligence
