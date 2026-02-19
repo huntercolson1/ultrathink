@@ -14,11 +14,19 @@ collections:
   posts:
     output: true
     permalink: /blog/:slug/
+  tutorials:
+    output: true
+    permalink: /tutorials/:slug/
 
 defaults:
   - scope:
       path: ""
       type: "posts"
+    values:
+      layout: post
+  - scope:
+      path: ""
+      type: "tutorials"
     values:
       layout: post
   - scope:
@@ -49,4 +57,3 @@ kramdown:
     preview_as_code: false
   auto_ids: true
   toc_levels: 2..6
-
