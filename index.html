@@ -22,43 +22,21 @@ permalink: /
       <div class="stack" style="gap: var(--space-sm);">
         <h2 class="u-text-mono"
           style="font-size: 1rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; text-transform: uppercase;">
-          > Recent_Logs
+          > Blogs_And_Tutorials
         </h2>
 
         <ul class="u-text-mono stack" style="gap: var(--space-xs); list-style: none; padding: 0;">
-          {% for post in site.posts limit:5 %}
+          {% assign recent_writing = site.posts | concat: site.tutorials | sort: "date" | reverse %}
+          {% for item in recent_writing limit:5 %}
           <li>
-            <a href="{{ post.url | relative_url }}" style="text-decoration: none; display: flex; gap: 1rem;">
-              <span style="opacity: 0.6;">{{ post.date | date: "%Y-%m-%d" }}</span>
-              <span style="font-weight: 600;">{{ post.title }}</span>
+            <a href="{{ item.url | relative_url }}" style="text-decoration: none; display: flex; gap: 1rem;">
+              <span style="opacity: 0.6;">{{ item.date | date: "%Y-%m-%d" }}</span>
+              <span style="font-weight: 600;">{{ item.title }}</span>
             </a>
           </li>
           {% endfor %}
         </ul>
       </div>
-
-      <!-- Tutorial / Project Listing (Simplifying to use same logic) -->
-      {% assign tutorials = site.data.tutorials %}
-      {% if tutorials %}
-      <div class="stack" style="gap: var(--space-sm);">
-        <h2 class="u-text-mono"
-          style="font-size: 1rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; text-transform: uppercase;">
-          > Project_Index
-        </h2>
-
-        <ul class="u-text-mono stack" style="gap: var(--space-xs); list-style: none; padding: 0;">
-          {% for tutorial in tutorials limit:5 %}
-          <li>
-            <a href="{{ tutorial.url | relative_url }}" style="text-decoration: none; display: flex; gap: 1rem;">
-              <span style="opacity: 0.6;">TYPE: TUTORIAL</span>
-              <span style="font-weight: 600;">{{ tutorial.title }}</span>
-            </a>
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
-      {% endif %}
-
     </div>
   </div>
 </section>

@@ -24,16 +24,15 @@ permalink: /tutorials/
 
     <div class="stack" style="gap: var(--space-lg);">
       {% if site.tutorials.size > 0 %}
-      {% assign sorted_tutorials = site.tutorials | sort: "date" | reverse %}
-      {% for tutorial in sorted_tutorials %}
+      {% for tutorial in site.tutorials %}
       <article class="stack"
         style="gap: var(--space-sm); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--border-color);">
         <span class="u-text-mono" style="font-size: 0.85rem;">{{ tutorial.date | date: "%Y-%m-%d" }}</span>
         <a href="{{ tutorial.url | relative_url }}" style="text-decoration: none;">
           <h2 class="u-text-display" style="font-size: 1.25rem; margin: 0;">{{ tutorial.title }}</h2>
         </a>
-        {% if tutorial.description %}
-        <p class="u-text-mono" style="opacity: 0.7; font-size: 0.95rem;">{{ tutorial.description }}</p>
+        {% if tutorial.subtitle or tutorial.description %}
+        <p class="u-text-mono" style="opacity: 0.7; font-size: 0.95rem;">{{ tutorial.subtitle | default: tutorial.description }}</p>
         {% endif %}
       </article>
       {% endfor %}
