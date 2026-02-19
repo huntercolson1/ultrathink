@@ -6,7 +6,18 @@ layout: default
 {% assign reading_minutes = word_count | plus: 199 | divided_by: 200 %}
 {% if reading_minutes < 1 %} {% assign reading_minutes=1 %} {% endif %} {% assign post_absolute_url=page.url |
   absolute_url %} {% assign share_url_encoded=post_absolute_url | uri_escape %} {% assign share_title_encoded=page.title
-  | uri_escape %} <section class="section post-hero" style="padding-top: var(--space-xl);">
+  | uri_escape %}
+{% assign is_tutorial_post = false %}
+{% if page.collection == "tutorials" or page.url contains "/tutorials/" %}
+{% assign is_tutorial_post = true %}
+{% endif %}
+{% assign post_index_url = "/blog/" %}
+{% assign post_index_label = "Back to blog" %}
+{% if is_tutorial_post %}
+{% assign post_index_url = "/tutorials/" %}
+{% assign post_index_label = "Back to tutorials" %}
+{% endif %}
+<section class="section post-hero" style="padding-top: var(--space-xl);">
   <div class="container stack post-hero__container" style="gap: var(--space-lg);">
     <header class="stack"
       style="gap: var(--space-md); border-bottom: 4px solid var(--border-color); padding-bottom: var(--space-lg);">
@@ -70,7 +81,7 @@ layout: default
           {% if page.tags %}
           {% for tag in page.tags %}
           {% assign tag_clean = tag | downcase | strip %}
-          <a href="{{ '/blog/' | relative_url }}?tag={{ tag_clean | uri_escape }}" class="u-text-contrast">#{{
+          <a href="{{ post_index_url | relative_url }}?tag={{ tag_clean | uri_escape }}" class="u-text-contrast">#{{
             tag_clean }}</a>{% unless
           forloop.last %}, {% endunless %}
           {% endfor %}
@@ -78,7 +89,7 @@ layout: default
           <span>Notes</span>
           {% endif %}
         </span>
-        <a class="c-btn c-btn--ghost" href="{{ '/blog/' | relative_url }}">← Back to blog</a>
+        <a class="c-btn c-btn--ghost" href="{{ post_index_url | relative_url }}">← {{ post_index_label }}</a>
       </div>
     </div>
   </article>
