@@ -23,7 +23,7 @@ An Interactive Excel Tutorial
 
 Companion document for Logistic_Regression_Tutorial.xlsx
 
-# 1. Introduction: What Is Machine Learning?
+## Introduction: What Is Machine Learning?
 
 Imagine you are a doctor examining tumor biopsies. After years of experience, you develop an intuition: larger, rougher tumors tend to be malignant. You cannot write down an exact rule, but you have learned patterns from hundreds of past cases.
 
@@ -31,13 +31,13 @@ Machine learning automates this process. Instead of a human learning patterns fr
 
 In this tutorial, you will play the role of that computer. You will manually perform every step of the learning process inside an Excel spreadsheet, with every calculation visible and inspectable. By the end, you will understand the fundamental mechanism behind how machines learn.
 
-## 1.1 What You Will Build
+### What You Will Build
 
 You will build a logistic regression model. This is one of the simplest and most important models in all of machine learning. It takes in measurements (numbers describing something) and outputs a probability: how likely is it that this thing belongs to a particular category?
 
 Specifically, your model will take two measurements of a breast tumor (its radius and its texture) and output a probability that the tumor is malignant. If the probability is above 50%, the model predicts malignant. If below 50%, it predicts benign.
 
-## 1.2 What You Will Learn
+### What You Will Learn
 
 This tutorial is designed for someone with no prior machine learning experience. By working through it, you will develop an intuitive understanding of:
 
@@ -53,11 +53,11 @@ This tutorial is designed for someone with no prior machine learning experience.
 
 - Why some features matter more than others (learned weights)
 
-## 1.3 Prerequisites
+### Prerequisites
 
 You need basic familiarity with Excel (opening files, editing cells, copying and pasting). No programming, statistics, or advanced math knowledge is required. Any mathematical notation will be explained in plain language.
 
-# 2. The Dataset: Breast Tumor Measurements
+## The Dataset: Breast Tumor Measurements
 
 Our dataset comes from the Breast Cancer Wisconsin (Diagnostic) dataset, one of the most widely used datasets in machine learning education. It was created by researchers at the University of Wisconsin who used a fine needle aspirate (FNA) procedure to extract cell samples from breast masses. They then digitized images of those cells and measured various geometric properties of the cell nuclei.
 
@@ -69,15 +69,15 @@ We use a subset of 150 samples with two features and one label:
 | **Texture** | Numeric (continuous) | The standard deviation of gray-scale pixel values in the image. Higher values indicate rougher, more irregular surfaces. |
 | **Malignant** | Binary (0 or 1) | The diagnosis: 1 if the tumor is malignant (cancerous), 0 if benign (not cancerous). This is what the model will predict. |
 
-## 2.1 The Prediction Task
+### The Prediction Task
 
 **Given a tumor's radius and texture, predict whether it is malignant or benign.** This is called **binary classification** because there are exactly two possible outcomes (malignant or benign, encoded as 1 or 0).
 
-## 2.2 Why These Features?
+### Why These Features?
 
 We chose radius and texture because they have real medical significance. In general, malignant tumors tend to have larger nuclei (higher radius) and more irregular surfaces (higher texture). This means there is a genuine pattern for the model to discover. You can verify this yourself by looking at the scatter plot on the Visualizations sheet: the red (malignant) and blue (benign) points partially separate along these axes, though they overlap.
 
-## 2.3 Feature Normalization
+### Feature Normalization
 
 The raw radius values range from about 7 to 25, while texture values range from about 10 to 31. These different scales can cause problems during training: the model would need to use tiny weights for the larger-valued feature and larger weights for the smaller one. This makes the learning process lopsided and slow.
 
@@ -89,11 +89,11 @@ $$
 
 After normalization, both features are centered around zero and have similar scales (most values fall between -2 and +2). This ensures both features contribute equally to learning from the start. The Data sheet in the workbook shows both the raw and normalized values side by side so you can see exactly what normalization does.
 
-# 3. The Model: How Logistic Regression Works
+## The Model: How Logistic Regression Works
 
 A logistic regression model is like a simple decision-making machine with adjustable knobs. It takes in numbers (the features), processes them through a formula, and outputs a probability. The adjustable knobs are the model's parameters: the values that change during training.
 
-## 3.1 The Parameters
+### The Parameters
 
 Our model has exactly three parameters:
 
@@ -107,7 +107,7 @@ These three numbers are the entirety of the model's "knowledge." Before training
 
 > *Key insight: A machine learning model is just a mathematical function with adjustable parameters. "Training" means finding the parameter values that make the function produce correct outputs.*
 
-## 3.2 Step 1: The Linear Combination (Computing z)
+### Step 1: The Linear Combination (Computing z)
 
 The model's first calculation is a weighted sum:
 
@@ -123,7 +123,7 @@ Think of z as a score. A positive z means the model is leaning toward predicting
 
 In the Training sheet, column E shows the z value for every sample. When all weights are zero (before training), every z equals zero.
 
-## 3.3 Step 2: The Sigmoid Function (Computing p)
+### Step 2: The Sigmoid Function (Computing p)
 
 The value z is a raw score, but we need a probability between 0 and 1. The sigmoid function performs this conversion:
 
@@ -145,7 +145,7 @@ The sigmoid creates a smooth S-shaped curve. It never outputs exactly 0 or exact
 
 In the Training sheet, column F shows p = sigmoid(z) for every sample. When all weights are zero, every p equals exactly 0.5.
 
-## 3.4 Making a Classification Decision
+### Making a Classification Decision
 
 The predicted probability p is continuous: it could be 0.73 or 0.12 or 0.51. To make an actual classification decision (malignant or benign), we apply a threshold:
 
@@ -153,11 +153,11 @@ The predicted probability p is continuous: it could be 0.73 or 0.12 or 0.51. To 
 
 The accuracy metric on the Parameters sheet counts how many samples are classified correctly using this threshold.
 
-# 4. The Loss Function: Measuring How Wrong the Model Is
+## The Loss Function: Measuring How Wrong the Model Is
 
 Now we need a way to tell the model how wrong its predictions are. This is the job of the loss function. It takes the model's prediction (p) and the true answer (y) and outputs a single number: the loss. A small loss means the prediction was good. A large loss means it was bad.
 
-## 4.1 Binary Cross-Entropy (Log Loss)
+### Binary Cross-Entropy (Log Loss)
 
 For binary classification, we use a loss function called binary cross-entropy:
 
@@ -185,13 +185,13 @@ If the model predicts p = 0.01 (correctly confident in benign), Loss = -ln(0.99)
 
 If the model predicts p = 0.99 (confidently wrong), Loss = -ln(0.01) = 4.61. Huge loss.
 
-## 4.2 Why Cross-Entropy Instead of Simple Difference?
+### Why Cross-Entropy Instead of Simple Difference?
 
 You might wonder: why not just use (p - y) squared as the loss? This would technically work, but cross-entropy has an important advantage. It penalizes confident wrong predictions much more harshly than uncertain ones. If the model predicts p = 0.99 for a benign tumor, the cross-entropy loss is 4.61, but the squared error loss would only be (0.99 - 0)^2 = 0.98. Cross-entropy provides a much stronger signal to the model that something is seriously wrong, which speeds up learning.
 
 > *Think of it this way: cross-entropy says "being confidently wrong is much worse than being uncertain." This harsh penalty for confident mistakes is exactly what we want, because it forces the model to be honest about its uncertainty.*
 
-## 4.3 The Average Loss
+### The Average Loss
 
 Each of the 150 samples has its own individual loss (shown in column G of the Training sheet). We average all of them to get a single number that summarizes the model's overall performance:
 
@@ -201,17 +201,17 @@ $$
 
 This average loss is what we are trying to minimize. It appears on the Parameters sheet in cell B12. When the model starts (all weights zero), every prediction is 0.5, so the average loss is -ln(0.5) = 0.693. This is the loss of a model that is purely guessing. Any learning at all should bring the loss below this number.
 
-# 5. Training: How the Model Learns
+## Training: How the Model Learns
 
 We now have a model that makes predictions and a loss function that measures how wrong those predictions are. The remaining question is: how do we improve the parameters so the loss goes down? The answer is gradient descent.
 
-## 5.1 The Core Idea
+### The Core Idea
 
 Imagine you are standing on a hilly landscape in complete fog. You cannot see which way is downhill, but you can feel the slope of the ground beneath your feet. Gradient descent is like taking a step in whichever direction feels most downhill. After many steps, you end up in a valley (a low point of the loss).
 
 The gradient tells you the slope. Specifically, for each parameter, the gradient tells you: "If you increase this parameter by a tiny amount, how much does the loss increase?" If the gradient is positive, increasing the parameter makes things worse, so you should decrease it. If the gradient is negative, increasing the parameter makes things better, so you should increase it.
 
-## 5.2 The Error Signal
+### The Error Signal
 
 The first step in computing gradients is calculating the error for each sample:
 
@@ -229,7 +229,7 @@ This is remarkably simple. It is just the predicted probability minus the true l
 
 The sign of the error tells us the direction of the needed correction. The magnitude tells us how large the correction should be. In the Training sheet, column H shows this error for every sample.
 
-## 5.3 Computing Gradients
+### Computing Gradients
 
 The gradient for each weight tells us how much that weight contributed to the total error. For logistic regression, the math works out elegantly:
 
@@ -255,7 +255,7 @@ For each sample, we multiply the error by the corresponding feature value. This 
 
 In the Training sheet, columns I and J show each sample's gradient contribution for w1 and w2 respectively. The averages of these columns (plus the average error for bias) appear in the aggregated cells P3 through R3 and are reflected on the Parameters sheet.
 
-## 5.4 The Update Rule
+### The Update Rule
 
 Once we have the gradients, we update each parameter:
 
@@ -273,7 +273,7 @@ $$
 
 Here α (alpha) is the learning rate. The minus sign is critical: we subtract the gradient because the gradient points uphill (toward higher loss), and we want to go downhill (toward lower loss). Think of it as walking in the opposite direction of the slope.
 
-## 5.5 The Learning Rate
+### The Learning Rate
 
 The learning rate is a number (typically between 0.001 and 1.0) that controls the step size. It answers the question: "How far should we walk in the downhill direction?"
 
@@ -285,7 +285,7 @@ The learning rate is a number (typically between 0.001 and 1.0) that controls th
 
 > *Experiment! Try changing the learning rate on the Parameters sheet to see its effect. Set it to 0.01 and notice how the loss decreases more slowly. Set it to 1.0 and watch the model learn faster (but be aware it may become unstable for even larger values).*
 
-## 5.6 What Is One Training Iteration?
+### What Is One Training Iteration?
 
 One training iteration (also called an epoch) consists of one complete pass through all 150 training samples. The word “epoch” simply means one full cycle through the entire dataset. Each epoch produces one gradient update, moving the weights slightly closer to their optimal values. One epoch here consists of:
 
@@ -303,13 +303,13 @@ One training iteration (also called an epoch) consists of one complete pass thro
 
 In the spreadsheet, steps 1 through 5 happen automatically through formulas. Step 6 is the part you do manually by copying the new parameter values.
 
-# 6. Detailed Walkthrough of the Excel Workbook
+## Detailed Walkthrough of the Excel Workbook
 
-## 6.1 Overview Sheet
+### Overview Sheet
 
 The first sheet you see when you open the workbook. It provides a quick-start guide and lists all the sheets with their purposes. Use it as a reference card.
 
-## 6.2 Parameters Sheet
+### Parameters Sheet
 
 This is your control panel. It is organized into clearly labeled sections:
 
@@ -333,7 +333,7 @@ Cells B17 through B19 show the current gradient for each parameter. These tell y
 
 Cells B22, B23, and B24 show what the parameters should be after one gradient descent step. These are computed as: new = old - learning_rate * gradient. To perform a training iteration, you copy these values and paste them into the yellow cells above.
 
-## 6.3 Data Sheet
+### Data Sheet
 
 This sheet contains the full dataset of 150 tumor samples. The first section shows the normalization statistics (mean and standard deviation for each feature). The main table has six columns:
 
@@ -351,7 +351,7 @@ This sheet contains the full dataset of 150 tumor samples. The first section sho
 
 The normalization formulas in columns E and F reference the statistics computed at the top of the sheet. You can click on any normalized cell to see the formula and verify the calculation.
 
-## 6.4 Training Sheet
+### Training Sheet
 
 This is the computational heart of the workbook. Every intermediate calculation is exposed as a visible column. There are two header rows: the first shows the short name, the second provides a description.
 
@@ -372,7 +372,7 @@ The aggregated metrics appear in the top-right area of the sheet: average loss i
 
 > *Click on any formula cell in the Training sheet to see exactly what it computes. Every single calculation is transparent. There are no macros, no hidden code, and no VBA scripts. Everything is a standard Excel formula.*
 
-## 6.5 Iteration Log Sheet
+### Iteration Log Sheet
 
 This sheet records the model's performance across training iterations. The first 101 rows (iterations 0 through 100) are pre-filled with data from a simulation, so you can immediately see the loss curve chart without needing to do 100 manual iterations. The pre-filled data shows:
 
@@ -386,7 +386,7 @@ This sheet records the model's performance across training iterations. The first
 
 If you want to continue training beyond iteration 100, empty rows are provided below. Simply fill in the values from the Parameters sheet after each update.
 
-## 6.6 Visualizations Sheet
+### Visualizations Sheet
 
 This sheet contains seven charts. Charts 1, 2, and 3 update automatically when you change parameters. Charts 4 through 7 are static reference charts.
 
@@ -418,9 +418,9 @@ This chart traces how the two weights (w1 for Radius and w2 for Texture) evolve 
 
 This full-width chart overlays both training loss and accuracy on the same axis, letting you directly compare how the two metrics evolve together. This is the chart that most clearly illustrates why loss and accuracy behave so differently: loss (the continuous curve) decreases smoothly while accuracy (the step-function curve) jumps sharply at first and then plateaus. The divergence between these two curves is a fundamental concept in machine learning: a model can continue to improve its confidence and calibration (reducing loss) even after accuracy has stopped increasing.
 
-# 7. Hands-On: Running Training Iterations
+## Hands-On: Running Training Iterations
 
-## 7.1 Step-by-Step Instructions
+### Step-by-Step Instructions
 
 Follow these steps to perform one complete training iteration:
 
@@ -438,7 +438,7 @@ Follow these steps to perform one complete training iteration:
 
 13. Return to the Parameters sheet and repeat from step 2. Each cycle is one training iteration.
 
-## 7.2 What to Expect
+### What to Expect
 
 Here is a rough guide for what you should see at different stages:
 
@@ -450,7 +450,7 @@ Here is a rough guide for what you should see at different stages:
 | 30-50 | 0.35 - 0.41 | ~89% | Improvement slows down. The model is refining its decision boundary. |
 | 80-100 | 0.29 - 0.31 | ~90% | Plateau. Loss barely decreases. The model has learned most of what it can from this data. |
 
-## 7.3 Troubleshooting
+### Troubleshooting
 
 - **Loss increased after an update:** The learning rate is likely too high. Change B9 to 0.01, reset the weights to zero, and try again.
 
@@ -458,9 +458,9 @@ Here is a rough guide for what you should see at different stages:
 
 - **Accuracy is stuck:** Accuracy can be stable even while loss continues to decrease. This is because accuracy only changes when a sample crosses the 0.5 threshold. The model may be making better calibrated predictions (probabilities closer to 0 or 1) without changing which side of 0.5 they are on.
 
-# 8. Interpreting the Trained Model
+## Interpreting the Trained Model
 
-## 8.1 What the Weights Mean
+### What the Weights Mean
 
 After training, examine the final weight values:
 
@@ -470,7 +470,7 @@ After training, examine the final weight values:
 
 - **Bias reaches approximately -0.4 to -0.5:** The negative bias reflects the class imbalance in the dataset (92 benign vs 58 malignant). The model starts with a slight lean toward benign, which features must overcome.
 
-## 8.2 The Decision Boundary
+### The Decision Boundary
 
 The model classifies a sample as malignant when p >= 0.5, which happens when z >= 0. Setting z = 0 gives us:
 
@@ -480,13 +480,13 @@ $$
 
 This is the equation of a straight line in the feature space. Every point on one side of this line is predicted malignant; every point on the other side is predicted benign. As the weights change during training, this line rotates and shifts to better separate the two classes.
 
-## 8.3 Why the Model Cannot Reach 100% Accuracy
+### Why the Model Cannot Reach 100% Accuracy
 
 With only two features and a linear decision boundary, the model has limited expressive power. Some malignant and benign tumors have similar radius and texture values, making them impossible to separate with a straight line. This is not a failure of the model; it is a reflection of the data. To achieve higher accuracy, you would need more features, a more complex model (like a neural network), or both.
 
 > *This limitation is actually the key insight that motivates deep learning: by stacking many logistic regression units in layers (creating a neural network), you can learn curved, complex decision boundaries that separate data that a single straight line cannot.*
 
-# 9. The Bigger Picture: From Here to Neural Networks
+## The Bigger Picture: From Here to Neural Networks
 
 Everything you have learned in this tutorial is the foundation of modern AI systems. Here is how the concepts scale up:
 
@@ -504,7 +504,7 @@ Everything you have learned in this tutorial is the foundation of modern AI syst
 
 The conceptual core is always the same: start with adjustable parameters, compute predictions, measure loss, compute gradients, and update parameters to reduce loss. You now understand this core.
 
-# 10. Key Takeaways
+## Key Takeaways
 
 After working through this tutorial, here are the essential ideas:
 
@@ -526,7 +526,7 @@ After working through this tutorial, here are the essential ideas:
 
 **Congratulations on completing this tutorial. You now have a working understanding of the fundamental mechanism behind how machines learn from data. Every time you hear about AI "training" on data, you know exactly what that means: computing predictions, measuring errors, and adjusting parameters to do better next time.**
 
-# 11. Glossary
+## Glossary
 
 | **Term** | **Definition** |
 | --- | --- |
