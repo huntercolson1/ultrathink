@@ -30,7 +30,7 @@ In this tutorial, you will play the role of that computer. You will manually per
 
 ### What You Will Build
 
-You will build a logistic regression model. This is one of the simplest and most important models in all of machine learning. It takes in measurements (numbers describing something) and outputs a probability: how likely is it that this thing belongs to a particular category?
+You will build a logistic regression model, one of the simplest and most important models in all of machine learning. It takes in measurements about a subject and outputs a probability: how likely is it that this subject belongs to a particular category?
 
 Specifically, your model will take two measurements from a breast tumor biopsy (the mean nuclear radius and nuclear texture of the sampled cells) and output a probability that the tumor is malignant. If the probability is above 50%, the model predicts malignant. If below 50%, it predicts benign.
 
