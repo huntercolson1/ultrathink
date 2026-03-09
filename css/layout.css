@@ -106,6 +106,114 @@ main {
   margin-bottom: 0;
 }
 
+/* Responsive tables: allow horizontal scroll on small screens */
+.post-content table:not(.post-data-table) {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-collapse: collapse;
+}
+
+.post-figure-card {
+  margin: var(--space-lg) 0;
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--text-primary);
+  background: var(--code-bg);
+}
+
+.post-figure-card__label {
+  display: block;
+  margin-bottom: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.post-figure-card__media {
+  width: 100%;
+  height: auto;
+}
+
+.post-figure-card table {
+  border: none;
+  margin: 0;
+}
+
+.post-metrics-table {
+  width: auto;
+  max-width: 100%;
+  display: inline-table;
+  table-layout: auto;
+}
+
+.post-metrics-table th:last-child,
+.post-metrics-table td:last-child {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.post-figure-card figcaption,
+.post-figure-card__caption {
+  margin-top: var(--space-sm);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.post-scale-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+
+.post-scale-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.post-scale-chip__roman {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.post-scale-chip__swatch {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--border-color);
+}
+
+.post-scale-chip__note {
+  font-size: 0.72rem;
+  line-height: 1.35;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.theme-asset {
+  display: block;
+}
+
+.theme-asset--dark {
+  display: none;
+}
+
+[data-theme="dark"] .theme-asset--light {
+  display: none;
+}
+
+[data-theme="dark"] .theme-asset--dark {
+  display: block;
+}
+
 .post-hero__meta {
   display: flex;
   flex-wrap: wrap;
@@ -896,6 +1004,16 @@ footer {
 
   .reading-width {
     max-width: 100%;
+  }
+
+  .post-figure-card {
+    padding: var(--space-md);
+    margin: var(--space-md) 0;
+  }
+
+  .post-scale-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: var(--space-md);
   }
 }
 

@@ -44,6 +44,7 @@ exclude:
   - reports
   - vendor
   - components/README.md
+  - research-scratchpads
 
 plugins:
   - jekyll-feed

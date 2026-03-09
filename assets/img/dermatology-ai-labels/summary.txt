@@ -1,0 +1,6 @@
+known_rows=15230
+exact_pct=47.89
+within_one_pct=91.04
+within_two_pct=98.44
+unweighted_kappa=0.351
+quadratic_kappa=0.786
