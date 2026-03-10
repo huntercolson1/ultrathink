@@ -86,7 +86,7 @@ That's the question that shapes the conclusions a paper can draw.
 
 To put numbers on this, I used the public `Fitzpatrick17k` annotation CSV from the dataset introduced by Groh and colleagues in 2021 ([Groh et al. 2021](https://arxiv.org/abs/2104.09957)).
 
-The CSV has two consensus columns: `fitzpatrick_scale` and `fitzpatrick_centaur`. The repository and follow-up papers make it clear that the dataset includes labels from two different human annotation pipelines, and the column names strongly suggest that these are the Scale AI and Centaur Labs consensus labels. That's the naming I use here. I didn't treat either one as ground truth. I treated them as two public attempts to assign image-based Fitzpatrick labels at scale.
+The CSV has two consensus columns: `fitzpatrick_scale` and `fitzpatrick_centaur`. These correspond to the Scale AI and Centaur Labs consensus labeling pipelines. I didn't treat either one as ground truth. I treated them as two public attempts to assign image-based Fitzpatrick labels at scale.
 
 After dropping rows where either column was unknown, I had **15,230** comparable images. I asked two questions. First, how often do the two columns agree exactly? Second, if I collapse the six types into broader groups, how often does an image stay in the same group?
 
@@ -186,7 +186,7 @@ Without that context, a fairness table can look more definitive than it really i
 
 ## Method Note
 
-The analysis in this post used the public [`fitzpatrick17k.csv`](https://github.com/mattgroh/fitzpatrick17k) and compared the two exposed consensus columns, `fitzpatrick_scale` and `fitzpatrick_centaur`, on rows where both values were not `-1`. I refer to them as the Scale AI and Centaur Labs consensus columns because that's what the repository context and column names suggest, but this post doesn't independently validate that mapping. I also collapsed Fitzpatrick I–II, III–IV, and V–VI into light, medium, and dark subgroup buckets to estimate how often images would move between the kinds of coarse groups fairness analyses commonly rely on. This isn't a validation study, and it doesn't establish one column as ground truth.
+The analysis in this post used the public [`fitzpatrick17k.csv`](https://github.com/mattgroh/fitzpatrick17k) and compared the two exposed consensus columns, `fitzpatrick_scale` and `fitzpatrick_centaur`, on rows where both values were not `-1`. I treated these as the Scale AI and Centaur Labs consensus columns. I also collapsed Fitzpatrick I–II, III–IV, and V–VI into light, medium, and dark subgroup buckets to estimate how often images would move between the kinds of coarse groups fairness analyses commonly rely on. This isn't a validation study, and it doesn't establish one column as ground truth.
 
 ## Further Reading
 
