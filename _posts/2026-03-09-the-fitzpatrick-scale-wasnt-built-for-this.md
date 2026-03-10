@@ -2,8 +2,8 @@
 title: The Fitzpatrick Scale Wasn't Built for This
 date: 2026-03-09
 author: Hunter Colson
-subtitle: Dermatology AI papers often use the Fitzpatrick scale to sort images by skin tone, even though the scale was built for sun response, not for reading photographs.
-description: Why the Fitzpatrick scale keeps showing up in dermatology AI, and why different labeling pipelines can quietly change the fairness groups a paper reports.
+subtitle: Dermatology AI papers often use the Fitzpatrick scale to sort images by skin tone, even though it was designed to describe sun response rather than the appearance of skin in a photograph.
+description: A closer look at why the Fitzpatrick scale is used in dermatology AI and how different labeling pipelines can change the subgroup comparisons a paper reports.
 tags:
   - dermatology
   - ai
@@ -15,15 +15,13 @@ tags:
 
 ## Introduction
 
-When people talk about fairness in dermatology AI, the conversation usually starts at the end of the pipeline. Does the model work worse on darker skin? That's an important question. But before a model can underperform on a group, someone has to decide who belongs in that group in the first place.
+When people talk about fairness in dermatology AI, the conversation usually starts with model performance, whether a model works worse on darker skin than on lighter skin. But those comparisons rest on an earlier judgment that is easier to miss. Before a model can underperform on a group, someone has to decide which images belong in that group at all.
 
-That's the layer this post is about. Not model accuracy, but the measurement underneath it. The part where images get sorted into skin-tone groups before a model ever sees them.
+In dermatology AI, that decision often runs through the Fitzpatrick scale. The scale is widely used to sort images by skin type, but it was designed for something narrower and more clinical, a way of describing how skin responds to sun exposure. That mismatch matters because if two reasonable labeling pipelines sort the same image differently, the fairness groups in a paper can shift before the model ever makes a prediction.
 
-The tool almost everyone reaches for is the Fitzpatrick scale. I want to walk through what it actually measures, why it gets reused in AI, and what happens when you ask a simple question: if two reasonable labeling pipelines look at the same image, do they put it in the same bucket?
+## What the Fitzpatrick Scale Measures
 
-## What the Fitzpatrick Scale Is
-
-The Fitzpatrick scale is a six-step clinical scale, from Type I to Type VI, originally designed around how skin responds to sun exposure. Type I skin almost always burns. Type VI skin almost never burns. The types in between sit somewhere along that range.
+The Fitzpatrick scale is a six-step clinical scale, from Type I to Type VI, originally designed around how skin responds to sun exposure. At one end, Type I skin almost always burns; at the other, Type VI skin almost never does, with the remaining types falling somewhere in between.
 
 <div class="post-figure-card" role="img" aria-label="Simplified explainer of the six-step Fitzpatrick scale from Type I to Type VI.">
   <span class="post-figure-card__label">Quick Explainer</span>
@@ -64,37 +62,33 @@ The Fitzpatrick scale is a six-step clinical scale, from Type I to Type VI, orig
   </div>
 </div>
 
-That makes the scale useful when sun sensitivity matters: phototherapy dosing, burn risk, tanning response. What it wasn't built for is estimating skin tone from a single photograph.
+That makes the scale useful when sun sensitivity matters, whether the question is phototherapy dosing, burn risk, or tanning response. It is much less suited to estimating skin tone from a single photograph.
 
-That difference matters more than it might seem. In clinic, a dermatologist can ask the patient about burning and tanning, look at the skin under consistent lighting, and use context from the visit. A photo annotator gets none of that. They get one image, taken under whatever lighting happened to be in the room, with some mix of healthy skin, inflamed skin, shadow, and camera color balance all folded together. That's a very different job from the one the scale was made for.
+The gap between those two tasks is larger than it first appears. In clinic, a dermatologist can ask about burning and tanning, look at the skin under consistent lighting, and use the rest of the visit as context. A photo annotator has none of that, only a single image taken under whatever lighting happened to be in the room, with healthy skin, inflamed skin, shadow, and camera color balance all mixed together. That is a different kind of judgment from the one the scale was designed to support.
 
-And yet the Fitzpatrick scale is still the most common skin-type label in dermatology AI papers. The field has taken a clinical concept and asked it to do a computer-vision job.
+The Fitzpatrick scale remains the most common skin-type label in dermatology AI papers, which means a clinical concept is regularly being asked to do a computer-vision job.
 
-## Why a Small Disagreement Can Be a Big Deal
+## Why Small Disagreements Matter
 
-At first glance, a one-step disagreement on a six-point scale doesn't sound serious. If one annotator says Type III and another says Type IV, that feels close enough.
+At first glance, a one-step disagreement on a six-point scale does not sound especially serious. If one annotator says Type III and another says Type IV, that can seem close enough. The problem shows up later, when those labels get used downstream.
 
-The trouble starts when those labels get used downstream.
+Most papers do not keep the Fitzpatrick types as six separate bins. They collapse them into broader groups and report model performance for each group, often using I–II for "light," III–IV for "medium," and V–VI for "dark."
 
-Most papers don't keep the Fitzpatrick types as six separate bins. They collapse them into broader groups and report model performance for each group. That's the fairness table. A common grouping is I–II as "light," III–IV as "medium," and V–VI as "dark."
+Once the labels are reduced that way, a one-step disagreement can move an image across a group boundary. A Type II that becomes a Type III no longer belongs to the same subgroup, so the question is not only whether two annotators picked the same exact number. It is whether they placed the image in the same fairness bucket, because that decision shapes the conclusions a paper can draw.
 
-Once you do that, a one-step disagreement can move an image across a group boundary. A Type II that becomes a Type III jumps from "light" to "medium." So the real question isn't just whether two annotators picked the same exact number. It's whether they put the same image in the same fairness bucket.
+## The Public Labels I Compared
 
-That's the question that shapes the conclusions a paper can draw.
+To put some numbers on this, I used the public `Fitzpatrick17k` annotation CSV from the dataset introduced by Groh and colleagues in 2021 ([Groh et al. 2021](https://arxiv.org/abs/2104.09957)).
 
-## What I Looked At
+The CSV has two consensus columns: `fitzpatrick_scale` and `fitzpatrick_centaur`. I read those as the Scale AI and Centaur Labs consensus labeling pipelines. I did not treat either one as ground truth, only as two public attempts to assign image-based Fitzpatrick labels at scale.
 
-To put numbers on this, I used the public `Fitzpatrick17k` annotation CSV from the dataset introduced by Groh and colleagues in 2021 ([Groh et al. 2021](https://arxiv.org/abs/2104.09957)).
+After dropping rows where either column was unknown, I was left with **15,230** comparable images. I wanted to know how often the two columns agreed exactly and how often an image stayed in the same broad subgroup once the six types were collapsed into the bins fairness analyses usually use.
 
-The CSV has two consensus columns: `fitzpatrick_scale` and `fitzpatrick_centaur`. I read those as the Scale AI and Centaur Labs consensus labeling pipelines. I didn't treat either one as ground truth. I treated them as two public attempts to assign image-based Fitzpatrick labels at scale.
+## Agreement Between the Two Pipelines
 
-After dropping rows where either column was unknown, I had **15,230** comparable images. I asked two questions. First, how often do the two columns agree exactly? Second, if I collapse the six types into broader groups, how often does an image stay in the same group?
+Across those images, the two columns matched exactly on **47.89%** of cases.
 
-## How Often the Two Pipelines Agree
-
-The first thing I looked at was exact agreement: for each image, did the two columns assign the same Fitzpatrick type? They matched exactly on **47.89%** of images.
-
-On its own, that sounds alarming. But a six-point scale is fairly granular, and most of the disagreements are small. If you allow a one-step margin, agreement jumps to **91.04%**. Allow two steps, and it reaches **98.44%**. Most of the time, the two pipelines land on the same type or a neighboring one.
+On its own, that sounds alarming. But a six-point scale is fairly granular, and most of the disagreements are small. If you allow a one-step margin, agreement jumps to **91.04%**. Allow two steps, and it reaches **98.44%**. In most cases, the two pipelines land on the same type or a neighboring one.
 
 <table class="post-metrics-table">
   <thead>
@@ -112,7 +106,7 @@ On its own, that sounds alarming. But a six-point scale is fairly granular, and 
   </tbody>
 </table>
 
-The chart below puts those three numbers side by side. The picture changes dramatically depending on how strictly you define "agreement." That's normal for an ordinal scale. If two people had to sort thousands of photos onto a six-step ladder, you would expect a lot of near-misses even when they broadly see the same thing.
+Seen together, those numbers change the picture. Exact match stays below 50%, but once near-misses count, the two columns look much closer. That is what you would expect from an ordinal scale like this. If two people had to sort thousands of photos onto a six-step ladder, a lot of disagreements would land one rung apart even when they were broadly seeing the same thing.
 
 <figure class="post-figure-card">
   <img class="post-figure-card__media theme-asset theme-asset--light" src="/assets/img/dermatology-ai-labels/agreement-metrics.svg" alt="Bar chart showing exact agreement at 47.9%, within 1 step at 91.0%, and within 2 steps at 98.4%.">
@@ -120,9 +114,9 @@ The chart below puts those three numbers side by side. The picture changes drama
   <figcaption>The same data tells very different stories depending on how strictly you define "agreement." Exact match is under 50%, but within one Fitzpatrick step, the two columns agree over 91% of the time.</figcaption>
 </figure>
 
-The Cohen's kappa values in the table are a more formal way to say the same thing. Unweighted kappa (0.351) treats every disagreement equally, so a III-vs-IV miss counts just as much as a I-vs-VI miss. Quadratic-weighted kappa (0.786) gives partial credit for near-misses, which makes more sense for an ordered scale like this. If you care about exact matching, the two columns look shaky. If you care about whether they usually land close together, they look much more consistent. Both readings are true.
+The Cohen's kappa values in the table make the same point in a more formal way. Unweighted kappa (0.351) treats every disagreement equally, so a III-vs-IV miss counts just as much as a I-vs-VI miss. Quadratic-weighted kappa (0.786) gives partial credit for near-misses, which fits an ordered scale much better. If exact matching is the standard, the two columns look shaky. If the question is whether they usually land close together, they look much more consistent. Both descriptions are true to the data.
 
-### Where the Disagreements Actually Fall
+### Where the Disagreements Fall
 
 To see where the two pipelines agree and disagree in more detail, it helps to look at the full confusion matrix. Each cell represents a pair of labels: one pipeline assigned the row type, the other assigned the column type. The darker the cell, the more images fell into that pairing.
 
@@ -132,15 +126,13 @@ To see where the two pipelines agree and disagree in more detail, it helps to lo
   <figcaption>Each cell shows how many images got one Fitzpatrick type from one pipeline and a different type from the other. The heaviest counts sit on or right next to the diagonal, meaning most disagreements are by a single step. But look at the cells right at the boundary between Types II and III, or IV and V. Those one-step disagreements happen to land exactly where the common fairness-bucket boundaries fall.</figcaption>
 </figure>
 
-Most of the counts sit on the diagonal, where the two pipelines agree exactly, or just beside it, where they're one step apart. That matches the summary numbers above: when the pipelines disagree, they usually disagree by a small amount.
+Most counts sit on the diagonal, where the two pipelines agree exactly, or just beside it, where they are one step apart. That lines up with the summary numbers above: when the pipelines disagree, they usually do so by a small amount.
 
-But the location of those near-misses matters. Look at the boundary between Types II and III, where the "light" and "medium" buckets meet. There's a lot of weight on both sides of that line. The same thing happens between IV and V, where "medium" meets "dark." These are just one-step disagreements on paper, but they can move an image into a different subgroup in the final fairness analysis.
+Where those near-misses fall matters as much as how many there are. The boundary between Types II and III carries a lot of weight on both sides, and the same is true between IV and V. On paper, these are one-step disagreements. In a fairness table, they can move an image into a different subgroup altogether.
 
-## What Happens When You Collapse Into Buckets
+## What Changes When the Labels Are Collapsed Into Buckets
 
-This is the part that matters most for fairness analysis.
-
-When I collapsed the six Fitzpatrick types into the three broader groups that fairness analyses usually use, **76.8%** of images stayed in the same group regardless of which pipeline I used. The other **23.2%**, or **3,533 images**, moved to a different subgroup.
+When I collapsed the six Fitzpatrick types into the three broader groups that fairness analyses usually use, **76.8%** of images stayed in the same group regardless of which pipeline I used. The remaining **23.2%**, or **3,533 images**, moved to a different subgroup.
 
 <figure class="post-figure-card">
   <img class="post-figure-card__media theme-asset theme-asset--light" src="/assets/img/dermatology-ai-labels/bucket-consistency.svg" alt="Bar chart showing how often images stay in the same broad subgroup versus move to a different one.">
@@ -148,13 +140,13 @@ When I collapsed the six Fitzpatrick types into the three broader groups that fa
   <figcaption>When the six Fitzpatrick types are collapsed into light, medium, and dark groupings, nearly one in four comparable images changes subgroup depending on which public consensus column you use.</figcaption>
 </figure>
 
-Nearly one in four images. Put yourself in the position of a reader looking at a paper that says, "our model achieved 92% accuracy on light skin and 84% accuracy on dark skin." That eight-point gap looks like a clean disparity. But if almost a quarter of the images in those groups could have landed in a different bucket under a different but still reasonable labeling pipeline, part of that gap may be telling you about labeling choices rather than model behavior.
+That is a striking amount of movement. If you were reading a paper that said, "our model achieved 92% accuracy on light skin and 84% accuracy on dark skin," the eight-point gap would look clean and interpretable. But if almost a quarter of the images in those groups could have landed in a different bucket under another reasonable labeling pipeline, some of that gap may reflect labeling choices as much as model behavior.
 
-That doesn't mean the labels are useless or the dataset is broken. It means subgroup membership can shift at scale before the model ever makes a prediction.
+That does not make the labels useless, and it does not mean the dataset is broken. It means subgroup membership can shift at scale before the model ever makes a prediction.
 
-## How the Distribution Shifts
+## How the Group Distribution Shifts
 
-The bucket-switching from the previous section doesn't just cancel out as random noise. When you put the two pipelines side by side, they produce noticeably different distributions across the three groups.
+The bucket-switching from the previous section does not simply wash out as random noise. Side by side, the two pipelines produce noticeably different distributions across the three groups.
 
 <figure class="post-figure-card">
   <img class="post-figure-card__media theme-asset theme-asset--light" src="/assets/img/dermatology-ai-labels/representation-shift.svg" alt="Grouped bar chart comparing the distribution of images across light, medium, and dark groups for each pipeline.">
@@ -162,21 +154,21 @@ The bucket-switching from the previous section doesn't just cancel out as random
   <figcaption>The two consensus columns don't just disagree on individual images. They produce different overall group sizes. A fairness analysis built on one pipeline would be working with a measurably different subgroup composition than one built on the other.</figcaption>
 </figure>
 
-In this subset, the Scale AI consensus column comes out to about **48.2% light, 37.9% medium, and 13.9% dark**. The Centaur Labs consensus column comes out to about **56.3% light, 31.8% medium, and 11.9% dark**. Neither is obviously "wrong." They're both outputs of reasonable human labeling processes. But the fairness analysis you build on top of them still changes. The subgroup sizes change. The denominators in the accuracy table change. The number of rare cases inside each group changes.
+In this subset, the Scale AI consensus column comes out to about **48.2% light, 37.9% medium, and 13.9% dark**. The Centaur Labs consensus column comes out to about **56.3% light, 31.8% medium, and 11.9% dark**. Neither distribution is obviously "wrong." They are both outputs of reasonable human labeling processes. Even so, the fairness analysis built on top of them changes. The subgroup sizes change, the denominators in the accuracy table change, and the number of rare cases inside each group changes with them.
 
-So the uncertainty isn't only at the level of the individual image. The shape of the dataset shifts too.
+The uncertainty therefore sits at more than the level of any single image. It changes the shape of the dataset as well.
 
-## Who Did the Labeling
+## How the Labels Were Produced
 
 The original Fitzpatrick17k paper describes the annotation process in some detail. Images were labeled by human annotators through Scale AI, with each image reviewed by two to five annotators using a dynamic consensus process. Annotator quality was benchmarked against a 312-image gold-standard set labeled by a board-certified dermatologist.
 
 The 2022 follow-up paper ([Groh et al. 2022](https://arxiv.org/abs/2207.02942)) went further and compared several annotation methods head to head: three board-certified dermatologists, crowd-based protocols through Scale AI, crowd-based protocols through Centaur Labs, and an algorithmic method called ITA-FST.
 
-The results are worth pausing on. Any two board-certified dermatologists matched exactly on only 50–55% of a 320-image benchmark, but matched within one category on 92–94%. The crowd pipelines performed in a similar range. The ITA-FST algorithm did noticeably worse.
+Taken together, those results change how disagreement in the public CSV should be read. Any two board-certified dermatologists matched exactly on only 50–55% of a 320-image benchmark, but matched within one category on 92–94%. The crowd pipelines performed in a similar range. The ITA-FST algorithm did noticeably worse.
 
-That matters because it changes how we should read disagreement in the public CSV. These aren't numbers that point to obviously sloppy labeling. They're close to what you'd expect even if board-certified dermatologists were doing the work. Image-based Fitzpatrick labeling is just a subjective task. The answer changes with the method, even when the people doing the labeling are experts.
+These figures do not point to obviously sloppy labeling. They sit close to what you would expect even when board-certified dermatologists are doing the work. Image-based Fitzpatrick labeling is a subjective task, and the answer changes with the method even when the people doing the labeling are experts.
 
-## What This Means for Reading Dermatology AI Papers
+## How to Read Fairness Claims Built on These Labels
 
 I don't think the takeaway is to stop reporting subgroup performance. If anything, the field needs more of it. A 2021 scoping review in *JAMA Dermatology* found that only 10% of dermatology AI studies reported skin-tone information in at least one dataset ([Daneshjou et al.](https://pubmed.ncbi.nlm.nih.gov/34550305/)). A 2024 review in the *International Journal of Dermatology* highlighted ongoing underrepresentation challenges for skin of color ([Fliorent et al.](https://pubmed.ncbi.nlm.nih.gov/38444331/)). And a 2022 paper on the Diverse Dermatology Images dataset found that several dermatology AI systems performed worse on dark skin tones and uncommon diseases ([Daneshjou et al.](https://pubmed.ncbi.nlm.nih.gov/35960806/)). Those are real problems, and subgroup reporting is how we notice them.
 
@@ -186,7 +178,7 @@ Without that context, a fairness table can look more definitive than it really i
 
 ## Method Note
 
-The analysis in this post used the public [`fitzpatrick17k.csv`](https://github.com/mattgroh/fitzpatrick17k) and compared the two exposed consensus columns, `fitzpatrick_scale` and `fitzpatrick_centaur`, on rows where both values were not `-1`. I read those as the Scale AI and Centaur Labs consensus columns. I also collapsed Fitzpatrick I–II, III–IV, and V–VI into light, medium, and dark subgroup buckets to estimate how often images would move between the kinds of coarse groups fairness analyses commonly rely on. This isn't a validation study, and I'm not treating one column as the real answer. I put the code, calculations, and figure-generation scripts for this post in a public repo here: [`huntercolson1/fitzpatrick17k-label-methods`](https://github.com/huntercolson1/fitzpatrick17k-label-methods).
+The analysis in this post used the public [`fitzpatrick17k.csv`](https://github.com/mattgroh/fitzpatrick17k) and compared the two exposed consensus columns, `fitzpatrick_scale` and `fitzpatrick_centaur`, on rows where both values were not `-1`. I read those columns as the Scale AI and Centaur Labs consensus labels, then collapsed Fitzpatrick I–II, III–IV, and V–VI into light, medium, and dark subgroup buckets to estimate how often images would move between the coarse groups fairness analyses commonly rely on. This is not a validation study, and I am not treating one column as the real answer. The code, calculations, and figure-generation scripts for the post are in a public repo here: [`huntercolson1/fitzpatrick17k-label-methods`](https://github.com/huntercolson1/fitzpatrick17k-label-methods).
 
 ## Further Reading
 
