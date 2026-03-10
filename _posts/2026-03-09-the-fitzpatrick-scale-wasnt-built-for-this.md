@@ -186,7 +186,7 @@ Without that context, a fairness table can look more definitive than it really i
 
 ## Method Note
 
-The analysis in this post used the public [`fitzpatrick17k.csv`](https://github.com/mattgroh/fitzpatrick17k) and compared the two exposed consensus columns, `fitzpatrick_scale` and `fitzpatrick_centaur`, on rows where both values were not `-1`. I treated these as the Scale AI and Centaur Labs consensus columns. I also collapsed Fitzpatrick I–II, III–IV, and V–VI into light, medium, and dark subgroup buckets to estimate how often images would move between the kinds of coarse groups fairness analyses commonly rely on. This isn't a validation study, and it doesn't establish one column as ground truth.
+The analysis in this post used the public [`fitzpatrick17k.csv`](https://github.com/mattgroh/fitzpatrick17k) and compared the two exposed consensus columns, `fitzpatrick_scale` and `fitzpatrick_centaur`, on rows where both values were not `-1`. I treated these as the Scale AI and Centaur Labs consensus columns. I also collapsed Fitzpatrick I–II, III–IV, and V–VI into light, medium, and dark subgroup buckets to estimate how often images would move between the kinds of coarse groups fairness analyses commonly rely on. This isn't a validation study, and it doesn't establish one column as ground truth. I put the code, calculations, and figure-generation scripts for this post in a public repo here: [`huntercolson1/fitzpatrick17k-label-methods`](https://github.com/huntercolson1/fitzpatrick17k-label-methods).
 
 ## Further Reading
 
