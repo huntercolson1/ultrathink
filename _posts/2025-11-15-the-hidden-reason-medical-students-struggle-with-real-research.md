@@ -2,6 +2,7 @@
 title: The Hidden Reason Medical Students Struggle With Real Research
 date: 2025-11-15
 author: Hunter Colson
+published: false
 subtitle: Why medical students need better tools for real research
 description: ERAS is closing loopholes that made research padding easy. Here's why Python, modular scripts, AI copilots, and Quarto are the best entry point for medical students moving beyond case reports.
 tags:
