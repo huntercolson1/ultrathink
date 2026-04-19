@@ -1,6 +1,7 @@
 import { initComponents } from './components.js';
 import { initMathAnimation } from './math-animation.js';
 import { initBlogTags } from './blog-tags.js';
+import { initHeroScramble } from './hero-scramble.js';
 import { initBlogSort, initPostEnhancements, initThemeToggle } from './ui.js';
 
 // Initialize theme before render to prevent flash
@@ -63,6 +64,7 @@ const boot = async () => {
     initPostEnhancements();
     initExternalLinksInMain();
     initMathAnimation();
+    initHeroScramble();
 
     // Initialize theme toggle button
     const themeToggle = document.querySelector('[data-theme-toggle]');

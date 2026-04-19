@@ -741,6 +741,34 @@
   min-width: 0;
 }
 
+.construct-hero__title {
+  position: relative;
+  display: inline-block;
+}
+
+.construct-hero__title-static,
+.construct-hero__title-overlay {
+  display: block;
+  white-space: pre;
+}
+
+.construct-hero__title-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  font-variant-numeric: tabular-nums;
+  transition: opacity 180ms ease;
+}
+
+.construct-hero__title-overlay.is-active {
+  opacity: 1;
+}
+
+.construct-hero__title-overlay.is-complete {
+  opacity: 0;
+}
+
 /* Blog latest card */
 .blog-latest-card {
   max-width: 700px;
