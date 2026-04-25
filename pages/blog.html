@@ -5,30 +5,23 @@ description: Ultrathink blog — essays and notes.
 permalink: /blog/
 ---
 
-<section class="section" style="padding-top: var(--space-xl);">
-  <div class="container stack" style="gap: var(--space-lg); max-width: 800px; margin: 0 auto;">
-    <header class="stack"
-      style="gap: var(--space-md); border-bottom: 2px solid var(--border-color); padding-bottom: var(--space-lg);">
-      <p class="u-text-mono" style="font-size: 0.9rem; opacity: 0.6;">// BLOG</p>
-      <h1 class="u-text-display"
-        style="font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1.1; text-transform: uppercase;">Essays & Notes</h1>
-      <p class="u-text-mono" style="max-width: 55ch; opacity: 0.8;">Longer posts on things I'm learning, building, or
+<section class="section listing-page">
+  <div class="container stack listing-shell">
+    <header class="stack listing-hero">
+      <p class="u-text-mono listing-kicker">// BLOG</p>
+      <h1 class="u-text-display listing-title">Essays & Notes</h1>
+      <p class="u-text-mono listing-lede">Longer posts on things I'm learning, building, or
         trying to figure out.</p>
     </header>
-    <div class="u-text-mono"
-      style="font-size: 0.85rem; opacity: 0.6; border-bottom: 1px solid var(--border-color); padding-bottom: var(--space-sm);">
-      > BLOG_INDEX</div>
-
     <div class="blog-tags" data-tag-panel>
       <div class="blog-tags__header">
-        <div class="stack" style="gap: var(--space-xs);">
+        <div class="stack blog-tags__heading">
           <p class="u-text-mono blog-tags__title">Tags</p>
           <p class="u-text-mono blog-tags__summary" data-tag-summary></p>
         </div>
         <button class="tag-pill tag-pill--ghost" type="button" data-tag-clear>Clear</button>
       </div>
       <div class="blog-tags__controls">
-        <span class="u-text-mono blog-tags__label">Sort</span>
         <div class="blog-tags__sort" role="group" aria-label="Sort tags">
           <button class="tag-pill is-active" type="button" data-tag-sort="count" aria-pressed="true">Popular</button>
           <button class="tag-pill" type="button" data-tag-sort="alpha" aria-pressed="false">A–Z</button>
@@ -37,9 +30,9 @@ permalink: /blog/
       <ul class="blog-tags__list" data-tag-list role="list"></ul>
     </div>
 
-    <div class="blog-feed" id="blog-feed" style="gap: var(--space-lg); display: flex; flex-direction: column; width: 100%;">
+    <div class="blog-feed listing-feed" id="blog-feed">
       {% if site.posts == empty %}
-      <p class="u-text-mono" style="opacity: 0.5;">No posts yet.</p>
+      <p class="u-text-mono listing-empty">No posts yet.</p>
       {% else %}
       {% for post in site.posts %}
       {% assign normalized_tags = "" %}
@@ -50,31 +43,30 @@ permalink: /blog/
       {% endfor %}
       {% endcapture %}
       {% endif %}
-      <article class="stack"
-        style="gap: var(--space-sm); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--border-color);"
+      <article class="stack listing-entry"
         data-blog-post data-tags="{{ normalized_tags | strip | strip_newlines }}" data-published="{{ post.date | date_to_xmlschema }}">
-        <div class="cluster" style="justify-content: space-between; align-items: baseline;">
-          <span class="u-text-mono" style="font-size: 0.85rem;">{{ post.date | date: "%Y-%m-%d" }}</span>
+        <div class="cluster listing-entry__meta">
+          <span class="u-text-mono listing-entry__date">{{ post.date | date: "%Y-%m-%d" }}</span>
           {% if post.tags %}
-          <div class="cluster" style="gap: var(--space-xs);">
+          <div class="cluster listing-entry__tags">
             {% for tag in post.tags %}
             {% assign tag_clean = tag | downcase | strip %}
-            <a class="u-text-mono blog-tag-link" style="font-size: 0.75rem; opacity: 0.6;"
+            <a class="u-text-mono blog-tag-link"
               href="{{ '/blog/' | relative_url }}?tag={{ tag_clean | uri_escape }}">#{{ tag_clean }}</a>
             {% endfor %}
           </div>
           {% endif %}
         </div>
-        <a href="{{ post.url | relative_url }}" style="text-decoration: none;">
-          <h2 class="u-text-display" style="font-size: 1.25rem; margin: 0;">{{ post.title }}</h2>
+        <a href="{{ post.url | relative_url }}" class="listing-entry__link">
+          <h2 class="u-text-display listing-entry__title">{{ post.title }}</h2>
         </a>
         {% if post.subtitle or post.description %}
-        <p class="u-text-mono" style="opacity: 0.7; font-size: 0.95rem;">{{ post.subtitle | default: post.description }}
+        <p class="u-text-mono listing-entry__summary">{{ post.subtitle | default: post.description }}
         </p>
         {% endif %}
       </article>
       {% endfor %}
-      <p class="u-text-mono blog-feed__empty" style="opacity: 0.6;" data-blog-empty hidden>No posts match this tag.</p>
+      <p class="u-text-mono blog-feed__empty listing-empty" data-blog-empty hidden>No posts match this tag.</p>
       {% endif %}
     </div>
   </div>

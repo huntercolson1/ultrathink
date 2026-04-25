@@ -1,11 +1,17 @@
 const HERO_SCRAMBLE_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-const HERO_SCRAMBLE_SPEED_MS = 38;
-const HERO_SCRAMBLE_FADE_MS = 140;
+const HERO_SCRAMBLE_DURATION_MS = 1000;
+const HERO_SCRAMBLE_FADE_MS = 160;
+const HERO_SCRAMBLE_STAGGER_MS = 32;
+const HERO_SCRAMBLE_TICK_MS = 55;
 
-const randomScrambleCharacter = () =>
-  HERO_SCRAMBLE_CHARSET[Math.floor(Math.random() * HERO_SCRAMBLE_CHARSET.length)];
+const easeOutCubic = (value) => 1 - Math.pow(1 - value, 3);
 
-const buildScrambleFrame = (text, revealCount) =>
+const getDecodeCharacter = (index, elapsed) => {
+  const tick = Math.floor(elapsed / HERO_SCRAMBLE_TICK_MS);
+  return HERO_SCRAMBLE_CHARSET[(index * 7 + tick * 3) % HERO_SCRAMBLE_CHARSET.length];
+};
+
+const buildScrambleFrame = (text, elapsed) =>
   text
     .split('')
     .map((character, index) => {
@@ -13,9 +19,19 @@ const buildScrambleFrame = (text, revealCount) =>
         return character;
       }
 
-      return index < revealCount ? character : randomScrambleCharacter();
+      const localProgress = clamp(
+        (elapsed - index * HERO_SCRAMBLE_STAGGER_MS) / HERO_SCRAMBLE_DURATION_MS,
+        0,
+        1
+      );
+      const settleProgress = easeOutCubic(localProgress);
+      const isSettled = settleProgress > 0.92;
+
+      return isSettled ? character : getDecodeCharacter(index, elapsed);
     })
     .join('');
+
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
 export const initHeroScramble = () => {
   const title = document.querySelector('[data-hero-scramble]');
@@ -38,19 +54,36 @@ export const initHeroScramble = () => {
     return;
   }
 
-  let revealCount = 0;
-  overlay.classList.add('is-active');
-  overlay.textContent = buildScrambleFrame(finalText, revealCount);
+  let startTime = null;
+  let frameId = null;
 
-  const timer = window.setInterval(() => {
-    revealCount += 1;
-    overlay.textContent = buildScrambleFrame(finalText, revealCount);
+  const runScramble = () => {
+    if (frameId) window.cancelAnimationFrame(frameId);
+    startTime = null;
+    overlay.classList.remove('is-complete');
+    overlay.classList.add('is-active');
+    title.classList.add('is-scrambling');
+    overlay.textContent = buildScrambleFrame(finalText, 0);
+    frameId = window.requestAnimationFrame(render);
+  };
 
-    if (revealCount > finalText.length) {
-      window.clearInterval(timer);
+  const render = (timestamp) => {
+    if (startTime === null) startTime = timestamp;
+    const elapsed = timestamp - startTime;
+    overlay.textContent = buildScrambleFrame(finalText, elapsed);
+
+    if (elapsed >= HERO_SCRAMBLE_DURATION_MS + finalText.length * HERO_SCRAMBLE_STAGGER_MS) {
+      overlay.textContent = finalText;
       window.setTimeout(() => {
         overlay.classList.add('is-complete');
+        title.classList.remove('is-scrambling');
       }, HERO_SCRAMBLE_FADE_MS);
+      frameId = null;
+      return;
     }
-  }, HERO_SCRAMBLE_SPEED_MS);
+
+    frameId = window.requestAnimationFrame(render);
+  };
+
+  window.requestAnimationFrame(runScramble);
 };

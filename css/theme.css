@@ -64,7 +64,12 @@
   --space-md: 1rem;
   --space-lg: 2rem;
   --space-xl: 4rem;
+  --space-page: clamp(2.25rem, 5vw, 4rem);
+  --space-section: clamp(1.75rem, 4vw, 3rem);
+  --space-row: clamp(1rem, 2.2vw, 1.5rem);
   --container-max: 900px;
+  --container-readable: 760px;
+  --container-article: 68ch;
 
   /* Components */
   --radius-sm: 0px;
@@ -105,7 +110,7 @@
   --accent-color: #f0f0f0;
   --link-color: var(--text-primary);
   --link-underline: rgb(240 240 240 / 65%);
-  --grid-dot-color: #2a2a2a;
+  --grid-dot-color: #363636;
   --code-bg: #1a1a1a;
 }
 
@@ -119,64 +124,6 @@ body {
   /* Dotted Grid Pattern */
   background-image: radial-gradient(var(--grid-dot-color, var(--grey-med)) 1px, transparent 1px);
   background-size: 20px 20px;
-}
-
-/* Headings */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  margin-top: 2em;
-  margin-bottom: 0.75em;
-  text-transform: uppercase;
-}
-
-h1 {
-  font-size: 2.5rem;
-  line-height: 1.1;
-}
-
-h2 {
-  font-size: 1.75rem;
-  border-bottom: 2px solid var(--border-color);
-  padding-bottom: 0.5rem;
-}
-
-h3 {
-  font-size: 1.25rem;
-}
-
-/* Links */
-a {
-  color: var(--text-primary);
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
-  transition: text-decoration-color var(--transition-fast);
-}
-
-a:hover {
-  text-decoration-color: var(--text-primary);
-}
-
-/* Code Blocks */
-pre,
-code {
-  font-family: var(--font-mono);
-  font-size: 0.9em;
-}
-
-pre {
-  background: var(--code-bg);
-  border: 1px solid var(--border-color);
-  padding: 1rem;
-  overflow-x: auto;
 }
 
 /* Specific Utilities */

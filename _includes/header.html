@@ -1,19 +1,19 @@
-<header class="pin-nav" data-component="nav scroll-header" style="border-bottom: 2px solid var(--black);">
+<header class="pin-nav" data-component="nav scroll-header">
   <div class="container c-header">
-    <a class="c-header__brand" href="{{ '/' | relative_url }}" aria-label="Ultrathink Home" style="text-decoration: none;">
+    <a class="c-header__brand" href="{{ '/' | relative_url }}" aria-label="Ultrathink Home">
       <!-- Logo -->
       <img src="{{ '/assets/icons/ultrathink-mobius.png' | relative_url }}" alt="Ultrathink" class="c-header__logo" width="32" height="32">
-      <span class="c-header__brand-text u-text-mono" style="font-weight: 700;">ULTRATHINK</span>
+      <span class="c-header__brand-text u-text-mono">ULTRATHINK</span>
     </a>
 
     <nav class="c-nav" aria-label="Primary navigation">
-      <ul class="c-nav__list u-text-mono" style="font-size: 0.9rem; gap: 1rem;">
+      <ul class="c-nav__list u-text-mono">
         {% for item in site.data.nav %}
         <li>
-          <a class="c-nav__link" href="{{ item.url | relative_url }}" style="text-transform: lowercase;">{{ item.title }}</a>
+          <a class="c-nav__link" href="{{ item.url | relative_url }}">{{ item.title }}</a>
         </li>
         {% unless forloop.last %}
-        <li aria-hidden="true" style="opacity: 0.3;">/</li>
+        <li class="c-nav__separator" aria-hidden="true">/</li>
         {% endunless %}
         {% endfor %}
       </ul>
