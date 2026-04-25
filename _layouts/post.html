@@ -17,21 +17,18 @@ layout: default
 {% assign post_index_url = "/tutorials/" %}
 {% assign post_index_label = "Back to tutorials" %}
 {% endif %}
-<section class="section post-hero" style="padding-top: var(--space-xl);">
-  <div class="container stack post-hero__container" style="gap: var(--space-lg);">
-    <header class="stack"
-      style="gap: var(--space-md); border-bottom: 4px solid var(--border-color); padding-bottom: var(--space-lg);">
-      <div class="cluster"
-        style="justify-content: space-between; align-items: baseline; font-family: var(--font-mono); font-size: 0.9rem;">
+<section class="section post-hero">
+  <div class="container stack post-hero__container">
+    <header class="stack post-hero__header">
+      <div class="cluster post-hero__meta-row">
         <span>DATE: {{ page.date | date: "%Y-%m-%d" }}</span>
         <span>{{ reading_minutes }} min read</span>
       </div>
 
-      <h1 class="u-text-display"
-        style="font-size: clamp(2.5rem, 8vw, 6rem); line-height: 0.9; text-transform: uppercase;">{{ page.title }}</h1>
+      <h1 class="u-text-display post-hero__title">{{ page.title }}</h1>
 
       {% if page.subtitle %}
-      <p class="u-text-mono" style="font-size: 1.1rem; max-width: 60ch;">> {{ page.subtitle }}</p>
+      <p class="u-text-mono post-hero__subtitle">> {{ page.subtitle }}</p>
       {% endif %}
     </header>
   </div>
@@ -62,7 +59,7 @@ layout: default
 
       <!-- Main Content Area: Monospace Laboratory Style -->
       <div class="post-grid">
-        <div class="post-main post-content u-text-mono" style="font-size: 1.05rem;">
+        <div class="post-main post-content u-text-mono">
           {{ content }}
         </div>
         <aside class="post-aside" id="post-desktop-toc" aria-label="Table of contents" data-post-toc-aside hidden>
@@ -76,7 +73,7 @@ layout: default
           </div>
         </aside>
       </div>
-      <div class="post-footer cluster" style="justify-content: space-between;">
+      <div class="post-footer cluster">
         <span class="u-text-muted">Filed under:
           {% if page.tags %}
           {% for tag in page.tags %}

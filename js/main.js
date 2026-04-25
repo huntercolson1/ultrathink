@@ -1,8 +1,13 @@
 import { initComponents } from './components.js';
-import { initMathAnimation } from './math-animation.js';
 import { initBlogTags } from './blog-tags.js';
-import { initHeroScramble } from './hero-scramble.js';
-import { initBlogSort, initPostEnhancements, initThemeToggle } from './ui.js';
+import { initHeroScramble } from './hero-scramble.js?v=design-20260423f';
+import { initHomeLab } from './home-lab.js?v=design-20260423e';
+import {
+  initBlogSort,
+  initPostEnhancements,
+  initScrollBehavior,
+  initThemeToggle
+} from './ui.js?v=scroll-20260423';
 
 // Initialize theme before render to prevent flash
 const initTheme = () => {
@@ -59,12 +64,13 @@ const initExternalLinksInMain = () => {
 const boot = async () => {
   try {
     await initComponents();
+    initScrollBehavior();
     initBlogTags();
     initBlogSort();
     initPostEnhancements();
     initExternalLinksInMain();
-    initMathAnimation();
     initHeroScramble();
+    initHomeLab();
 
     // Initialize theme toggle button
     const themeToggle = document.querySelector('[data-theme-toggle]');

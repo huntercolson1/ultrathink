@@ -62,15 +62,110 @@ export const initNav = (header) => {
 };
 
 export const initScrollHeader = (header) => {
-  const toggleClass = () => {
-    if (window.scrollY > 40) {
-      header.classList.add('is-condensed');
-    } else {
-      header.classList.remove('is-condensed');
-    }
+  const innerHeader = qs('.c-header', header);
+  const hiddenOffset = 96;
+  const scrollDelta = 6;
+  let lastY = Math.max(window.scrollY, 0);
+  let ticking = false;
+  let forceVisibleUntil = 0;
+
+  const setHeaderState = (isCondensed, isHidden) => {
+    header.classList.toggle('is-condensed', isCondensed);
+    innerHeader?.classList.toggle('is-condensed', isCondensed);
+    header.classList.toggle('is-hidden', isHidden);
   };
+
+  const toggleClass = () => {
+    const currentY = Math.max(window.scrollY, 0);
+    const delta = currentY - lastY;
+    const isCondensed = currentY > 24;
+    const isHidden =
+      currentY > hiddenOffset &&
+      delta > scrollDelta &&
+      !header.matches(':focus-within') &&
+      performance.now() > forceVisibleUntil;
+
+    if (Math.abs(delta) > scrollDelta || currentY <= hiddenOffset) {
+      setHeaderState(isCondensed, isHidden);
+      lastY = currentY;
+    }
+
+    ticking = false;
+  };
+
+  const queueToggle = () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(toggleClass);
+  };
+
   toggleClass();
-  window.addEventListener('scroll', toggleClass, { passive: true });
+  window.addEventListener('scroll', queueToggle, { passive: true });
+  window.addEventListener('resize', queueToggle);
+  header.addEventListener('focusin', () => header.classList.remove('is-hidden'));
+  document.addEventListener('ultrathink:anchor-scroll', () => {
+    forceVisibleUntil = performance.now() + 900;
+    header.classList.remove('is-hidden');
+  });
+};
+
+export const initScrollBehavior = () => {
+  const getAnchorOffset = () => {
+    const nav = document.querySelector('.pin-nav');
+    const navHeight = nav ? nav.getBoundingClientRect().height : 80;
+    return navHeight + 24;
+  };
+
+  const scrollToTarget = (target, shouldUpdateHistory = true) => {
+    if (!target) return;
+
+    const targetTop = target.getBoundingClientRect().top + window.scrollY;
+    const top = Math.max(targetTop - getAnchorOffset(), 0);
+    const behavior = prefersReducedMotion() ? 'auto' : 'smooth';
+
+    document.dispatchEvent(new window.CustomEvent('ultrathink:anchor-scroll'));
+    window.scrollTo({ top, behavior });
+
+    if (shouldUpdateHistory && target.id) {
+      window.history.pushState(null, '', `#${target.id}`);
+    }
+
+    if (!target.hasAttribute('tabindex')) {
+      target.setAttribute('tabindex', '-1');
+    }
+    target.focus({ preventScroll: true });
+  };
+
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    const hash = link.getAttribute('href');
+    if (!hash || hash === '#') return;
+
+    let target;
+    try {
+      target = document.getElementById(decodeURIComponent(hash.slice(1)));
+    } catch {
+      target = document.querySelector(hash);
+    }
+
+    if (!target) return;
+    event.preventDefault();
+    scrollToTarget(target);
+  });
+
+  if (window.location.hash) {
+    window.requestAnimationFrame(() => {
+      let target = null;
+      try {
+        target = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+      } catch {
+        target = document.querySelector(window.location.hash);
+      }
+      if (target) scrollToTarget(target, false);
+    });
+  }
 };
 
 export const initThemeToggle = (node) => {
@@ -604,7 +699,6 @@ export const initBlogFilter = (node) => {
 };
 
 export const initSearch = async (form) => {
-  console.log('initSearch called', form);
   const input = form.querySelector('input[type="search"]');
   const resultsContainer = form.querySelector('.c-search__results');
   if (!input || !resultsContainer) {
@@ -620,11 +714,9 @@ export const initSearch = async (form) => {
   // Load tutorials
   try {
     const tutorialsPath = form.dataset.tutorialsSource || `${basePath}/data/tutorials.json`;
-    console.log('Loading tutorials from:', tutorialsPath);
     const tutorialsResponse = await fetch(tutorialsPath);
     if (tutorialsResponse.ok) {
       tutorials = await tutorialsResponse.json();
-      console.log('Loaded tutorials:', tutorials.length);
     } else {
       console.warn('Tutorials response not ok:', tutorialsResponse.status);
     }
@@ -635,7 +727,6 @@ export const initSearch = async (form) => {
   // Load blog posts from feed.xml (Jekyll RSS feed)
   try {
     const feedPath = `${basePath}/feed.xml`;
-    console.log('Loading blog posts from feed:', feedPath);
     const feedResponse = await fetch(feedPath);
     if (feedResponse.ok) {
       const feedText = await feedResponse.text();
@@ -666,7 +757,6 @@ export const initSearch = async (form) => {
           date: pubDate
         };
       });
-      console.log('Loaded blog posts from feed:', blogPosts.length);
     } else {
       console.warn('Feed response not ok:', feedResponse.status);
       throw new Error('Feed not available');
@@ -676,11 +766,9 @@ export const initSearch = async (form) => {
     // Try blog.json as fallback
     try {
       const blogPath = `${basePath}/data/blog.json`;
-      console.log('Trying blog.json:', blogPath);
       const blogResponse = await fetch(blogPath);
       if (blogResponse.ok) {
         blogPosts = await blogResponse.json();
-        console.log('Loaded blog posts from blog.json:', blogPosts.length);
       } else {
         throw new Error('blog.json not available');
       }
@@ -699,7 +787,6 @@ export const initSearch = async (form) => {
           date: post.dataset.published || ''
         };
       });
-      console.log('Loaded blog posts from DOM:', blogPosts.length);
     }
   }
 
@@ -708,7 +795,6 @@ export const initSearch = async (form) => {
 
     const lowerQuery = query.toLowerCase();
     const results = [];
-    console.log('Searching for:', query, { tutorials: tutorials.length, blogPosts: blogPosts.length });
 
     // Search tutorials
     tutorials.forEach((tutorial) => {
@@ -745,11 +831,9 @@ export const initSearch = async (form) => {
   };
 
   const renderResults = (results) => {
-    console.log('Rendering results:', results.length, results);
     if (results.length === 0) {
       resultsContainer.innerHTML = '<div class="c-search__result-item"><p class="u-text-muted">No results found</p></div>';
       resultsContainer.hidden = false;
-      console.log('Showing no results message');
       return;
     }
 
@@ -769,7 +853,6 @@ export const initSearch = async (form) => {
     resultsContainer.innerHTML = '';
     resultsContainer.appendChild(fragment);
     resultsContainer.hidden = false;
-    console.log('Results container shown, hidden:', resultsContainer.hidden);
   };
 
   input.addEventListener('input', (e) => {
@@ -820,11 +903,6 @@ export const initSearch = async (form) => {
     }
   });
   
-  // Debug logging
-  console.log('Search initialized:', {
-    tutorials: tutorials.length,
-    blogPosts: blogPosts.length
-  });
 };
 
 export const initPostEnhancements = () => {
@@ -865,7 +943,7 @@ export const initPostEnhancements = () => {
     return;
   }
 
-  const desktopMediaQuery = window.matchMedia('(min-width: 1440px)');
+  const desktopMediaQuery = window.matchMedia('(min-width: 1180px)');
   const slugify = (text) =>
     text
       .toLowerCase()
@@ -936,14 +1014,6 @@ export const initPostEnhancements = () => {
   }
 
   const desktopCollapseKey = 'ultrathink-toc-collapsed';
-  const getSavedCollapsedState = () => {
-    try {
-      return window.localStorage.getItem(desktopCollapseKey) === 'true';
-    } catch {
-      return false;
-    }
-  };
-
   const saveCollapsedState = (isCollapsed) => {
     try {
       window.localStorage.setItem(desktopCollapseKey, isCollapsed ? 'true' : 'false');
@@ -989,7 +1059,7 @@ export const initPostEnhancements = () => {
       }
       return;
     }
-    setDesktopCollapsed(getSavedCollapsedState());
+    setDesktopCollapsed(false);
   };
 
   syncDesktopMode();

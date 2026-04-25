@@ -14,8 +14,7 @@
         <span class="u-sr-only">Close navigation menu</span>
       </button>
     </div>
-    <p class="c-drawer__title" id="nav-drawer-title">Navigate</p>
-    <nav class="c-drawer__nav" aria-label="Mobile primary">
+    <nav class="c-drawer__nav" aria-label="Mobile primary" id="nav-drawer-title">
       <ul class="c-drawer__list">
         {% assign current = page.url | default: '/' %}
         {% for item in site.data.nav %}
