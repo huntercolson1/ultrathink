@@ -245,7 +245,7 @@ main {
   --toc-rail-width: 230px;
   --toc-rail-gap: clamp(14px, 1.6vw, 22px);
   --toc-rail-inset: clamp(8px, 1vw, 14px);
-  --toc-rail-top: calc(80px + var(--space-lg));
+  --toc-rail-top: calc(80px + var(--space-md));
 }
 
 .post-hero {
@@ -338,12 +338,12 @@ main {
 
 .post-aside .post-card {
   height: 100%;
-  padding: var(--space-sm) 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   border: 0;
-  border-left: 1px solid color-mix(in srgb, var(--border-color) 70%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--border-color) 40%, transparent);
   background: transparent;
   box-shadow: none;
   backdrop-filter: none;
@@ -491,9 +491,9 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--space-xs);
-  padding: 0 0 var(--space-sm) var(--space-md);
-  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 0;
+  padding: var(--space-xs) 0 var(--space-sm) var(--space-md);
+  border-bottom: 1px solid color-mix(in srgb, var(--border-color) 30%, transparent);
 }
 
 .post-toc__desktop-close,
@@ -566,11 +566,11 @@ main {
 
 .post-toc__list {
   list-style: none;
-  margin: 0.5rem 0 0;
+  margin: 0.35rem 0 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.2rem;
 }
 
 .post-toc__item a {
@@ -952,7 +952,7 @@ main {
 
 footer {
   padding-block: var(--space-lg);
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid color-mix(in srgb, var(--border-color) 30%, transparent);
 }
 
 @media (width <=1024px) {
