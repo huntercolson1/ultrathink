@@ -19,11 +19,22 @@ permalink: /
         </p>
       </header>
 
-      <div class="home-graph" data-home-graph aria-label="Interactive abstract graph">
+      <div class="home-graph" data-home-graph aria-label="Interactive loss landscape contours and descent paths">
         <canvas class="home-graph__canvas" data-home-graph-canvas width="900" height="560"></canvas>
-        <div class="home-graph__axis home-graph__axis--x" aria-hidden="true"></div>
-        <div class="home-graph__axis home-graph__axis--y" aria-hidden="true"></div>
-        <p class="u-text-mono home-graph__hint">[ drag to explore ]</p>
+        <div class="home-graph__controls u-text-mono" aria-label="Loss landscape controls">
+          <label class="home-graph__control" data-home-graph-control>
+            <span>terrain</span>
+            <input data-home-graph-roughness type="range" min="0" max="100" value="58">
+          </label>
+          <label class="home-graph__control" data-home-graph-control>
+            <span>step</span>
+            <input data-home-graph-rate type="range" min="0" max="100" value="30">
+          </label>
+          <label class="home-graph__control" data-home-graph-control>
+            <span>start</span>
+            <input data-home-graph-start type="range" min="0" max="100" value="65">
+          </label>
+        </div>
       </div>
     </div>
 
