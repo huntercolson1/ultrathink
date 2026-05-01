@@ -906,44 +906,27 @@ export const initSearch = async (form) => {
 };
 
 export const initPostEnhancements = () => {
-  const postShell = document.querySelector('.post-shell');
   const post = document.querySelector('.post-content');
-  const tocAside = document.querySelector('[data-post-toc-aside]');
-  const tocDesktopBtn = document.querySelector('[data-toc-desktop-btn]');
-  const tocDesktopClose = document.querySelector('[data-toc-desktop-close]');
-  const tocList = document.querySelector('[data-post-toc-list]');
-  const tocMobileList = document.querySelector('[data-post-toc-list-mobile]');
-  const tocMobileBtn = document.querySelector('[data-toc-mobile-btn]');
-  const tocMobileDrawer = document.querySelector('[data-toc-mobile-drawer]');
-  const tocMobileOverlay = document.querySelector('[data-toc-mobile-overlay]');
-  const tocMobileClose = document.querySelector('[data-toc-mobile-close]');
-  const shareCopyBtn = document.querySelector('[data-share-copy]');
-  const shareStatusNode = document.querySelector('[data-share-status]');
+  if (!post) return;
 
-  if (!post) {
-    if (shareCopyBtn) {
-      shareCopyBtn.addEventListener('click', () => {
-        window.location.assign(shareCopyBtn.dataset.shareUrl || window.location.href);
-      });
-    }
-    return;
-  }
+  const toggle = document.querySelector('[data-toc-toggle]');
+  const drawer = document.querySelector('[data-toc-drawer]');
+  const panel = document.querySelector('[data-toc-panel]');
+  const overlay = document.querySelector('[data-toc-overlay]');
+  const closeBtn = document.querySelector('[data-toc-close]');
+  const list = document.querySelector('[data-post-toc-list]');
+  const progressBars = Array.from(document.querySelectorAll('[data-post-progress], [data-toc-progress]'));
+  const progressLabel = document.querySelector('[data-toc-progress-label]');
+  const jumpButtons = Array.from(document.querySelectorAll('[data-toc-jump]'));
 
-  const headings = Array.from(post.querySelectorAll('h2, h3')).filter((heading) =>
-    heading.textContent.trim().length
+  const headings = Array.from(post.querySelectorAll('h2, h3')).filter((h) =>
+    h.textContent.trim().length
   );
 
-  if (!tocList && !tocMobileList) return;
+  // No headings or missing drawer: hide the toggle and bail (progress bar still tracks below).
+  const hasToc = headings.length > 0 && list && toggle && drawer;
+  if (!hasToc && toggle) toggle.setAttribute('hidden', '');
 
-  if (headings.length === 0) {
-    if (tocMobileBtn) tocMobileBtn.setAttribute('hidden', '');
-    if (tocAside) tocAside.setAttribute('hidden', '');
-    if (tocDesktopBtn) tocDesktopBtn.setAttribute('hidden', '');
-    if (postShell) postShell.classList.remove('post-shell--toc-open');
-    return;
-  }
-
-  const desktopMediaQuery = window.matchMedia('(min-width: 1180px)');
   const slugify = (text) =>
     text
       .toLowerCase()
@@ -974,120 +957,30 @@ export const initPostEnhancements = () => {
     }
   });
 
-  const createTocItem = (heading) => {
-    const level = heading.tagName === 'H3' ? 3 : 2;
-    const li = document.createElement('li');
-    li.className = `post-toc__item post-toc__item--level-${level}`;
-    const link = document.createElement('a');
-    link.href = `#${heading.id}`;
-    link.textContent = heading.textContent.trim();
-    link.dataset.tocLink = heading.id;
-    li.appendChild(link);
-    return li;
-  };
-
-  // Populate desktop TOC
-  if (tocList) {
+  // Populate the TOC list (only when we have a drawer to show it in)
+  if (hasToc) {
     const fragment = document.createDocumentFragment();
     headings.forEach((heading) => {
-      fragment.appendChild(createTocItem(heading));
+      const level = heading.tagName === 'H3' ? 3 : 2;
+      const li = document.createElement('li');
+      li.className = `post-toc__item post-toc__item--level-${level}`;
+      const link = document.createElement('a');
+      link.href = `#${heading.id}`;
+      link.textContent = heading.textContent.trim();
+      link.dataset.tocLink = heading.id;
+      li.appendChild(link);
+      fragment.appendChild(li);
     });
-    tocList.innerHTML = '';
-    tocList.appendChild(fragment);
+    list.innerHTML = '';
+    list.appendChild(fragment);
   }
 
-  // Populate mobile TOC
-  if (tocMobileList) {
-    const mobileFragment = document.createDocumentFragment();
-    headings.forEach((heading) => {
-      mobileFragment.appendChild(createTocItem(heading));
-    });
-    tocMobileList.innerHTML = '';
-    tocMobileList.appendChild(mobileFragment);
+  if (hasToc) {
+    toggle.removeAttribute('hidden');
   }
 
-  if (tocMobileBtn) {
-    tocMobileBtn.removeAttribute('hidden');
-  }
-  if (tocAside) {
-    tocAside.removeAttribute('hidden');
-  }
-
-  const desktopCollapseKey = 'ultrathink-toc-collapsed';
-  const saveCollapsedState = (isCollapsed) => {
-    try {
-      window.localStorage.setItem(desktopCollapseKey, isCollapsed ? 'true' : 'false');
-    } catch {
-      // Ignore storage failures (private mode, blocked storage, etc.).
-    }
-  };
-
-  const setDesktopCollapsed = (isCollapsed) => {
-    if (!tocAside) return;
-    if (isCollapsed) {
-      tocAside.setAttribute('data-toc-collapsed', 'true');
-      if (postShell) {
-        postShell.classList.remove('post-shell--toc-open');
-      }
-      if (tocDesktopBtn) {
-        tocDesktopBtn.removeAttribute('hidden');
-        tocDesktopBtn.setAttribute('aria-expanded', 'false');
-      }
-    } else {
-      tocAside.removeAttribute('data-toc-collapsed');
-      if (postShell) {
-        if (desktopMediaQuery.matches) {
-          postShell.classList.add('post-shell--toc-open');
-        } else {
-          postShell.classList.remove('post-shell--toc-open');
-        }
-      }
-      if (tocDesktopBtn) {
-        tocDesktopBtn.setAttribute('hidden', '');
-        tocDesktopBtn.setAttribute('aria-expanded', 'true');
-      }
-    }
-  };
-
-  const syncDesktopMode = () => {
-    if (!desktopMediaQuery.matches) {
-      if (postShell) {
-        postShell.classList.remove('post-shell--toc-open');
-      }
-      if (tocDesktopBtn) {
-        tocDesktopBtn.setAttribute('hidden', '');
-      }
-      return;
-    }
-    setDesktopCollapsed(false);
-  };
-
-  syncDesktopMode();
-  if (desktopMediaQuery.addEventListener) {
-    desktopMediaQuery.addEventListener('change', syncDesktopMode);
-  } else if (desktopMediaQuery.addListener) {
-    desktopMediaQuery.addListener(syncDesktopMode);
-  }
-
-  if (tocDesktopBtn) {
-    tocDesktopBtn.addEventListener('click', () => {
-      setDesktopCollapsed(false);
-      saveCollapsedState(false);
-    });
-  }
-
-  if (tocDesktopClose) {
-    tocDesktopClose.addEventListener('click', () => {
-      setDesktopCollapsed(true);
-      saveCollapsedState(true);
-    });
-  }
-
-  // Get all TOC links (both desktop and mobile)
-  const allLinks = [
-    ...(tocList ? tocList.querySelectorAll('a[data-toc-link]') : []),
-    ...(tocMobileList ? tocMobileList.querySelectorAll('a[data-toc-link]') : [])
-  ];
+  // ───── Scroll spy + reading progress ─────
+  const allLinks = list ? Array.from(list.querySelectorAll('a[data-toc-link]')) : [];
 
   const setActiveLink = (id) => {
     allLinks.forEach((link) => {
@@ -1105,152 +998,131 @@ export const initPostEnhancements = () => {
     return navHeight + 24;
   };
 
+  const updateProgress = () => {
+    const start = Math.max(0, post.offsetTop - getAnchorOffset());
+    const end = Math.max(start + 1, post.offsetTop + post.offsetHeight - window.innerHeight * 0.72);
+    const ratio = Math.min(1, Math.max(0, (window.scrollY - start) / (end - start)));
+    const pct = `${(ratio * 100).toFixed(1)}%`;
+    progressBars.forEach((bar) => {
+      if (bar.hasAttribute('data-post-progress')) {
+        bar.style.setProperty('--post-progress', ratio.toFixed(4));
+      } else {
+        bar.style.width = pct;
+      }
+    });
+    if (progressLabel) {
+      progressLabel.textContent = `${Math.round(ratio * 100)}%`;
+    }
+  };
+
   const resolveActiveHeadingId = () => {
-    if (headings.length === 0) return null;
+    if (!headings.length) return null;
     const threshold = window.scrollY + getAnchorOffset();
     let activeHeading = headings[0];
-
     headings.forEach((heading) => {
       if (heading.offsetTop <= threshold) {
         activeHeading = heading;
       }
     });
-
     return activeHeading?.id || null;
   };
 
   const syncActiveHeading = () => {
-    const activeId = resolveActiveHeadingId();
-    if (activeId) setActiveLink(activeId);
+    const id = resolveActiveHeadingId();
+    if (id) setActiveLink(id);
   };
 
-  let activeSyncFrame = null;
-  const queueActiveHeadingSync = () => {
-    if (activeSyncFrame !== null) return;
-    activeSyncFrame = window.requestAnimationFrame(() => {
-      activeSyncFrame = null;
+  let frame = null;
+  const queueSync = () => {
+    if (frame !== null) return;
+    frame = window.requestAnimationFrame(() => {
+      frame = null;
       syncActiveHeading();
+      updateProgress();
     });
   };
 
-  allLinks.forEach((link) => {
-    link.addEventListener('click', () => {
-      const targetId = link.dataset.tocLink;
-      if (targetId) {
-        setActiveLink(targetId);
-      }
-      window.setTimeout(syncActiveHeading, 180);
-    });
-  });
-
-  window.addEventListener('scroll', queueActiveHeadingSync, { passive: true });
-  window.addEventListener('resize', queueActiveHeadingSync);
-  window.addEventListener('hashchange', queueActiveHeadingSync);
+  window.addEventListener('scroll', queueSync, { passive: true });
+  window.addEventListener('resize', queueSync);
+  window.addEventListener('hashchange', queueSync);
   syncActiveHeading();
+  updateProgress();
 
-  // Mobile drawer functionality
-  const openMobileDrawer = () => {
-    if (tocMobileDrawer) {
-      tocMobileDrawer.removeAttribute('hidden');
-      tocMobileDrawer.setAttribute('data-toc-mobile-open', '');
-      lockScroll(true);
+  // ───── Drawer open/close (universal) ─────
+  if (!drawer || !toggle) return;
+
+  let releaseFocus = () => {};
+  const isOpen = () => drawer.hasAttribute('data-toc-open');
+
+  const openDrawer = () => {
+    if (isOpen()) return;
+    drawer.removeAttribute('hidden');
+    // Force reflow so the slide-in transition runs
+    void drawer.offsetWidth;
+    drawer.setAttribute('data-toc-open', '');
+    toggle.setAttribute('aria-expanded', 'true');
+    toggle.classList.add('is-hidden');
+    lockScroll(true);
+    if (panel) {
+      releaseFocus = trapFocus(panel);
+      panel.focus({ preventScroll: true });
     }
   };
 
-  const closeMobileDrawer = () => {
-    if (tocMobileDrawer) {
-      tocMobileDrawer.removeAttribute('data-toc-mobile-open');
-      lockScroll(false);
-      // Wait for animation to complete before hiding
-      setTimeout(() => {
-        if (!tocMobileDrawer.hasAttribute('data-toc-mobile-open')) {
-          tocMobileDrawer.setAttribute('hidden', '');
-        }
-      }, 200);
-    }
+  const closeDrawer = () => {
+    if (!isOpen()) return;
+    drawer.removeAttribute('data-toc-open');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.classList.remove('is-hidden');
+    lockScroll(false);
+    releaseFocus();
+    releaseFocus = () => {};
+    toggle.focus({ preventScroll: true });
+    setTimeout(() => {
+      if (!isOpen()) {
+        drawer.setAttribute('hidden', '');
+      }
+    }, 220);
   };
 
-  if (tocMobileBtn) {
-    tocMobileBtn.addEventListener('click', openMobileDrawer);
-  }
-
-  if (tocMobileClose) {
-    tocMobileClose.addEventListener('click', closeMobileDrawer);
-  }
-
-  if (tocMobileOverlay) {
-    tocMobileOverlay.addEventListener('click', closeMobileDrawer);
-  }
-
-  // Close mobile drawer when clicking on a TOC link
-  if (tocMobileList) {
-    tocMobileList.addEventListener('click', (e) => {
-      const link = e.target.closest('a[data-toc-link]');
-      if (link) {
-        // Small delay to allow smooth scroll
-        setTimeout(() => {
-          closeMobileDrawer();
-        }, 100);
-      }
-    });
-  }
-
-  // Close mobile drawer on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      if (tocMobileDrawer?.hasAttribute('data-toc-mobile-open')) {
-        closeMobileDrawer();
-      } else if (tocAside && !tocAside.hasAttribute('data-toc-collapsed')) {
-        setDesktopCollapsed(true);
-        saveCollapsedState(true);
-      }
+  toggle.addEventListener('click', () => {
+    if (isOpen()) {
+      closeDrawer();
+    } else {
+      openDrawer();
     }
   });
 
-  if (shareCopyBtn) {
-    const shareUrl = shareCopyBtn.dataset.shareUrl || window.location.href;
-    const defaultLabel = shareCopyBtn.textContent;
+  if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+  if (overlay) overlay.addEventListener('click', closeDrawer);
 
-    const writeToClipboard = async (text) => {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        return navigator.clipboard.writeText(text);
-      }
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      textarea.setAttribute('readonly', '');
-      textarea.style.position = 'absolute';
-      textarea.style.left = '-9999px';
-      document.body.appendChild(textarea);
-      textarea.select();
-      try {
-        document.execCommand('copy');
-      } finally {
-        document.body.removeChild(textarea);
-      }
-      return Promise.resolve();
-    };
-
-    shareCopyBtn.addEventListener('click', async () => {
-      try {
-        await writeToClipboard(shareUrl);
-        shareCopyBtn.textContent = 'Link copied';
-        if (shareStatusNode) {
-          shareStatusNode.textContent = 'Copied to clipboard.';
-        }
-        setTimeout(() => {
-          shareCopyBtn.textContent = defaultLabel;
-          if (shareStatusNode) {
-            shareStatusNode.textContent = '';
-          }
-        }, 2500);
-      } catch (error) {
-        console.warn('Share copy failed', error);
-        if (shareStatusNode) {
-          shareStatusNode.textContent = 'Could not copy automatically. Please copy the address bar.';
-        }
-      }
+  if (list) {
+    list.addEventListener('click', (event) => {
+      const link = event.target.closest('a[data-toc-link]');
+      if (!link) return;
+      // Let the global smooth-scroll handler run, then close
+      setTimeout(closeDrawer, 120);
     });
   }
+
+  jumpButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const dir = btn.dataset.tocJump;
+      const top = dir === 'bottom'
+        ? Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+        : 0;
+      const behavior = prefersReducedMotion() ? 'auto' : 'smooth';
+      document.dispatchEvent(new window.CustomEvent('ultrathink:anchor-scroll'));
+      window.scrollTo({ top, behavior });
+      setTimeout(closeDrawer, 120);
+    });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && isOpen()) {
+      closeDrawer();
+    }
+  });
 };
 
 export const initBlogSort = () => {

@@ -7,7 +7,7 @@ import {
   initPostEnhancements,
   initScrollBehavior,
   initThemeToggle
-} from './ui.js?v=scroll-20260423';
+} from './ui.js?v=scroll-20260429';
 
 // Initialize theme before render to prevent flash
 const initTheme = () => {
