@@ -2,7 +2,7 @@
 title: Why AI Hallucinations Happen
 date: 2026-05-01
 author: Hunter Colson
-published: false
+published: true
 subtitle: An explanation you can stop reading at whatever depth answers the question you came with.
 description: Why AI hallucinations happen, from simple intuition to technical detail, plus practical ways to reduce risk.
 tags:
