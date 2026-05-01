@@ -202,8 +202,6 @@
 .c-drawer__panel {
   width: min(440px, 100vw);
   background: var(--bg-color);
-  background-image: radial-gradient(var(--grid-dot-color, var(--grey-med)) 1px, transparent 1px);
-  background-size: 20px 20px;
   padding: clamp(1rem, 5vw, 2.25rem);
   padding-top: clamp(1.25rem, 7vw, 3rem);
   display: flex;

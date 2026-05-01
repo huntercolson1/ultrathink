@@ -114,16 +114,12 @@
   --code-bg: #1a1a1a;
 }
 
-/* Base Reset & Grid Background */
+/* Base Reset */
 body {
   background-color: var(--bg-color);
   color: var(--text-primary);
   font-family: var(--font-body);
   line-height: var(--line-body);
-
-  /* Dotted Grid Pattern */
-  background-image: radial-gradient(var(--grid-dot-color, var(--grey-med)) 1px, transparent 1px);
-  background-size: 20px 20px;
 }
 
 /* Specific Utilities */
