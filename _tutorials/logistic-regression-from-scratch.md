@@ -19,13 +19,13 @@ Machine learning automates this process. Instead of a human learning patterns fr
 
 In this tutorial, you will play the role of that computer. You will manually perform every step of the learning process inside an Excel spreadsheet, with every calculation visible and inspectable. By the end, you will understand the fundamental mechanism behind how machines learn.
 
-<div class="post-download">
-  <div class="post-download__meta">
-    <span class="post-download__eyebrow">Companion file</span>
-    <p class="post-download__title">Logistic_Regression_Tutorial.xlsx</p>
-    <p class="post-download__description">The Excel workbook used throughout this tutorial. Download it before you begin.</p>
+<div style="margin: var(--space-lg) 0; padding: var(--space-md) var(--space-lg); border: 1px solid var(--border-color); border-left: 4px solid var(--text-primary); display: flex; align-items: center; justify-content: space-between; gap: var(--space-lg); flex-wrap: wrap;">
+  <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+    <span style="font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-secondary);">Companion File</span>
+    <span style="font-family: var(--font-mono); font-size: 1rem; font-weight: 600;">Logistic_Regression_Tutorial.xlsx</span>
+    <span style="font-size: 0.85rem; color: var(--text-secondary);">The Excel workbook used throughout this tutorial. Download it before you begin.</span>
   </div>
-  <a href="/assets/downloads/Logistic_Regression_Tutorial.xlsx" download class="c-btn c-btn--ghost">Download workbook</a>
+  <a href="/assets/downloads/Logistic_Regression_Tutorial.xlsx" download class="c-btn c-btn--solid" style="white-space: nowrap; flex-shrink: 0; font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.05em;">↓ Download</a>
 </div>
 
 ### What You Will Build
