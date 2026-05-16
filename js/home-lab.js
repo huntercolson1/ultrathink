@@ -3,6 +3,7 @@ const MAX_PULL_X = 28;
 const MAX_PULL_Y = 10;
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+const fract = (value) => value - Math.floor(value);
 const lerp = (a, b, t) => a + (b - a) * t;
 
 const setRowPosition = (row, x, y) => {
@@ -62,6 +63,54 @@ const mixRgb = (a, b, amount) => ({
   b: Math.round(lerp(a.b, b.b, amount))
 });
 
+const hash2 = (x, y) => fract(Math.sin(x * 127.1 + y * 311.7) * 43758.5453123);
+
+const valueNoise = (x, y) => {
+  const ix = Math.floor(x);
+  const iy = Math.floor(y);
+  const fx = fract(x);
+  const fy = fract(y);
+  const ux = fx * fx * (3 - 2 * fx);
+  const uy = fy * fy * (3 - 2 * fy);
+
+  const a = hash2(ix, iy);
+  const b = hash2(ix + 1, iy);
+  const c = hash2(ix, iy + 1);
+  const d = hash2(ix + 1, iy + 1);
+  return lerp(lerp(a, b, ux), lerp(c, d, ux), uy) * 2 - 1;
+};
+
+const ridgeNoise = (x, y) => 1 - Math.abs(valueNoise(x, y));
+
+const fbmNoise = (x, y) => (
+  0.56 * valueNoise(x, y) +
+  0.28 * valueNoise(x * 2.03 + 11.2, y * 2.03 - 4.7) +
+  0.13 * valueNoise(x * 4.07 - 5.4, y * 4.07 + 8.9) +
+  0.07 * valueNoise(x * 8.11 + 2.1, y * 8.11 + 6.3)
+);
+
+const spikeNoise = (x, y, frequency) => {
+  const gx = Math.floor(x * frequency);
+  const gy = Math.floor(y * frequency);
+  let total = 0;
+
+  for (let oy = -1; oy <= 1; oy += 1) {
+    for (let ox = -1; ox <= 1; ox += 1) {
+      const cellX = gx + ox;
+      const cellY = gy + oy;
+      const px = (cellX + hash2(cellX + 19.17, cellY - 31.81)) / frequency;
+      const py = (cellY + hash2(cellX - 47.53, cellY + 13.29)) / frequency;
+      const height = hash2(cellX + 71.3, cellY - 5.9);
+      const polarity = height > 0.31 ? 1 : -0.72;
+      const distance = Math.hypot((x - px) * frequency, (y - py) * frequency);
+      const influence = Math.max(0, 1 - distance * 1.45);
+      total += polarity * (0.18 + height * 0.82) * influence ** 3.2;
+    }
+  }
+
+  return total;
+};
+
 /* ------------------------------------------------------------------ */
 /*  Loss landscape: projected surface with drag-to-rotate             */
 /* ------------------------------------------------------------------ */
@@ -73,7 +122,7 @@ const initGraph = (graph, prefersReducedMotion) => {
   const context = canvas.getContext('2d');
   if (!context) return;
 
-  const grid = 72;
+  const grid = 96;
   let viewYaw = -0.42;
   let viewPitch = 0.78;
   let targetYaw = viewYaw;
@@ -86,7 +135,7 @@ const initGraph = (graph, prefersReducedMotion) => {
   let cachedPalette = null;
   let cachedPaletteKey = '';
 
-  const roughness = 0.92;
+  const roughness = 1.38;
 
   const scheduleFrame = () => {
     if (frameId != null) return;
@@ -98,39 +147,54 @@ const initGraph = (graph, prefersReducedMotion) => {
 
   const lossAt = (x, y) => {
     const curvedValley = y - 0.46 * x * x + 0.11 * Math.sin(x * 2.1);
-    const bowl = 0.12 * x * x + 0.78 * curvedValley * curvedValley;
-    const broadMin = -1.18 * Math.exp(-((x + 0.14) ** 2 * 1.25 + (y - 0.02) ** 2 * 1.7));
-    const localMin = -0.46 * Math.exp(-((x - 1.24) ** 2 * 2.4 + (y + 0.72) ** 2 * 2));
-    const leftRidge = 0.62 * Math.exp(-((x + 1.44) ** 2 * 1.65 + (y - 1.04) ** 2 * 2.2));
-    const backRidge = 0.34 * Math.exp(-((x - 0.42) ** 2 * 2 + (y - 1.34) ** 2 * 2.8));
-    const island = 0.28 * Math.exp(-((x - 0.74) ** 2 * 7.8 + (y - 0.68) ** 2 * 5.6));
-    const crater = -0.26 * Math.exp(-((x + 1.12) ** 2 * 5.4 + (y + 0.42) ** 2 * 6.2));
-    const ring = roughness * 0.12 * Math.sin(Math.hypot(x + 0.25, y - 0.12) * 13);
-    const roughEnvelope = 0.75 + 0.25 * Math.exp(-(x * x + y * y) * 0.18);
+    const bowl = 0.13 * x * x + 0.82 * curvedValley * curvedValley;
+    const broadMin = -1.28 * Math.exp(-((x + 0.14) ** 2 * 1.25 + (y - 0.02) ** 2 * 1.7));
+    const localMin = -0.5 * Math.exp(-((x - 1.24) ** 2 * 2.4 + (y + 0.72) ** 2 * 2));
+    const leftRidge = 0.7 * Math.exp(-((x + 1.44) ** 2 * 1.65 + (y - 1.04) ** 2 * 2.2));
+    const backRidge = 0.4 * Math.exp(-((x - 0.42) ** 2 * 2 + (y - 1.34) ** 2 * 2.8));
+    const island = 0.34 * Math.exp(-((x - 0.74) ** 2 * 7.8 + (y - 0.68) ** 2 * 5.6));
+    const crater = -0.3 * Math.exp(-((x + 1.12) ** 2 * 5.4 + (y + 0.42) ** 2 * 6.2));
+    const ring = roughness * 0.15 * Math.sin(Math.hypot(x + 0.25, y - 0.12) * 13.8);
+    const roughEnvelope = 0.82 + 0.28 * Math.exp(-(x * x + y * y) * 0.18);
     const roughScale = roughness ** 1.04;
     const jaggedScale = Math.max(roughness - 0.62, 0) ** 1.18;
+    const noiseWarpX = x + 0.24 * valueNoise(x * 1.9 + 9.1, y * 1.9 - 2.6);
+    const noiseWarpY = y + 0.24 * valueNoise(x * 1.7 - 4.4, y * 1.7 + 7.8);
 
-    const saddleA = 0.19 * Math.exp(-((x - 0.35) ** 2 * 3.2 + (y + 0.48) ** 2 * 2.8));
-    const saddleB = -0.15 * Math.exp(-((x + 0.88) ** 2 * 4.1 + (y - 0.62) ** 2 * 3.5));
-    const plateau = 0.22 * Math.exp(-((x + 0.52) ** 2 * 1.8 + (y + 1.05) ** 2 * 1.6));
-    const sharpMin = -0.32 * Math.exp(-((x - 0.18) ** 2 * 9.5 + (y - 0.92) ** 2 * 8.2));
+    const saddleA = 0.23 * Math.exp(-((x - 0.35) ** 2 * 3.2 + (y + 0.48) ** 2 * 2.8));
+    const saddleB = -0.18 * Math.exp(-((x + 0.88) ** 2 * 4.1 + (y - 0.62) ** 2 * 3.5));
+    const plateau = 0.26 * Math.exp(-((x + 0.52) ** 2 * 1.8 + (y + 1.05) ** 2 * 1.6));
+    const sharpMin = -0.38 * Math.exp(-((x - 0.18) ** 2 * 9.5 + (y - 0.92) ** 2 * 8.2));
 
     const localBumps =
-      0.22 * Math.exp(-((x - 0.58) ** 2 * 11 + (y - 0.42) ** 2 * 8)) -
-      0.18 * Math.exp(-((x + 0.72) ** 2 * 8.5 + (y + 0.25) ** 2 * 10)) +
-      0.16 * Math.exp(-((x - 1.18) ** 2 * 10 + (y + 0.92) ** 2 * 7.5));
+      0.27 * Math.exp(-((x - 0.58) ** 2 * 11 + (y - 0.42) ** 2 * 8)) -
+      0.22 * Math.exp(-((x + 0.72) ** 2 * 8.5 + (y + 0.25) ** 2 * 10)) +
+      0.2 * Math.exp(-((x - 1.18) ** 2 * 10 + (y + 0.92) ** 2 * 7.5));
+    const microPeaks = jaggedScale * (
+      0.18 * Math.max(0, Math.sin(x * 18.4 + y * 27.1)) ** 3 -
+      0.14 * Math.max(0, Math.cos(x * 24.6 - y * 16.8)) ** 3 +
+      0.13 * Math.max(0, Math.sin(x * 38.5 - y * 29.2)) ** 4
+    );
+    const fracturedField = jaggedScale * (
+      0.62 * fbmNoise(noiseWarpX * 5.2, noiseWarpY * 5.2) +
+      0.42 * ridgeNoise(noiseWarpX * 8.4 + 3.1, noiseWarpY * 8.4 - 5.8) +
+      0.28 * spikeNoise(noiseWarpX + 8.6, noiseWarpY - 3.2, 5.4) +
+      0.18 * spikeNoise(noiseWarpX - 2.1, noiseWarpY + 6.7, 9.2)
+    );
     const ripples =
       roughScale * roughEnvelope * (
-        0.38 * Math.sin(x * 5.1 + y * 2.8) +
-        0.28 * Math.cos(x * 8.4 - y * 5.7) +
-        0.19 * Math.sin((x + y) * 12.6) +
-        0.16 * Math.cos(x * 19.2 - y * 14.4) +
-        0.11 * Math.sin(x * 31.1 + y * 24.2) +
-        0.07 * Math.cos(x * 45.3 - y * 36.8) +
+        0.43 * Math.sin(x * 5.1 + y * 2.8) +
+        0.32 * Math.cos(x * 8.4 - y * 5.7) +
+        0.22 * Math.sin((x + y) * 12.6) +
+        0.19 * Math.cos(x * 19.2 - y * 14.4) +
+        0.13 * Math.sin(x * 31.1 + y * 24.2) +
+        0.09 * Math.cos(x * 45.3 - y * 36.8) +
         jaggedScale * (
-          0.075 * Math.sin(x * 62.4 + y * 43.8) +
-          0.06 * Math.cos(x * 78.2 - y * 57.1)
+          0.09 * Math.sin(x * 62.4 + y * 43.8) +
+          0.075 * Math.cos(x * 78.2 - y * 57.1)
         ) +
+        microPeaks +
+        fracturedField +
         localBumps
       );
 
@@ -167,8 +231,8 @@ const initGraph = (graph, prefersReducedMotion) => {
 
   const projectFactory = (width, height, zMin, zMax) => {
     const size = Math.min(width, height);
-    const horizontalScale = width < 580 ? 0.165 : 0.245;
-    const verticalScale = width < 580 ? 0.175 : 0.23;
+    const horizontalScale = width < 580 ? 0.18 : 0.265;
+    const verticalScale = width < 580 ? 0.19 : 0.255;
     const scale = size * horizontalScale;
     const zScale = size * verticalScale;
     const cx = width * 0.51;
@@ -198,22 +262,22 @@ const initGraph = (graph, prefersReducedMotion) => {
       ? { r: 15, g: 22, b: 23 }
       : { r: 236, g: 242, b: 239 };
     const middle = palette.dark
-      ? { r: 30, g: 121, b: 119 }
+      ? { r: 29, g: 144, b: 139 }
       : { r: 42, g: 157, b: 146 };
     const high = palette.dark
-      ? { r: 189, g: 244, b: 70 }
+      ? { r: 218, g: 248, b: 68 }
       : { r: 185, g: 195, b: 23 };
     const low = palette.dark
-      ? { r: 74, g: 84, b: 165 }
+      ? { r: 58, g: 84, b: 174 }
       : { r: 63, g: 67, b: 120 };
 
     const curved = Math.pow(clamp(level, 0, 1), 0.82);
     const mixA = curved < 0.45
       ? mixRgb(low, middle, curved / 0.45)
       : mixRgb(middle, high, (curved - 0.45) / 0.55);
-    const mixed = mixRgb(base, mixA, palette.dark ? 0.74 : 0.66);
+    const mixed = mixRgb(base, mixA, palette.dark ? 0.82 : 0.7);
     const lit = mixRgb(mixed, palette.dark ? { r: 245, g: 245, b: 245 } : { r: 255, g: 255, b: 255 }, shade);
-    return rgbString(lit, palette.dark ? 0.9 : 0.86);
+    return rgbString(lit, palette.dark ? 0.94 : 0.88);
   };
 
   const draw = () => {
