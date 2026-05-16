@@ -73,7 +73,7 @@ const initGraph = (graph, prefersReducedMotion) => {
   const context = canvas.getContext('2d');
   if (!context) return;
 
-  const grid = 72;
+  const grid = 88;
   let viewYaw = -0.42;
   let viewPitch = 0.78;
   let targetYaw = viewYaw;
@@ -86,8 +86,6 @@ const initGraph = (graph, prefersReducedMotion) => {
   let cachedPalette = null;
   let cachedPaletteKey = '';
 
-  const roughness = 0.92;
-
   const scheduleFrame = () => {
     if (frameId != null) return;
     frameId = window.requestAnimationFrame(() => {
@@ -97,45 +95,44 @@ const initGraph = (graph, prefersReducedMotion) => {
   };
 
   const lossAt = (x, y) => {
-    const curvedValley = y - 0.46 * x * x + 0.11 * Math.sin(x * 2.1);
-    const bowl = 0.12 * x * x + 0.78 * curvedValley * curvedValley;
-    const broadMin = -1.18 * Math.exp(-((x + 0.14) ** 2 * 1.25 + (y - 0.02) ** 2 * 1.7));
-    const localMin = -0.46 * Math.exp(-((x - 1.24) ** 2 * 2.4 + (y + 0.72) ** 2 * 2));
-    const leftRidge = 0.62 * Math.exp(-((x + 1.44) ** 2 * 1.65 + (y - 1.04) ** 2 * 2.2));
-    const backRidge = 0.34 * Math.exp(-((x - 0.42) ** 2 * 2 + (y - 1.34) ** 2 * 2.8));
-    const island = 0.28 * Math.exp(-((x - 0.74) ** 2 * 7.8 + (y - 0.68) ** 2 * 5.6));
-    const crater = -0.26 * Math.exp(-((x + 1.12) ** 2 * 5.4 + (y + 0.42) ** 2 * 6.2));
-    const ring = roughness * 0.12 * Math.sin(Math.hypot(x + 0.25, y - 0.12) * 13);
-    const roughEnvelope = 0.75 + 0.25 * Math.exp(-(x * x + y * y) * 0.18);
-    const roughScale = roughness ** 1.04;
-    const jaggedScale = Math.max(roughness - 0.62, 0) ** 1.18;
+    const bowl = 0.08 * (x * x + y * y);
+    const globalMin = -1.4 * Math.exp(-((x + 0.1) ** 2 * 1.1 + (y - 0.05) ** 2 * 1.4));
+    const localMin1 = -0.55 * Math.exp(-((x - 1.24) ** 2 * 2.4 + (y + 0.72) ** 2 * 2));
+    const localMin2 = -0.4 * Math.exp(-((x + 1.1) ** 2 * 3.2 + (y + 0.9) ** 2 * 2.6));
+    const localMin3 = -0.35 * Math.exp(-((x - 0.6) ** 2 * 4.5 + (y - 1.15) ** 2 * 3.8));
+    const ridge1 = 0.7 * Math.exp(-((x + 1.44) ** 2 * 1.65 + (y - 1.04) ** 2 * 2.2));
+    const ridge2 = 0.45 * Math.exp(-((x - 0.42) ** 2 * 2 + (y - 1.34) ** 2 * 2.8));
+    const ridge3 = 0.38 * Math.exp(-((x - 1.3) ** 2 * 1.9 + (y + 1.2) ** 2 * 1.7));
+    const saddle1 = 0.25 * (x - 0.5) * (y + 0.3) * Math.exp(-((x - 0.5) ** 2 + (y + 0.3) ** 2) * 0.9);
+    const saddle2 = -0.2 * (x + 0.8) * (y - 0.7) * Math.exp(-((x + 0.8) ** 2 + (y - 0.7) ** 2) * 1.1);
+    const crater = -0.3 * Math.exp(-((x + 1.12) ** 2 * 5.4 + (y + 0.42) ** 2 * 6.2));
+    const sharpPeak = 0.32 * Math.exp(-((x - 0.74) ** 2 * 9 + (y - 0.68) ** 2 * 7));
+    const sharpMin = -0.38 * Math.exp(-((x - 0.18) ** 2 * 11 + (y - 0.92) ** 2 * 9));
 
-    const saddleA = 0.19 * Math.exp(-((x - 0.35) ** 2 * 3.2 + (y + 0.48) ** 2 * 2.8));
-    const saddleB = -0.15 * Math.exp(-((x + 0.88) ** 2 * 4.1 + (y - 0.62) ** 2 * 3.5));
-    const plateau = 0.22 * Math.exp(-((x + 0.52) ** 2 * 1.8 + (y + 1.05) ** 2 * 1.6));
-    const sharpMin = -0.32 * Math.exp(-((x - 0.18) ** 2 * 9.5 + (y - 0.92) ** 2 * 8.2));
+    const envelope = 0.7 + 0.3 * Math.exp(-(x * x + y * y) * 0.15);
+    const ripples = envelope * (
+      0.42 * Math.sin(x * 5.1 + y * 2.8) +
+      0.32 * Math.cos(x * 8.4 - y * 5.7) +
+      0.24 * Math.sin((x + y) * 12.6) +
+      0.2 * Math.cos(x * 19.2 - y * 14.4) +
+      0.16 * Math.sin(x * 31.1 + y * 24.2) +
+      0.12 * Math.cos(x * 45.3 - y * 36.8) +
+      0.09 * Math.sin(x * 62.4 + y * 43.8) +
+      0.07 * Math.cos(x * 78.2 - y * 57.1) +
+      0.055 * Math.sin(x * 95 + y * 68) +
+      0.04 * Math.cos(x * 112 - y * 82)
+    );
 
-    const localBumps =
-      0.22 * Math.exp(-((x - 0.58) ** 2 * 11 + (y - 0.42) ** 2 * 8)) -
-      0.18 * Math.exp(-((x + 0.72) ** 2 * 8.5 + (y + 0.25) ** 2 * 10)) +
-      0.16 * Math.exp(-((x - 1.18) ** 2 * 10 + (y + 0.92) ** 2 * 7.5));
-    const ripples =
-      roughScale * roughEnvelope * (
-        0.38 * Math.sin(x * 5.1 + y * 2.8) +
-        0.28 * Math.cos(x * 8.4 - y * 5.7) +
-        0.19 * Math.sin((x + y) * 12.6) +
-        0.16 * Math.cos(x * 19.2 - y * 14.4) +
-        0.11 * Math.sin(x * 31.1 + y * 24.2) +
-        0.07 * Math.cos(x * 45.3 - y * 36.8) +
-        jaggedScale * (
-          0.075 * Math.sin(x * 62.4 + y * 43.8) +
-          0.06 * Math.cos(x * 78.2 - y * 57.1)
-        ) +
-        localBumps
-      );
+    const bumps =
+      0.26 * Math.exp(-((x - 0.58) ** 2 * 11 + (y - 0.42) ** 2 * 8)) -
+      0.22 * Math.exp(-((x + 0.72) ** 2 * 8.5 + (y + 0.25) ** 2 * 10)) +
+      0.2 * Math.exp(-((x - 1.18) ** 2 * 10 + (y + 0.92) ** 2 * 7.5)) -
+      0.18 * Math.exp(-((x + 0.35) ** 2 * 12 + (y - 1.3) ** 2 * 9)) +
+      0.15 * Math.exp(-((x - 0.95) ** 2 * 14 + (y + 0.55) ** 2 * 11));
 
-    return bowl + broadMin + localMin + leftRidge + backRidge + island + crater + ring
-      + saddleA + saddleB + plateau + sharpMin + ripples;
+    return bowl + globalMin + localMin1 + localMin2 + localMin3
+      + ridge1 + ridge2 + ridge3 + saddle1 + saddle2
+      + crater + sharpPeak + sharpMin + ripples + bumps;
   };
 
   const getPalette = () => {
