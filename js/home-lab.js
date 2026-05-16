@@ -63,7 +63,7 @@ const mixRgb = (a, b, amount) => ({
 });
 
 /* ------------------------------------------------------------------ */
-/*  Interactive loss landscape: projected surface + descent traces     */
+/*  Loss landscape: projected surface with drag-to-rotate             */
 /* ------------------------------------------------------------------ */
 
 const initGraph = (graph, prefersReducedMotion) => {
@@ -73,13 +73,7 @@ const initGraph = (graph, prefersReducedMotion) => {
   const context = canvas.getContext('2d');
   if (!context) return;
 
-  const roughnessInput = graph.querySelector('[data-home-graph-roughness]');
-  const rateInput = graph.querySelector('[data-home-graph-rate]');
-  const startInput = graph.querySelector('[data-home-graph-start]');
-
   const grid = 72;
-  let descentTime = 0;
-  let lastFrameTime = null;
   let viewYaw = -0.42;
   let viewPitch = 0.78;
   let targetYaw = viewYaw;
@@ -87,9 +81,12 @@ const initGraph = (graph, prefersReducedMotion) => {
   let dragging = false;
   let lastPointerX = 0;
   let lastPointerY = 0;
+  let lastFrameTime = null;
   let frameId = null;
   let cachedPalette = null;
   let cachedPaletteKey = '';
+
+  const roughness = 0.92;
 
   const scheduleFrame = () => {
     if (frameId != null) return;
@@ -99,26 +96,7 @@ const initGraph = (graph, prefersReducedMotion) => {
     });
   };
 
-  const restartDescent = () => {
-    descentTime = -0.18;
-    lastFrameTime = performance.now();
-    scheduleFrame();
-  };
-
-  const readControl = (input, fallback) => {
-    if (!input) return fallback;
-    const value = Number.parseFloat(input.value);
-    if (Number.isNaN(value)) return fallback;
-    return clamp(value / 100, 0, 1);
-  };
-
-  const currentSettings = () => ({
-    roughness: (readControl(roughnessInput, 0.58) ** 0.72) * 1.45,
-    rate: 0.003 + (readControl(rateInput, 0.3) ** 1.55) * 0.32,
-    start: readControl(startInput, 0.65)
-  });
-
-  const lossAt = (x, y, roughness) => {
+  const lossAt = (x, y) => {
     const curvedValley = y - 0.46 * x * x + 0.11 * Math.sin(x * 2.1);
     const bowl = 0.12 * x * x + 0.78 * curvedValley * curvedValley;
     const broadMin = -1.18 * Math.exp(-((x + 0.14) ** 2 * 1.25 + (y - 0.02) ** 2 * 1.7));
@@ -131,6 +109,12 @@ const initGraph = (graph, prefersReducedMotion) => {
     const roughEnvelope = 0.75 + 0.25 * Math.exp(-(x * x + y * y) * 0.18);
     const roughScale = roughness ** 1.04;
     const jaggedScale = Math.max(roughness - 0.62, 0) ** 1.18;
+
+    const saddleA = 0.19 * Math.exp(-((x - 0.35) ** 2 * 3.2 + (y + 0.48) ** 2 * 2.8));
+    const saddleB = -0.15 * Math.exp(-((x + 0.88) ** 2 * 4.1 + (y - 0.62) ** 2 * 3.5));
+    const plateau = 0.22 * Math.exp(-((x + 0.52) ** 2 * 1.8 + (y + 1.05) ** 2 * 1.6));
+    const sharpMin = -0.32 * Math.exp(-((x - 0.18) ** 2 * 9.5 + (y - 0.92) ** 2 * 8.2));
+
     const localBumps =
       0.22 * Math.exp(-((x - 0.58) ** 2 * 11 + (y - 0.42) ** 2 * 8)) -
       0.18 * Math.exp(-((x + 0.72) ** 2 * 8.5 + (y + 0.25) ** 2 * 10)) +
@@ -150,14 +134,8 @@ const initGraph = (graph, prefersReducedMotion) => {
         localBumps
       );
 
-    return bowl + broadMin + localMin + leftRidge + backRidge + island + crater + ring + ripples;
-  };
-
-  const gradientAt = (x, y, roughness) => {
-    const h = 0.035;
-    const dx = lossAt(x + h, y, roughness) - lossAt(x - h, y, roughness);
-    const dy = lossAt(x, y + h, roughness) - lossAt(x, y - h, roughness);
-    return [dx / (h * 2), dy / (h * 2)];
+    return bowl + broadMin + localMin + leftRidge + backRidge + island + crater + ring
+      + saddleA + saddleB + plateau + sharpMin + ripples;
   };
 
   const getPalette = () => {
@@ -238,68 +216,6 @@ const initGraph = (graph, prefersReducedMotion) => {
     return rgbString(lit, palette.dark ? 0.9 : 0.86);
   };
 
-  const descentStart = (start) => {
-    const x = lerp(-1.35, 1.35, start);
-    return {
-      x,
-      y: 1.36 + Math.sin(start * Math.PI) * 0.18
-    };
-  };
-
-  const descentPath = (roughness, learningRate, start) => {
-    let { x, y } = descentStart(start);
-    const path = [];
-
-    for (let step = 0; step < 78; step += 1) {
-      const z = lossAt(x, y, roughness);
-      path.push({ x, y, z });
-
-      const [gx, gy] = gradientAt(x, y, roughness);
-      const magnitude = Math.hypot(gx, gy);
-      if (magnitude < 0.012) break;
-
-      let stepSize = learningRate;
-      let nextX = x;
-      let nextY = y;
-      let nextLoss = z;
-      let accepted = false;
-
-      for (let attempt = 0; attempt < 10; attempt += 1) {
-        nextX = clamp(x - gx * stepSize, -1.84, 1.84);
-        nextY = clamp(y - gy * stepSize, -1.84, 1.84);
-        nextLoss = lossAt(nextX, nextY, roughness);
-
-        if (nextLoss < z - 0.000001) {
-          accepted = true;
-          break;
-        }
-
-        stepSize *= 0.5;
-      }
-
-      if (!accepted) break;
-      if (Math.abs(nextLoss - z) < 0.00002) break;
-
-      x = nextX;
-      y = nextY;
-    }
-
-    return path;
-  };
-
-  const drawSmoothPath = (path) => {
-    if (path.length < 2) return;
-    context.beginPath();
-    context.moveTo(path[0].x, path[0].y);
-    for (let i = 1; i < path.length - 1; i += 1) {
-      const midX = (path[i].x + path[i + 1].x) * 0.5;
-      const midY = (path[i].y + path[i + 1].y) * 0.5;
-      context.quadraticCurveTo(path[i].x, path[i].y, midX, midY);
-    }
-    const last = path[path.length - 1];
-    context.lineTo(last.x, last.y);
-  };
-
   const draw = () => {
     const rect = canvas.getBoundingClientRect();
     const width = rect.width;
@@ -310,10 +226,6 @@ const initGraph = (graph, prefersReducedMotion) => {
     const dt = lastFrameTime == null ? 16 : Math.min(now - lastFrameTime, 48);
     lastFrameTime = now;
 
-    if (!prefersReducedMotion) {
-      descentTime += dt / 1000;
-    }
-
     if (!dragging && !prefersReducedMotion) {
       targetYaw += 0.08 * (dt / 1000);
     }
@@ -322,21 +234,18 @@ const initGraph = (graph, prefersReducedMotion) => {
     viewPitch += (targetPitch - viewPitch) * 0.08;
 
     const palette = getPalette();
-    const settings = currentSettings();
     context.clearRect(0, 0, width, height);
 
     const domain = 3.9;
     const points = [];
     let zMin = Infinity;
     let zMax = -Infinity;
-    const influenceX = 0;
-    const influenceY = 0;
 
     for (let j = 0; j <= grid; j += 1) {
       for (let i = 0; i <= grid; i += 1) {
-        const x = (i / grid - 0.5) * domain + influenceX;
-        const y = (j / grid - 0.5) * domain + influenceY;
-        const z = lossAt(x, y, settings.roughness);
+        const x = (i / grid - 0.5) * domain;
+        const y = (j / grid - 0.5) * domain;
+        const z = lossAt(x, y);
         if (z < zMin) zMin = z;
         if (z > zMax) zMax = z;
         points.push({ x, y, z });
@@ -404,96 +313,22 @@ const initGraph = (graph, prefersReducedMotion) => {
     }
     context.restore();
 
-    context.save();
-    context.lineCap = 'round';
-    context.lineJoin = 'round';
-    const path = descentPath(settings.roughness, settings.rate, settings.start).map((point) => ({
-      ...point,
-      ...project(point.x, point.y, point.z)
-    }));
-    const cycleTime = descentTime % 5.4;
-    const revealDelay = 0.62;
-    const revealDuration = 4.35;
-    const visiblePath = [];
-
-    if (path.length > 0) {
-      if (prefersReducedMotion || cycleTime >= revealDelay + revealDuration) {
-        visiblePath.push(...path);
-      } else if (cycleTime < revealDelay || path.length === 1) {
-        visiblePath.push(path[0]);
-      } else {
-        const progress = clamp((cycleTime - revealDelay) / revealDuration, 0, 1);
-        const stepProgress = progress * (path.length - 1);
-        const fullSteps = Math.floor(stepProgress);
-        const partialStep = stepProgress - fullSteps;
-
-        if (fullSteps === 0 && path[1]) {
-          visiblePath.push({
-            x: lerp(path[0].x, path[1].x, partialStep),
-            y: lerp(path[0].y, path[1].y, partialStep),
-            z: lerp(path[0].z, path[1].z, partialStep)
-          });
-        } else {
-          visiblePath.push(...path.slice(0, fullSteps + 1));
-        }
-
-        if (fullSteps > 0 && path[fullSteps + 1]) {
-          const from = path[fullSteps];
-          const to = path[fullSteps + 1];
-          visiblePath.push({
-            x: lerp(from.x, to.x, partialStep),
-            y: lerp(from.y, to.y, partialStep),
-            z: lerp(from.z, to.z, partialStep)
-          });
-        }
-      }
-    }
-
-    if (visiblePath.length > 1) {
-      drawSmoothPath(visiblePath);
-      context.shadowColor = palette.dark ? 'rgb(0 0 0 / 0.5)' : 'rgb(255 255 255 / 0.52)';
-      context.shadowBlur = 4;
-      context.strokeStyle = palette.dark ? 'rgb(248 248 238 / 0.96)' : 'rgb(5 5 5 / 0.78)';
-      context.lineWidth = 1.85;
-      context.stroke();
-      context.shadowBlur = 0;
-
-      const head = visiblePath[visiblePath.length - 1];
-      context.beginPath();
-      context.arc(head.x, head.y, 2.6, 0, Math.PI * 2);
-      context.fillStyle = palette.dark ? 'rgb(248 248 238 / 0.98)' : 'rgb(5 5 5 / 0.9)';
-      context.fill();
-    } else if (visiblePath.length === 1) {
-      const head = visiblePath[0];
-      context.beginPath();
-      context.arc(head.x, head.y, 2.6, 0, Math.PI * 2);
-      context.fillStyle = palette.dark ? 'rgb(248 248 238 / 0.98)' : 'rgb(5 5 5 / 0.9)';
-      context.fill();
-    }
-    context.restore();
-
     if (!prefersReducedMotion || dragging) {
       scheduleFrame();
     }
-  };
-
-  const updateTarget = (event) => {
-    if (!event.isPrimary) return;
-    scheduleFrame();
   };
 
   graph.addEventListener(
     'pointerdown',
     (event) => {
       if (!event.isPrimary || event.button !== 0) return;
-      if (event.target.closest('[data-home-graph-control]')) return;
       event.preventDefault();
       dragging = true;
       lastPointerX = event.clientX;
       lastPointerY = event.clientY;
       graph.setPointerCapture?.(event.pointerId);
       graph.classList.add('is-grabbing');
-      updateTarget(event);
+      scheduleFrame();
     },
     { passive: false }
   );
@@ -511,7 +346,7 @@ const initGraph = (graph, prefersReducedMotion) => {
         targetYaw += dx * 0.006;
         targetPitch = clamp(targetPitch + dy * 0.0035, 0.58, 1.18);
       }
-      updateTarget(event);
+      scheduleFrame();
     },
     { passive: false }
   );
@@ -529,10 +364,6 @@ const initGraph = (graph, prefersReducedMotion) => {
   graph.addEventListener('lostpointercapture', () => {
     dragging = false;
     graph.classList.remove('is-grabbing');
-  });
-
-  [roughnessInput, rateInput, startInput].forEach((input) => {
-    input?.addEventListener('input', restartDescent);
   });
 
   window.addEventListener('resize', () => {

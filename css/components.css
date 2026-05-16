@@ -191,6 +191,7 @@
   justify-content: flex-end;
   align-items: flex-start;
   z-index: calc(var(--z-nav) + 1);
+  overflow: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -850,7 +851,7 @@
   min-height: clamp(350px, 32vw, 455px);
   transform: translateY(-48%);
   cursor: default;
-  touch-action: none;
+  touch-action: pan-y;
   user-select: none;
   isolation: isolate;
   overflow: hidden;
@@ -870,80 +871,10 @@
 
 .home-graph__canvas {
   position: absolute;
-  inset: clamp(0.55rem, 1.4vw, 1rem) clamp(0.55rem, 1.4vw, 1rem) 3.85rem;
+  inset: clamp(0.55rem, 1.4vw, 1rem);
   width: calc(100% - clamp(1.1rem, 2.8vw, 2rem));
-  height: calc(100% - clamp(4.4rem, 5.3vw, 4.85rem));
-}
-
-.home-graph__controls {
-  position: absolute;
-  left: clamp(0.25rem, 1.2vw, 0.7rem);
-  right: clamp(0.25rem, 1.2vw, 0.7rem);
-  bottom: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(0.65rem, 1.7vw, 1rem);
-  padding-block: 0.45rem 0.2rem;
-  color: var(--text-secondary);
-  font-size: 0.68rem;
-  letter-spacing: 0.04em;
-  pointer-events: auto;
-  z-index: 2;
-}
-
-.home-graph__control {
-  display: grid;
-  gap: 0.3rem;
-  min-width: 0;
-}
-
-.home-graph__control span {
-  opacity: 0.78;
-  text-transform: uppercase;
-}
-
-.home-graph__control input {
-  appearance: none;
-  width: 100%;
-  height: 1rem;
-  margin: 0;
-  background: transparent;
-  cursor: ew-resize;
-}
-
-.home-graph__control input::-webkit-slider-runnable-track {
-  height: 1px;
-  background: color-mix(in srgb, var(--text-primary) 76%, transparent);
-  border-radius: 0;
-}
-
-.home-graph__control input::-moz-range-track {
-  height: 1px;
-  background: color-mix(in srgb, var(--text-primary) 76%, transparent);
-  border-radius: 0;
-}
-
-.home-graph__control input::-webkit-slider-thumb {
-  appearance: none;
-  width: 0.7rem;
-  height: 0.7rem;
-  margin-top: calc(-0.35rem + 1px);
-  background: var(--text-primary);
-  border: 0;
-  border-radius: 0;
-}
-
-.home-graph__control input::-moz-range-thumb {
-  width: 0.7rem;
-  height: 0.7rem;
-  background: var(--text-primary);
-  border: 0;
-  border-radius: 0;
-}
-
-.home-graph__control input:focus-visible {
-  outline: 1px solid var(--text-primary);
-  outline-offset: 4px;
+  height: calc(100% - clamp(1.1rem, 2.8vw, 2rem));
+  touch-action: none;
 }
 
 .home-index {
@@ -1389,19 +1320,13 @@
 
   .home-graph {
     width: min(100%, 460px);
-    min-height: 350px;
+    min-height: 390px;
     border-radius: 1px;
   }
 
-  .home-graph__controls {
-    grid-template-columns: 1fr;
-    gap: 0.45rem;
-    font-size: 0.64rem;
-  }
-
-  .home-graph__control {
-    grid-template-columns: 5.5rem minmax(0, 1fr);
-    align-items: center;
+  .home-graph__canvas {
+    inset: clamp(0.55rem, 1.4vw, 1rem);
+    height: auto;
   }
 
   .home-feed-list__link {
