@@ -85,5 +85,11 @@ export const initHeroScramble = () => {
     frameId = window.requestAnimationFrame(render);
   };
 
-  window.requestAnimationFrame(runScramble);
+  const supportsHover = window.matchMedia?.('(hover: hover) and (pointer: fine)').matches;
+
+  if (supportsHover) {
+    title.addEventListener('mouseenter', runScramble);
+  } else {
+    title.addEventListener('click', runScramble);
+  }
 };
