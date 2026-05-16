@@ -1,6 +1,6 @@
 import { initComponents } from './components.js';
 import { initBlogTags } from './blog-tags.js';
-import { initHeroScramble } from './hero-scramble.js?v=design-20260516a';
+import { initHeroScramble } from './hero-scramble.js?v=design-20260516b';
 import { initHomeLab } from './home-lab.js?v=loss-landscape-20260425x';
 import {
   initBlogSort,

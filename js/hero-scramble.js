@@ -92,4 +92,6 @@ export const initHeroScramble = () => {
   } else {
     title.addEventListener('click', runScramble);
   }
+
+  window.requestAnimationFrame(runScramble);
 };
