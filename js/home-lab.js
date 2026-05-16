@@ -95,44 +95,29 @@ const initGraph = (graph, prefersReducedMotion) => {
   };
 
   const lossAt = (x, y) => {
-    const bowl = 0.08 * (x * x + y * y);
-    const globalMin = -1.4 * Math.exp(-((x + 0.1) ** 2 * 1.1 + (y - 0.05) ** 2 * 1.4));
-    const localMin1 = -0.55 * Math.exp(-((x - 1.24) ** 2 * 2.4 + (y + 0.72) ** 2 * 2));
-    const localMin2 = -0.4 * Math.exp(-((x + 1.1) ** 2 * 3.2 + (y + 0.9) ** 2 * 2.6));
-    const localMin3 = -0.35 * Math.exp(-((x - 0.6) ** 2 * 4.5 + (y - 1.15) ** 2 * 3.8));
-    const ridge1 = 0.7 * Math.exp(-((x + 1.44) ** 2 * 1.65 + (y - 1.04) ** 2 * 2.2));
-    const ridge2 = 0.45 * Math.exp(-((x - 0.42) ** 2 * 2 + (y - 1.34) ** 2 * 2.8));
-    const ridge3 = 0.38 * Math.exp(-((x - 1.3) ** 2 * 1.9 + (y + 1.2) ** 2 * 1.7));
-    const saddle1 = 0.25 * (x - 0.5) * (y + 0.3) * Math.exp(-((x - 0.5) ** 2 + (y + 0.3) ** 2) * 0.9);
-    const saddle2 = -0.2 * (x + 0.8) * (y - 0.7) * Math.exp(-((x + 0.8) ** 2 + (y - 0.7) ** 2) * 1.1);
-    const crater = -0.3 * Math.exp(-((x + 1.12) ** 2 * 5.4 + (y + 0.42) ** 2 * 6.2));
-    const sharpPeak = 0.32 * Math.exp(-((x - 0.74) ** 2 * 9 + (y - 0.68) ** 2 * 7));
-    const sharpMin = -0.38 * Math.exp(-((x - 0.18) ** 2 * 11 + (y - 0.92) ** 2 * 9));
+    const bowl = 0.1 * (x * x + y * y);
+    const globalMin = -1.3 * Math.exp(-((x + 0.1) ** 2 * 1.0 + (y - 0.05) ** 2 * 1.2));
+    const localMin1 = -0.5 * Math.exp(-((x - 1.24) ** 2 * 2.2 + (y + 0.72) ** 2 * 1.8));
+    const localMin2 = -0.35 * Math.exp(-((x + 1.1) ** 2 * 2.8 + (y + 0.9) ** 2 * 2.2));
+    const localMin3 = -0.3 * Math.exp(-((x - 0.6) ** 2 * 3.5 + (y - 1.15) ** 2 * 3));
+    const ridge1 = 0.65 * Math.exp(-((x + 1.44) ** 2 * 1.4 + (y - 1.04) ** 2 * 1.8));
+    const ridge2 = 0.4 * Math.exp(-((x - 0.42) ** 2 * 1.6 + (y - 1.34) ** 2 * 2.2));
+    const ridge3 = 0.35 * Math.exp(-((x - 1.3) ** 2 * 1.5 + (y + 1.2) ** 2 * 1.4));
+    const saddle1 = 0.2 * (x - 0.5) * (y + 0.3) * Math.exp(-((x - 0.5) ** 2 + (y + 0.3) ** 2) * 0.7);
+    const saddle2 = -0.18 * (x + 0.8) * (y - 0.7) * Math.exp(-((x + 0.8) ** 2 + (y - 0.7) ** 2) * 0.8);
 
-    const envelope = 0.7 + 0.3 * Math.exp(-(x * x + y * y) * 0.15);
-    const ripples = envelope * (
-      0.42 * Math.sin(x * 5.1 + y * 2.8) +
-      0.32 * Math.cos(x * 8.4 - y * 5.7) +
-      0.24 * Math.sin((x + y) * 12.6) +
-      0.2 * Math.cos(x * 19.2 - y * 14.4) +
-      0.16 * Math.sin(x * 31.1 + y * 24.2) +
-      0.12 * Math.cos(x * 45.3 - y * 36.8) +
-      0.09 * Math.sin(x * 62.4 + y * 43.8) +
-      0.07 * Math.cos(x * 78.2 - y * 57.1) +
-      0.055 * Math.sin(x * 95 + y * 68) +
-      0.04 * Math.cos(x * 112 - y * 82)
+    const envelope = 0.65 + 0.35 * Math.exp(-(x * x + y * y) * 0.12);
+    const terrain = envelope * (
+      0.28 * Math.sin(x * 4.2 + y * 2.4) +
+      0.22 * Math.cos(x * 6.8 - y * 4.6) +
+      0.16 * Math.sin((x + y) * 9.5) +
+      0.12 * Math.cos(x * 14.3 - y * 10.8) +
+      0.08 * Math.sin(x * 21.6 + y * 17.2) +
+      0.05 * Math.cos(x * 32 - y * 25)
     );
 
-    const bumps =
-      0.26 * Math.exp(-((x - 0.58) ** 2 * 11 + (y - 0.42) ** 2 * 8)) -
-      0.22 * Math.exp(-((x + 0.72) ** 2 * 8.5 + (y + 0.25) ** 2 * 10)) +
-      0.2 * Math.exp(-((x - 1.18) ** 2 * 10 + (y + 0.92) ** 2 * 7.5)) -
-      0.18 * Math.exp(-((x + 0.35) ** 2 * 12 + (y - 1.3) ** 2 * 9)) +
-      0.15 * Math.exp(-((x - 0.95) ** 2 * 14 + (y + 0.55) ** 2 * 11));
-
     return bowl + globalMin + localMin1 + localMin2 + localMin3
-      + ridge1 + ridge2 + ridge3 + saddle1 + saddle2
-      + crater + sharpPeak + sharpMin + ripples + bumps;
+      + ridge1 + ridge2 + ridge3 + saddle1 + saddle2 + terrain;
   };
 
   const getPalette = () => {
@@ -191,26 +176,31 @@ const initGraph = (graph, prefersReducedMotion) => {
   };
 
   const surfaceColor = (level, shade, palette) => {
-    const base = palette.dark
-      ? { r: 15, g: 22, b: 23 }
-      : { r: 236, g: 242, b: 239 };
-    const middle = palette.dark
-      ? { r: 30, g: 121, b: 119 }
-      : { r: 42, g: 157, b: 146 };
-    const high = palette.dark
-      ? { r: 189, g: 244, b: 70 }
-      : { r: 185, g: 195, b: 23 };
-    const low = palette.dark
-      ? { r: 74, g: 84, b: 165 }
-      : { r: 63, g: 67, b: 120 };
+    const stop0 = palette.dark
+      ? { r: 20, g: 30, b: 120 }
+      : { r: 30, g: 45, b: 130 };
+    const stop1 = palette.dark
+      ? { r: 15, g: 130, b: 145 }
+      : { r: 20, g: 140, b: 155 };
+    const stop2 = palette.dark
+      ? { r: 40, g: 185, b: 100 }
+      : { r: 50, g: 175, b: 90 };
+    const stop3 = palette.dark
+      ? { r: 200, g: 240, b: 60 }
+      : { r: 190, g: 225, b: 50 };
 
-    const curved = Math.pow(clamp(level, 0, 1), 0.82);
-    const mixA = curved < 0.45
-      ? mixRgb(low, middle, curved / 0.45)
-      : mixRgb(middle, high, (curved - 0.45) / 0.55);
-    const mixed = mixRgb(base, mixA, palette.dark ? 0.74 : 0.66);
-    const lit = mixRgb(mixed, palette.dark ? { r: 245, g: 245, b: 245 } : { r: 255, g: 255, b: 255 }, shade);
-    return rgbString(lit, palette.dark ? 0.9 : 0.86);
+    const t = clamp(level, 0, 1);
+    let color;
+    if (t < 0.33) {
+      color = mixRgb(stop0, stop1, t / 0.33);
+    } else if (t < 0.66) {
+      color = mixRgb(stop1, stop2, (t - 0.33) / 0.33);
+    } else {
+      color = mixRgb(stop2, stop3, (t - 0.66) / 0.34);
+    }
+
+    const lit = mixRgb(color, { r: 255, g: 255, b: 255 }, shade * 0.6);
+    return rgbString(lit, palette.dark ? 0.92 : 0.9);
   };
 
   const draw = () => {

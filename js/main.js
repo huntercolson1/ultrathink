@@ -1,7 +1,7 @@
 import { initComponents } from './components.js';
 import { initBlogTags } from './blog-tags.js';
 import { initHeroScramble } from './hero-scramble.js?v=design-20260516b';
-import { initHomeLab } from './home-lab.js?v=loss-landscape-20260516';
+import { initHomeLab } from './home-lab.js?v=loss-landscape-20260516b';
 import {
   initBlogSort,
   initPostEnhancements,
