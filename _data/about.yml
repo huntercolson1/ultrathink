@@ -10,18 +10,14 @@ social:
 principles:
   - Add your principles here.
 now:
-  intro: "I'm currently working on a few projects outside of medical school:"
+  intro: "A few things I'm working on outside of medical school:"
   projects:
-    - Developing an AI-driven medical education platform for Socratic tutoring and USMLE-style question generation based on uploaded material.
-    - Conducting a clinical trial aimed at improving surgical outcomes for women undergoing reconstructive breast surgery after mastectomy, using LiDAR scanning and photogrammetry to objectively analyze breast shape and volume.
-    - Investigating new diagnostic metrics from hepatobiliary scintigraphy (HIDA) to improve the evaluation of gallbladder dysfunction beyond traditional ejection fraction thresholds.
+    - Building an AI medical education platform for Socratic tutoring and USMLE-style question generation from uploaded material.
+    - Studying objective breast shape and volume analysis after reconstruction using LiDAR scanning and photogrammetry.
+    - Investigating HIDA scan metrics that may evaluate gallbladder dysfunction better than ejection fraction alone.
 capabilities:
-  - Medicine, dermatology, imaging informatics
-  - Artificial intelligence, machine learning, large language models (LLMs), NLP
-  - Predictive modeling, synthetic data, ensemble methods
-  - Software engineering, full-stack development, systems design
-  - Data science, visualization, statistical modeling, Bayesian reasoning
-  - Education, teaching, simplifying complex ideas, learning design
-  - Innovation, startups, product development, prototyping
-  - Mathematics, physics, computational modeling, information theory
-  - Design, UI/UX, medical visualization, data interfaces
+  - Medicine, dermatology, and imaging informatics
+  - AI systems, language models, and applied machine learning
+  - Data science, statistical modeling, and visualization
+  - Software engineering, full-stack tools, and product prototyping
+  - Medical education, learning design, and clear technical writing
