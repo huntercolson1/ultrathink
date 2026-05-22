@@ -60,25 +60,3 @@ permalink: /about/
     </div>
   </div>
 </section>
-
-<section class="section about-page__details">
-  <div class="container stack listing-shell">
-    <div class="about-panel stack">
-      <h3 class="u-text-display">Currently</h3>
-      <p class="u-text-mono">{{ site.data.about.now.intro }}</p>
-      <ul class="u-text-mono stack" style="--stack-gap: 0.5rem">
-        {% for project in site.data.about.now.projects %}
-        <li>{{ project }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    <div class="about-panel stack">
-      <h3 class="u-text-display">Focus areas</h3>
-      <ul class="u-text-mono stack" style="--stack-gap: 0.5rem">
-        {% for capability in site.data.about.capabilities %}
-        <li>{{ capability }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
-</section>
