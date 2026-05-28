@@ -320,59 +320,6 @@ main {
   padding-bottom: 0.2rem;
 }
 
-.pixel-flatten-figure .post-figure-card__media-frame {
-  padding: clamp(1rem, 3vw, 2rem);
-}
-
-.pixel-flatten {
-  display: grid;
-  grid-template-columns: minmax(150px, 220px) auto minmax(0, 1fr);
-  gap: clamp(0.8rem, 2vw, 1.4rem);
-  align-items: center;
-  width: 100%;
-  max-width: 780px;
-  margin: 0 auto;
-}
-
-.pixel-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  border: 1px solid var(--border-color);
-  background: var(--border-color);
-  gap: 1px;
-  aspect-ratio: 1;
-}
-
-.pixel-grid span {
-  display: grid;
-  place-items: center;
-  min-width: 0;
-  font-variant-numeric: tabular-nums;
-}
-
-.pixel-flatten__arrow {
-  color: var(--text-secondary);
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
-  text-align: center;
-}
-
-.pixel-row {
-  display: grid;
-  grid-template-columns: repeat(9, minmax(2rem, 1fr));
-  gap: 0.25rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.pixel-row li {
-  border: 1px solid var(--border-color);
-  padding: 0.4rem 0.2rem;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-  overflow-wrap: normal;
-}
-
 .post-note {
   border-left: 3px solid var(--border-color);
   padding: 0.8rem 1rem;
@@ -1062,21 +1009,6 @@ footer {
 
   .post-figure-card + .post-figure-card {
     margin-top: var(--space-lg);
-  }
-
-  .pixel-flatten {
-    grid-template-columns: 1fr;
-    justify-items: stretch;
-    max-width: 320px;
-  }
-
-  .pixel-flatten__arrow {
-    transform: rotate(90deg);
-    line-height: 1;
-  }
-
-  .pixel-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .post-content .post-data-table {
