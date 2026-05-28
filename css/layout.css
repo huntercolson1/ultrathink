@@ -586,8 +586,8 @@ main {
 
 @media (width <=720px) {
   .post-toc-toggle {
-    bottom: clamp(16px, 4vw, 22px);
-    right: clamp(14px, 4vw, 20px);
+    position: static;
+    margin: 0 0 var(--space-lg);
     padding: 0.7rem 0.9rem;
     font-size: 0.78rem;
     letter-spacing: 0.18em;
@@ -606,6 +606,7 @@ main {
     background: var(--bg-color);
     color: var(--text-primary);
     border-color: var(--border-color);
+    transform: none;
   }
 }
 
@@ -1080,7 +1081,11 @@ footer {
   }
 
   .post-content .post-data-table {
+    display: table;
+    width: 100%;
     min-width: min(36rem, 100%);
+    table-layout: fixed;
+    white-space: normal;
   }
 
   .post-scale-grid {
