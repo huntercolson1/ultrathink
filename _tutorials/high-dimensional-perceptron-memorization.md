@@ -30,8 +30,8 @@ X_{\mathrm{aug}}\tilde{w} = y.
 <p>The training route uses the perceptron learning rule instead of solving the equation directly. It starts with weights at zero, looks at one image at a time, and updates the weights only when the model makes a mistake. Once the algebra tells us a separator exists, the training run asks a more practical question: how hard is it for the original mistake-driven algorithm to find one? Figure 1 shows how the images move through both tests.</p>
 <figure class="post-figure-card post-figure-card--image" id="fig-pipeline">
 
-<div class="post-figure-card__media-frame"><img alt="The experiment turns images into a high-dimensional linear-algebra problem. Real cat and dog images are resized, flattened into 4096-pixel vectors, augmented with a bias column, assigned random labels, and then passed to both a direct solve and perceptron training." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/experiment_pipeline.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/experiment_pipeline-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-pipeline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-The experiment as a pipeline. The photographs are real, but the labels used for training are random. After resizing and flattening, each image becomes a 4096-number row; adding the bias gives the algebra and the perceptron learning rule the same input representation.
+<div class="post-figure-card__media-frame"><img alt="The experiment turns images into a high-dimensional linear-algebra problem. Real cat and dog images are resized, flattened into 4096-pixel vectors, augmented with a bias column, assigned random labels, and then passed to both an exact separator proof and perceptron training." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/experiment_pipeline.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/experiment_pipeline-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-pipeline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: The experiment turns images into a high-dimensional linear-algebra problem. Real cat and dog images are resized, flattened into 4096-pixel vectors, augmented with a bias column, assigned random labels, and then passed to both an exact separator proof and perceptron training.
 </figcaption>
 </figure>
 </section>
@@ -69,38 +69,15 @@ s = w_1x_1 + w_2x_2 + \cdots + w_{4096}x_{4096} + b.
 <li>flatten the image into a 4096-number row.</li>
 </ol>
 <p>At first this can feel as if the image has disappeared. It has not. A 64 by 64 grid and a 4096-number row contain the same brightness values arranged in different shapes. The grid is easier for us to inspect visually; the row is easier for the model to multiply by weights. For a tiny 3 by 3 grayscale image, the same rearrangement would look like this:</p>
-<figure class="post-figure-card pixel-flatten-figure" id="fig-3x3-pixel-grid">
-<div class="post-figure-card__media-frame">
-<div class="pixel-flatten" aria-label="A 3 by 3 pixel grid flattened row by row into a vector">
-<div class="pixel-grid" role="img" aria-label="3 by 3 grayscale pixel grid with values 12, 40, 91, 8, 55, 110, 4, 61, and 130">
-<span style="background: rgb(12 12 12); color: #fff;">12</span>
-<span style="background: rgb(40 40 40); color: #fff;">40</span>
-<span style="background: rgb(91 91 91); color: #fff;">91</span>
-<span style="background: rgb(8 8 8); color: #fff;">8</span>
-<span style="background: rgb(55 55 55); color: #fff;">55</span>
-<span style="background: rgb(110 110 110); color: #fff;">110</span>
-<span style="background: rgb(4 4 4); color: #fff;">4</span>
-<span style="background: rgb(61 61 61); color: #fff;">61</span>
-<span style="background: rgb(130 130 130); color: #111;">130</span>
-</div>
-<div class="pixel-flatten__arrow" aria-hidden="true">→</div>
-<ol class="pixel-row" aria-label="Flattened vector entries in row-major order">
-<li>12</li>
-<li>40</li>
-<li>91</li>
-<li>8</li>
-<li>55</li>
-<li>110</li>
-<li>4</li>
-<li>61</li>
-<li>130</li>
-</ol>
-</div>
-</div>
-<figcaption class="post-figure-card__caption">
-A 3x3 image is nine brightness numbers arranged as pixels. Flattening reads the grid row by row, so the same nine values become a vector the perceptron can multiply by nine weights.
-</figcaption>
-</figure>
+<p><span class="math display">\[
+\begin{bmatrix}
+12 &amp; 40 &amp; 91 \\
+8 &amp; 55 &amp; 110 \\
+4 &amp; 61 &amp; 130
+\end{bmatrix}
+\quad \longrightarrow \quad
+(12, 40, 91, 8, 55, 110, 4, 61, 130).
+\]</span></p>
 <p>A vector is just an ordered list of numbers. The order matters because each position corresponds to a location in the original image. Pixel 1 might be the upper-left corner. Pixel 4096 might be the lower-right corner.</p>
 <p>Once every image has been turned into a vector, the training set becomes a table. Each row is one image. Each column is one pixel position. If there are <span class="math inline">\(N\)</span> images, the table has <span class="math inline">\(N\)</span> rows and 4096 pixel columns. We call that table <span class="math inline">\(X\)</span>.</p>
 </section>
@@ -111,7 +88,7 @@ A 3x3 image is nine brightness numbers arranged as pixels. Flattening reads the 
 <figure class="post-figure-card post-figure-card--image" id="fig-perceptron-anatomy">
 
 <div class="post-figure-card__media-frame"><img alt="A perceptron multiplies each input feature by a weight, adds the weighted values plus the bias, and predicts by checking whether the score is positive or negative." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/perceptron_anatomy.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/perceptron_anatomy-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-perceptron-anatomy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-A perceptron turns an input vector into one signed score. The weights decide how much each pixel position contributes, the bias shifts the cutoff point, and the final sign becomes the predicted label.
+Figure&nbsp;2: A perceptron multiplies each input feature by a weight, adds the weighted values plus the bias, and predicts by checking whether the score is positive or negative.
 </figcaption>
 </figure>
 <p>The word “linear” matters. The perceptron does not multiply pixels by other pixels. It does not build an eye detector, an ear detector, or a fur detector. It only computes the weighted sum in <a href="#eq-score">Equation 2</a> and then checks the sign.</p>
@@ -182,7 +159,7 @@ C &amp;: 2(0) + 2(1) - 1 = +1.
 <figure class="post-figure-card post-figure-card--image" id="fig-toy-separator">
 
 <div class="post-figure-card__media-frame"><img alt="A line separating three points in two dimensions. The same logic scales to a hyperplane in 4096 dimensions." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/toy_separator_2d.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/toy_separator_2d-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-toy-separator-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-In two dimensions, the separator is a line. In the image experiment, the same equation becomes a hyperplane in a space with 4096 pixel axes plus the bias.
+Figure&nbsp;3: A line separating three points in two dimensions. The same logic scales to a hyperplane in 4096 dimensions.
 </figcaption>
 </figure>
 <p>This tiny example already contains the large result. There are two input dimensions plus one bias term, giving three adjustable numbers, and with three points in a favorable position those numbers can be chosen so the scores match arbitrary binary labels. For images, replace the two input dimensions with 4096. The same kind of separator becomes a hyperplane, which is the high-dimensional version of a line or plane.</p>
@@ -225,7 +202,7 @@ In two dimensions, the separator is a line. In the image experiment, the same eq
 <figure class="post-figure-card post-figure-card--image" id="fig-xor">
 
 <div class="post-figure-card__media-frame"><img alt="The XOR pattern is not linearly separable because matching labels sit on opposite corners of the square." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/xor_nonseparable.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/xor_nonseparable-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-xor-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-XOR shows the basic limit of one straight boundary. One line cannot put both positive corners on one side and both negative corners on the other.
+Figure&nbsp;4: The XOR pattern is not linearly separable because matching labels sit on opposite corners of the square.
 </figcaption>
 </figure>
 <p>This is why the result in this post should be stated carefully. We are not saying a perceptron can learn every pattern. It cannot. We are saying that when the input dimension is large and the number of examples is not too large, linear separators can fit many arbitrary labelings.</p>
@@ -242,7 +219,7 @@ y_i \in \{-1,+1\}.
 <figure class="post-figure-card post-figure-card--image" id="fig-random-labels">
 
 <div class="post-figure-card__media-frame"><img alt="Real AFHQ cat and dog images with random training labels. The random label, not the true animal class, is what the perceptron is asked to fit." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/random_label_examples_n500.png?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/random_label_examples_n500-dark.png?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-random-labels-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-The photographs still look like cats and dogs to us, but the model is asked to fit the random labels printed beside them. The animal category is no longer the target.
+Figure&nbsp;5: Real AFHQ cat and dog images with random training labels. The random label, not the true animal class, is what the perceptron is asked to fit.
 </figcaption>
 </figure>
 <p>If the perceptron fits those labels, the explanation cannot be that it learned the visual concept cat or dog. The label no longer encodes that concept. The model is fitting a random split of the training images, which turns the experiment into a capacity test rather than a test of animal recognition.</p>
@@ -270,7 +247,7 @@ d + 1 = 4097.
 <figure class="post-figure-card post-figure-card--image" id="fig-capacity-boundary">
 
 <div class="post-figure-card__media-frame"><img alt="The augmented image matrix has one row per example and 4097 columns after the bias is added. In this sampled AFHQ run, the rank follows the number of examples through 4097 and then stops at the column limit, which is exactly the capacity boundary this post is testing." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/capacity_boundary.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/capacity_boundary-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-capacity-boundary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-After the bias column is added, the data matrix has 4097 columns. In this sampled AFHQ run, the rank follows the number of examples through 4097 and then hits the column ceiling.
+Figure&nbsp;6: The augmented image matrix has one row per example and 4097 columns after the bias is added. In this sampled AFHQ run, the rank follows the number of examples through 4097 and then stops at the column limit, which is exactly the capacity boundary this post is testing.
 </figcaption>
 </figure>
 </section>
@@ -327,8 +304,8 @@ X_{\mathrm{aug}}\tilde{w} = y.
 <p>Figure 7 draws the same equation as a matrix so the dimensions are visible. \(X_{\mathrm{aug}}\) is the data matrix, with one row per image and one column per parameter. In this experiment it has 4097 columns. \(\tilde{w}\) is the vector of unknown parameters, meaning all pixel weights plus the bias. \(y\) is the vector of labels, with one random target for each image.</p>
 <figure class="post-figure-card post-figure-card--image" id="fig-linear-system">
 
-<div class="post-figure-card__media-frame"><img alt="The direct solve writes all training-score equations at once. The augmented image matrix has one row per training image. The unknown vector contains the pixel weights and bias. The label vector contains the randomly assigned targets." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/linear_system_construction.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/linear_system_construction-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-linear-system-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-The direct solve writes all training-score equations at once. Each row of the augmented image matrix asks for one score, the unknown vector holds the pixel weights plus the bias, and the label vector supplies the random targets.
+<div class="post-figure-card__media-frame"><img alt="The exact separator proof writes all training-score equations at once. The augmented image matrix has one row per training image. The unknown vector contains the pixel weights and bias. The label vector contains the randomly assigned targets." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/linear_system_construction.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/linear_system_construction-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-linear-system-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: The exact separator proof writes all training-score equations at once. The augmented image matrix has one row per training image. The unknown vector contains the pixel weights and bias. The label vector contains the randomly assigned targets.
 </figcaption>
 </figure>
 <p>If the equation can be solved, then every score has the correct sign. A score of \(+1\) predicts \(+1\), and a score of \(-1\) predicts \(-1\). Solving the linear system is therefore stronger than merely classifying the examples correctly, because it sets each score equal to the label itself.</p>
@@ -390,7 +367,7 @@ b \leftarrow b + \eta y_i.
 <figure class="post-figure-card post-figure-card--image" id="fig-weight-story">
 
 <div class="post-figure-card__media-frame"><img alt="Perceptron weights are built from signed image-like updates. The final weight image is a memory trace of the random training split, not a clean cat or dog template." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/weight_update_story_n500.png?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/weight_update_story_n500-dark.png?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-weight-story-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Perceptron training changes the weights by adding or subtracting image vectors. With random labels, the final weight image is a trace of the random split, not a cat or dog template.
+Figure&nbsp;8: Perceptron weights are built from signed image-like updates. The final weight image is a memory trace of the random training split, not a clean cat or dog template.
 </figcaption>
 </figure>
 <p>The random-label setting is important here. The weight image in <a href="#fig-weight-story">Figure 8</a> should not be interpreted as a cat detector or dog detector. The labels are arbitrary. The weight image is a record of the corrections needed to separate this particular random split.</p>
@@ -417,7 +394,7 @@ Perceptron training changes the weights by adding or subtracting image vectors. 
 <p>The first sweep trains for 50 epochs. The exact-separator column comes from the linear-system construction, while the perceptron column comes from finite perceptron training. The two columns should be read together because they answer different questions: one asks what exists somewhere in parameter space, and the other asks what the mistake-driven algorithm found within a limited run.</p>
 <figure class="post-table-figure" id="tbl-main-results">
 <figcaption class="post-table-figure__caption" id="tbl-main-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Fifty-epoch sweep on randomized AFHQ cat/dog labels.
+Table&nbsp;1: Fifty-epoch sweep on randomized AFHQ cat/dog labels.
 </figcaption>
 <div>
 <table class="post-data-table">
@@ -488,7 +465,7 @@ Fifty-epoch sweep on randomized AFHQ cat/dog labels.
 <p>The perceptron column tells the training story. At \(N=500\), the perceptron reaches zero training error within 50 epochs. At larger sample sizes, 50 epochs is not enough, which does not contradict the proof; it only says the training run stopped before the algorithm reached a separator. To test the “given enough iterations” part more directly, the experiment also runs longer perceptron training for the separable sample sizes:</p>
 <figure class="post-table-figure" id="tbl-long-run">
 <figcaption class="post-table-figure__caption" id="tbl-long-run-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Long perceptron runs on randomized labels up to the VC-dimension boundary.
+Table&nbsp;2: Long perceptron runs on randomized labels up to the VC-dimension boundary.
 </figcaption>
 <div>
 <table class="post-data-table">
@@ -552,7 +529,7 @@ Long perceptron runs on randomized labels up to the VC-dimension boundary.
 <figure class="post-figure-card post-figure-card--image" id="fig-long-run">
 
 <div class="post-figure-card__media-frame"><img alt="Long perceptron runs reach zero training error up through 4097 examples, though the number of epochs rises substantially." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/perceptron_long_run_epochs.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/perceptron_long_run_epochs-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-long-run-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Long perceptron runs reach zero training error through the 4097-example boundary. The separator exists, but finding it takes many more passes as the sample size grows.
+Figure&nbsp;9: Long perceptron runs reach zero training error up through 4097 examples, though the number of epochs rises substantially.
 </figcaption>
 </figure>
 <p>The epoch counts are not universal constants. They depend on the random seed, preprocessing, example order, learning rate, and margin. The important result is not that \(N=4097\) took 1228 epochs specifically; it is that the perceptron converged on random labels at the VC-dimension boundary, exactly as the separability result says it can.</p>
@@ -568,25 +545,25 @@ Long perceptron runs reach zero training error through the 4097-example boundary
 <figure class="post-figure-card post-figure-card--image" id="fig-training-error">
 
 <div class="post-figure-card__media-frame"><img alt="Training error across sample sizes. The exact separator has zero error through 4097 examples, while finite 50-epoch perceptron training does not converge for the larger sample sizes." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/training_error.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/training_error-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-training-error-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Training error across sample sizes. The exact separator reaches zero error through 4097 examples; the finite 50-epoch perceptron run succeeds at 500 examples but stops short on larger randomized sets.
+Figure&nbsp;10: Training error across sample sizes. The exact separator has zero error through 4097 examples, while finite 50-epoch perceptron training does not converge for the larger sample sizes.
 </figcaption>
 </figure>
 <figure class="post-figure-card post-figure-card--image" id="fig-rank">
 
 <div class="post-figure-card__media-frame"><img alt="Rank versus sample size. The rank follows the number of examples until it reaches the 4097-column ceiling." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/rank_vs_sample_size.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/rank_vs_sample_size-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-rank-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Rank versus sample size. The rank follows the number of examples until the augmented matrix reaches its 4097-column ceiling.
+Figure&nbsp;11: Rank versus sample size. The rank follows the number of examples until it reaches the 4097-column ceiling.
 </figcaption>
 </figure>
 <figure class="post-figure-card post-figure-card--image" id="fig-updates">
 
 <div class="post-figure-card__media-frame"><img alt="Perceptron updates after 50 epochs. Larger randomized training sets require many more corrections." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/perceptron_updates.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/perceptron_updates-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-updates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Perceptron updates after 50 epochs. Larger randomized training sets require many more corrections, even when the algebraic separator exists.
+Figure&nbsp;12: Perceptron updates after 50 epochs. Larger randomized training sets require many more corrections.
 </figcaption>
 </figure>
 <figure class="post-figure-card post-figure-card--image" id="fig-journey">
 
-<div class="post-figure-card__media-frame"><img alt="Training trace for 500 randomly labeled images, including snapshots of the evolving weight image." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/perceptron_training_journey_n500.png?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/perceptron_training_journey_n500-dark.png?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-journey-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-The 500-example run as a training trace: mistakes drive updates, the weight image changes, and the training error eventually reaches zero.
+<div class="post-figure-card__media-frame"><img alt="Training journey for 500 randomly labeled images, including snapshots of the evolving weight image." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/perceptron_training_journey_n500.png?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/perceptron_training_journey_n500-dark.png?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-journey-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;13: Training journey for 500 randomly labeled images, including snapshots of the evolving weight image.
 </figcaption>
 </figure>
 <p>The training journey makes the distinction concrete. The model starts wrong on many examples, each update moves the weights, and eventually the training error reaches zero. Because the labels were random, that success is not evidence of a learned animal concept. It is evidence that the model found a separating set of weights for this particular random split.</p>
