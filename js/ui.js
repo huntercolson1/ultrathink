@@ -137,8 +137,11 @@ export const initScrollBehavior = () => {
   };
 
   document.addEventListener('click', (event) => {
+    if (event.defaultPrevented) return;
+
     const link = event.target.closest('a[href^="#"]');
     if (!link) return;
+    if (link.matches('[data-toc-link]')) return;
 
     const hash = link.getAttribute('href');
     if (!hash || hash === '#') return;
@@ -943,8 +946,11 @@ export const initPostEnhancements = () => {
       .filter(Boolean)
   );
 
+  const getHeadingTargetId = (heading) =>
+    heading.id || heading.closest('section[id]')?.id || '';
+
   headings.forEach((heading) => {
-    if (!heading.id) {
+    if (!getHeadingTargetId(heading)) {
       const baseId = slugify(heading.textContent);
       let uniqueId = baseId;
       let suffix = 1;
@@ -962,12 +968,14 @@ export const initPostEnhancements = () => {
     const fragment = document.createDocumentFragment();
     headings.forEach((heading) => {
       const level = heading.tagName === 'H3' ? 3 : 2;
+      const targetId = getHeadingTargetId(heading);
+      if (!targetId) return;
       const li = document.createElement('li');
       li.className = `post-toc__item post-toc__item--level-${level}`;
       const link = document.createElement('a');
-      link.href = `#${heading.id}`;
+      link.href = `#${targetId}`;
       link.textContent = heading.textContent.trim();
-      link.dataset.tocLink = heading.id;
+      link.dataset.tocLink = targetId;
       li.appendChild(link);
       fragment.appendChild(li);
     });
@@ -1024,7 +1032,7 @@ export const initPostEnhancements = () => {
         activeHeading = heading;
       }
     });
-    return activeHeading?.id || null;
+    return activeHeading ? getHeadingTargetId(activeHeading) : null;
   };
 
   const syncActiveHeading = () => {
@@ -1069,7 +1077,7 @@ export const initPostEnhancements = () => {
     }
   };
 
-  const closeDrawer = () => {
+  const closeDrawer = ({ restoreFocus = true } = {}) => {
     if (!isOpen()) return;
     drawer.removeAttribute('data-toc-open');
     toggle.setAttribute('aria-expanded', 'false');
@@ -1077,12 +1085,32 @@ export const initPostEnhancements = () => {
     lockScroll(false);
     releaseFocus();
     releaseFocus = () => {};
-    toggle.focus({ preventScroll: true });
+    if (restoreFocus) {
+      toggle.focus({ preventScroll: true });
+    }
     setTimeout(() => {
       if (!isOpen()) {
         drawer.setAttribute('hidden', '');
       }
     }, 220);
+  };
+
+  const scrollToHeading = (target) => {
+    if (!target) return;
+
+    const top = Math.max(target.getBoundingClientRect().top + window.scrollY - getAnchorOffset(), 0);
+    document.dispatchEvent(new window.CustomEvent('ultrathink:anchor-scroll'));
+    const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo({ top, behavior: 'auto' });
+    document.documentElement.style.scrollBehavior = previousScrollBehavior;
+    if (target.id) {
+      window.history.pushState(null, '', `#${target.id}`);
+    }
+    if (!target.hasAttribute('tabindex')) {
+      target.setAttribute('tabindex', '-1');
+    }
+    target.focus({ preventScroll: true });
   };
 
   toggle.addEventListener('click', () => {
@@ -1100,8 +1128,10 @@ export const initPostEnhancements = () => {
     list.addEventListener('click', (event) => {
       const link = event.target.closest('a[data-toc-link]');
       if (!link) return;
-      // Let the global smooth-scroll handler run, then close
-      setTimeout(closeDrawer, 120);
+      event.preventDefault();
+      const target = document.getElementById(link.dataset.tocLink);
+      closeDrawer({ restoreFocus: false });
+      window.setTimeout(() => scrollToHeading(target), 80);
     });
   }
 
