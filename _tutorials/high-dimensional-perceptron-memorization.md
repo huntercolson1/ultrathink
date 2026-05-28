@@ -12,10 +12,10 @@ tags:
   - vc-dimension
 ---
 
-<section id="why-this-chapter-exists">
-<h2>Why this chapter exists</h2>
+<section id="why-this-post-exists">
+<h2>Why this post exists</h2>
 <p>Imagine taking a folder of cat and dog face photographs, shrinking every image to a 64 by 64 grayscale square, and handing those numbers to one of the simplest classifiers in machine learning: a single perceptron. If the labels still mean cat and dog, good training accuracy is tempting to read as evidence that the model has found something visual. Perhaps it has noticed ears, eyes, snouts, fur texture, or some other pattern we would recognize.</p>
-<p>This chapter deliberately removes that comfort. After the images are processed, the true labels are thrown away and replaced with random <span class="math inline">\(+1\)</span> and <span class="math inline">\(-1\)</span> targets. Some cats are assigned <span class="math inline">\(+1\)</span>, some cats are assigned <span class="math inline">\(-1\)</span>, and the same thing happens to the dogs. The photographs remain real, but the target attached to each photograph no longer means cat or dog. It is just a coin flip written beside an image.</p>
+<p>This post deliberately removes that comfort. After the images are processed, the true labels are thrown away and replaced with random <span class="math inline">\(+1\)</span> and <span class="math inline">\(-1\)</span> targets. Some cats are assigned <span class="math inline">\(+1\)</span>, some cats are assigned <span class="math inline">\(-1\)</span>, and the same thing happens to the dogs. The photographs remain real, but the target attached to each photograph no longer means cat or dog. It is just a coin flip written beside an image.</p>
 <p>For the processed images used here, a perceptron can still fit those random labels perfectly through 4097 training examples. That result says nothing about recognizing cats, because the labels no longer contain a cat concept to recognize. It says the model has enough geometric freedom to assign the requested signs to the particular training images in front of it. Perfect training accuracy, by itself, is therefore a weaker achievement than it first appears: sometimes it reflects a useful rule, and sometimes the input space simply has enough room for memorization.</p>
 <p>The point is not that perceptrons are bad, or that high-dimensional models are useless, or that VC dimension explains all of modern deep learning. The point is narrower and more useful: when the number of examples is small relative to the number of input dimensions, even a simple linear classifier can have surprising capacity to memorize. Random labels make that capacity visible because they remove the real-world pattern we would otherwise be tempted to credit.</p>
 </section>
@@ -37,62 +37,8 @@ The experiment as a pipeline. The photographs are real, but the labels used for 
 </section>
 <section id="how-to-read-the-experiment">
 <h2>How to read the experiment</h2>
-<p>This chapter assumes no machine learning background. The math is included because the claim is mathematical, but each symbol is introduced where it becomes useful. The idea builds in layers: an image becomes a vector, a perceptron becomes a weighted sum over that vector, and the bias term becomes one more column in a matrix. Once those pieces are in place, the VC-dimension statement stops sounding like a slogan and becomes a concrete claim about how many independent constraints a linear model can satisfy.</p>
+<p>This post assumes no machine learning background. The math is included because the claim is mathematical, but each symbol is introduced where it becomes useful. The idea builds in layers: an image becomes a vector, a perceptron becomes a weighted sum over that vector, and the bias term becomes one more column in a matrix. Once those pieces are in place, the VC-dimension statement stops sounding like a slogan and becomes a concrete claim about how many independent constraints a linear model can satisfy.</p>
 <p>By the end, the symbols should no longer feel like decoration. You should know what <span class="math inline">\(x\)</span> is, what <span class="math inline">\(w\)</span> is, why <span class="math inline">\(b\)</span> can be treated as another weight, what rank is checking, why <span class="math inline">\(X_{\mathrm{aug}}\tilde{w}=y\)</span> proves that a separator exists, why the perceptron learning rule can still take many epochs, and why training accuracy alone cannot tell us whether the model learned a meaningful concept. The thread is simple once the notation is unpacked: a perceptron is a weighted sum, an image is a long list of pixels, and a high-dimensional list gives the weighted sum many adjustable directions. If the examples are independent enough, those directions can be used to fit arbitrary labels.</p>
-<figure class="post-table-figure symbol-table">
-<div>
-<table class="post-data-table">
-<thead>
-<tr>
-<th>symbol</th>
-<th>plain meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><span class="math inline">\(i\)</span></td>
-<td>The example number. If <span class="math inline">\(i=17\)</span>, we are talking about the 17th image.</td>
-</tr>
-<tr>
-<td><span class="math inline">\(x_i\)</span></td>
-<td>The input vector for image <span class="math inline">\(i\)</span>: its pixel brightness values after the image has been flattened into a row.</td>
-</tr>
-<tr>
-<td><span class="math inline">\(y_i\)</span></td>
-<td>The target label for image <span class="math inline">\(i\)</span>. In this experiment, labels are intentionally only <span class="math inline">\(-1\)</span> or <span class="math inline">\(+1\)</span>.</td>
-</tr>
-<tr>
-<td><span class="math inline">\(w\)</span></td>
-<td>The vector of pixel weights. It tells the perceptron how much each pixel position should push the score up or down.</td>
-</tr>
-<tr>
-<td><span class="math inline">\(b\)</span></td>
-<td>The <a href="#glossary-bias">bias</a>, a single extra number that shifts the cutoff.</td>
-</tr>
-<tr>
-<td><span class="math inline">\(s_i\)</span></td>
-<td>The raw score for image <span class="math inline">\(i\)</span>. The classifier predicts from the sign of this score.</td>
-</tr>
-<tr>
-<td><span class="math inline">\(X_{\mathrm{aug}}\)</span></td>
-<td>The training table after the bias column has been added. Each row is one image; each column is one number the solver can use when it builds a score.</td>
-</tr>
-<tr>
-<td><span class="math inline">\(\tilde{w}\)</span></td>
-<td>The weight vector after the bias has been folded in. The tilde is a visual reminder that this is the expanded version of <span class="math inline">\(w\)</span>.</td>
-</tr>
-<tr>
-<td><span class="math inline">\(N\)</span></td>
-<td>The number of training images.</td>
-</tr>
-<tr>
-<td><span class="math inline">\(d\)</span></td>
-<td>The number of input features. Here <span class="math inline">\(d=4096\)</span> because each 64 by 64 image has 4096 pixels.</td>
-</tr>
-</tbody>
-</table>
-</div>
-</figure>
 </section>
 <section id="the-capacity-claim">
 <h2>The capacity claim</h2>
@@ -282,8 +228,8 @@ In two dimensions, the separator is a line. In the image experiment, the same eq
 XOR shows the basic limit of one straight boundary. One line cannot put both positive corners on one side and both negative corners on the other.
 </figcaption>
 </figure>
-<p>This is why the result in this chapter should be stated carefully. We are not saying a perceptron can learn every pattern. It cannot. We are saying that when the input dimension is large and the number of examples is not too large, linear separators can fit many arbitrary labelings.</p>
-<p>That contrast is the reason XOR belongs in this chapter. XOR shows the limitation of a single linear boundary, while VC dimension shows how much freedom that same boundary can still have when the examples live in a high-dimensional space.</p>
+<p>This is why the result in this post should be stated carefully. We are not saying a perceptron can learn every pattern. It cannot. We are saying that when the input dimension is large and the number of examples is not too large, linear separators can fit many arbitrary labelings.</p>
+<p>That contrast is the reason XOR belongs in this post. XOR shows the limitation of a single linear boundary, while VC dimension shows how much freedom that same boundary can still have when the examples live in a high-dimensional space.</p>
 </section>
 <section id="random-labels-are-the-diagnostic">
 <h2>Random labels are the diagnostic</h2>
@@ -303,7 +249,7 @@ The photographs still look like cats and dogs to us, but the model is asked to f
 </section>
 <section id="what-is-vc-dimension">
 <h2>What is VC dimension?</h2>
-<p>VC dimension is a way to measure how flexible a class of models is. The formal theory is deeper than this chapter needs, but the central idea starts with a simple counting question. Take \(N\) points. If each point can receive one of two labels, there are</p>
+<p>VC dimension is a way to measure how flexible a class of models is. The formal theory is deeper than this post needs, but the central idea starts with a simple counting question. Take \(N\) points. If each point can receive one of two labels, there are</p>
 <p><span class="math display">\[
 2^N
 \]</span></p>
@@ -323,7 +269,7 @@ d + 1 = 4097.
 <p>Put differently, VC dimension does not say the perceptron understands cats and dogs. It says the class of linear separators has enough capacity to realize any labeling of a sufficiently well-positioned set of up to 4097 image vectors. Random labels make that statement visible because they remove the semantic pattern that would otherwise distract from the geometry.</p>
 <figure class="post-figure-card post-figure-card--image" id="fig-capacity-boundary">
 
-<div class="post-figure-card__media-frame"><img alt="The augmented image matrix has one row per example and 4097 columns after the bias is added. In this sampled AFHQ run, the rank follows the number of examples through 4097 and then stops at the column limit, which is exactly the capacity boundary this chapter is testing." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/capacity_boundary.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/capacity_boundary-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-capacity-boundary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="post-figure-card__media-frame"><img alt="The augmented image matrix has one row per example and 4097 columns after the bias is added. In this sampled AFHQ run, the rank follows the number of examples through 4097 and then stops at the column limit, which is exactly the capacity boundary this post is testing." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/capacity_boundary.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/capacity_boundary-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-capacity-boundary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 After the bias column is added, the data matrix has 4097 columns. In this sampled AFHQ run, the rank follows the number of examples through 4097 and then hits the column ceiling.
 </figcaption>
 </figure>
@@ -618,7 +564,7 @@ Long perceptron runs reach zero training error through the 4097-example boundary
 </section>
 <section id="how-to-interpret-the-plots">
 <h2>How to interpret the plots</h2>
-<p>The figures in this part of the chapter should be read as one sequence. The training-error plot compares the exact construction with finite perceptron training; the rank plot shows where the linear-algebra guarantee holds; the update plot shows how training cost changes as the sample size grows; and the \(N=500\) training journey makes the update process small enough to inspect closely.</p>
+<p>The figures in this part of the post should be read as one sequence. The training-error plot compares the exact construction with finite perceptron training; the rank plot shows where the linear-algebra guarantee holds; the update plot shows how training cost changes as the sample size grows; and the \(N=500\) training journey makes the update process small enough to inspect closely.</p>
 <figure class="post-figure-card post-figure-card--image" id="fig-training-error">
 
 <div class="post-figure-card__media-frame"><img alt="Training error across sample sizes. The exact separator has zero error through 4097 examples, while finite 50-epoch perceptron training does not converge for the larger sample sizes." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/training_error.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/training_error-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-training-error-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
