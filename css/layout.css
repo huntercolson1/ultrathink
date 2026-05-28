@@ -586,8 +586,8 @@ main {
 
 @media (width <=720px) {
   .post-toc-toggle {
-    position: static;
-    margin: 0 0 var(--space-lg);
+    bottom: clamp(16px, 4vw, 22px);
+    right: clamp(14px, 4vw, 20px);
     padding: 0.7rem 0.9rem;
     font-size: 0.78rem;
     letter-spacing: 0.18em;
@@ -606,7 +606,6 @@ main {
     background: var(--bg-color);
     color: var(--text-primary);
     border-color: var(--border-color);
-    transform: none;
   }
 }
 
