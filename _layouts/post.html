@@ -38,12 +38,6 @@ layout: default
 
 <article class="section" data-section-tone="base">
   <div class="container post-shell">
-    <button class="post-toc-toggle" type="button" aria-label="Open contents" aria-expanded="false" aria-controls="post-toc-drawer" data-toc-toggle hidden>
-      <span class="post-toc-toggle__bracket" aria-hidden="true">[</span>
-      <span class="post-toc-toggle__label">INDEX</span>
-      <span class="post-toc-toggle__bracket" aria-hidden="true">]</span>
-    </button>
-
     <div class="post-grid">
       <div class="post-main post-content u-text-mono">
         {{ content }}
@@ -65,6 +59,12 @@ layout: default
     </div>
   </div>
 </article>
+
+<button class="post-toc-toggle" type="button" aria-label="Open contents" aria-expanded="false" aria-controls="post-toc-drawer" data-toc-toggle hidden>
+  <span class="post-toc-toggle__bracket" aria-hidden="true">[</span>
+  <span class="post-toc-toggle__label">INDEX</span>
+  <span class="post-toc-toggle__bracket" aria-hidden="true">]</span>
+</button>
 
 <div class="post-toc-drawer" id="post-toc-drawer" data-toc-drawer hidden role="dialog" aria-modal="true" aria-label="Table of contents">
   <div class="post-toc-drawer__overlay" data-toc-overlay></div>
