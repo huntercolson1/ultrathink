@@ -2,6 +2,7 @@
 title: High-Dimensional Perceptron Memorization
 date: 2026-05-27
 author: Hunter Colson
+published: false
 subtitle: Why 4096 pixels plus a bias can fit random labels
 description: Why 4096 pixels plus a bias can fit random labels
 tags:
