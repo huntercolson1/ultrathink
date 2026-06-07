@@ -1,14 +1,18 @@
-# Hunter Site
+# huntercolson.dev
 
-This is Hunter Colson's personal Jekyll site for [huntercolson.dev](https://huntercolson.dev).
+This repository contains the source for [huntercolson.dev](https://huntercolson.dev), Hunter Colson's personal website.
 
-## Branches
+The site is a static Jekyll project. There is no application backend or database; Jekyll turns the Markdown, layouts, data files, CSS, JavaScript, and assets in this repository into the public site.
 
-- `main` is production. GitHub Pages serves this branch from the repository root.
-- `dev` is the local/staging branch for drafts, experiments, and unpublished site work.
-- Keep work-in-progress posts, scratch files, screenshots, generated assets, and local agent/tooling folders off `main`.
+## What Is Here
 
-## Project Structure
+- Essays, posts, and tutorials written in Markdown.
+- Jekyll layouts and includes that define the site structure.
+- Small browser scripts for navigation, search/filtering, table-of-contents behavior, and homepage interactions.
+- Site styles, fonts, icons, downloads, and article figures.
+- Lightweight validation scripts for checking posts and front-end code.
+
+## Repository Map
 
 ```text
 _config.yml        Jekyll configuration, collections, and build excludes
@@ -25,7 +29,9 @@ tests/             JavaScript unit checks
 tools/             Validation helpers
 ```
 
-## Local Setup
+## Local Inspection
+
+To run the site locally:
 
 ```bash
 npm install
@@ -34,28 +40,16 @@ bundle install
 bundle exec jekyll serve --host 127.0.0.1 --port 4000
 ```
 
-`vendor/bundle` and `.bundle` are local Bundler output and should stay untracked.
+Then open `http://127.0.0.1:4000`.
 
-## Validation
+Local dependency folders such as `vendor/bundle`, `.bundle`, and generated build output are ignored by git.
 
-Before publishing post changes:
+## Checks
+
+Useful checks for the source:
 
 ```bash
 npm run prepublish:posts
-```
-
-Before pushing broader site changes:
-
-```bash
 npm test
 bundle exec jekyll build
 ```
-
-`npm run lint:html` is available for spot checks, but Jekyll/Liquid front matter can make it noisy. For post publishing, `npm run prepublish:posts` is the required gate.
-
-## Publishing
-
-1. Work on `dev` until the post or site change is ready.
-2. Confirm front matter, heading levels, math delimiters, and rendered desktop/mobile layout.
-3. Merge only intentional files to `main`.
-4. Push `main`; GitHub Pages builds and deploys the live site.
