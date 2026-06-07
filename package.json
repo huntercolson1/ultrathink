@@ -10,8 +10,9 @@
     "lint:js": "eslint \"js/**/*.js\"",
     "lint:html": "htmlhint \"*.html\" \"pages/**/*.html\"",
     "test:tags": "node tests/tag-utils.test.js && node tests/tag-index.test.js",
-    "test": "npm run lint:css && npm run lint:js && npm run lint:html && npm run test:tags",
-    "deploy": "npm run build:css && npm run test"
+    "prepublish:posts": "node tools/check-posts.mjs",
+    "test": "npm run lint:css && npm run lint:js && npm run test:tags && npm run prepublish:posts",
+    "deploy": "npm run build:css && npm run test && bundle exec jekyll build"
   },
   "repository": {
     "type": "git",

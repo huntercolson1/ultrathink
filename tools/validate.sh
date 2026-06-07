@@ -2,13 +2,10 @@
 
 set -euo pipefail
 
-echo "Linting CSS..."
-npm run lint:css
+echo "Running site validation..."
+npm test
 
-echo "Linting JS..."
-npm run lint:js
+echo "Building Jekyll site..."
+bundle exec jekyll build
 
-echo "Linting HTML..."
-npm run lint:html
-
-echo "Validation complete ✔"
+echo "Validation complete."

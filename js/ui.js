@@ -714,14 +714,16 @@ export const initSearch = async (form) => {
   let blogPosts = [];
   let searchTimeout;
 
-  // Load tutorials
+  // Load tutorials only when a page explicitly provides a source.
   try {
-    const tutorialsPath = form.dataset.tutorialsSource || `${basePath}/data/tutorials.json`;
-    const tutorialsResponse = await fetch(tutorialsPath);
-    if (tutorialsResponse.ok) {
-      tutorials = await tutorialsResponse.json();
-    } else {
-      console.warn('Tutorials response not ok:', tutorialsResponse.status);
+    const tutorialsPath = form.dataset.tutorialsSource;
+    if (tutorialsPath) {
+      const tutorialsResponse = await fetch(tutorialsPath);
+      if (tutorialsResponse.ok) {
+        tutorials = await tutorialsResponse.json();
+      } else {
+        console.warn('Tutorials response not ok:', tutorialsResponse.status);
+      }
     }
   } catch (error) {
     console.warn('Failed to load tutorials:', error);
@@ -765,32 +767,19 @@ export const initSearch = async (form) => {
       throw new Error('Feed not available');
     }
   } catch (error) {
-    console.warn('Failed to load feed.xml, trying alternative methods:', error);
-    // Try blog.json as fallback
-    try {
-      const blogPath = `${basePath}/data/blog.json`;
-      const blogResponse = await fetch(blogPath);
-      if (blogResponse.ok) {
-        blogPosts = await blogResponse.json();
-      } else {
-        throw new Error('blog.json not available');
-      }
-    } catch (err) {
-      console.warn('blog.json failed, trying DOM:', err);
-      // Last resort: try to get posts from the page DOM
-      const postElements = document.querySelectorAll('[data-blog-post]');
-      blogPosts = Array.from(postElements).map((post) => {
-        const titleEl = post.querySelector('h2, h4');
-        const linkEl = post.querySelector('a[href]');
-        return {
-          title: titleEl?.textContent?.trim() || '',
-          summary: post.querySelector('.u-text-muted')?.textContent?.trim() || '',
-          url: linkEl?.href || '',
-          tags: Array.from(post.querySelectorAll('.c-badge')).map((badge) => badge.textContent.replace('#', '')),
-          date: post.dataset.published || ''
-        };
-      });
-    }
+    console.warn('Failed to load feed.xml, trying DOM:', error);
+    const postElements = document.querySelectorAll('[data-blog-post]');
+    blogPosts = Array.from(postElements).map((post) => {
+      const titleEl = post.querySelector('h2, h4');
+      const linkEl = post.querySelector('a[href]');
+      return {
+        title: titleEl?.textContent?.trim() || '',
+        summary: post.querySelector('.u-text-muted')?.textContent?.trim() || '',
+        url: linkEl?.href || '',
+        tags: Array.from(post.querySelectorAll('.c-badge')).map((badge) => badge.textContent.replace('#', '')),
+        date: post.dataset.published || ''
+      };
+    });
   }
 
   const searchItems = (query) => {

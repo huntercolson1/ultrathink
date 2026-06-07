@@ -35,16 +35,17 @@ defaults:
       layout: default
 
 exclude:
+  - .bundle
   - node_modules
   - package.json
   - package-lock.json
   - README.md
-  - ULTRATHINK_BLUEPRINT.md
   - tools
   - reports
   - vendor
-  - components/README.md
   - research-scratchpads
+  - shadcn-preview
+  - tmp
 
 plugins:
   - jekyll-feed

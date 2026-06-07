@@ -3,9 +3,11 @@ node_modules/
 dist/
 _site/
 .jekyll-cache/
+.sass-cache/
 *.log
 
 # Ruby dependencies (GitHub Pages builds with its own Jekyll)
+.bundle/
 vendor/
 
 # macOS
@@ -14,6 +16,8 @@ vendor/
 # Editor
 .vscode/
 .idea/
+.cursor/
+.claude/
 *.swp
 *.swo
 *~
@@ -29,6 +33,19 @@ __pycache__/
 # Temporary files
 *.tmp
 *.temp
+tmp/
+reports/
+research-scratchpads/
+shadcn-preview/
+.playwright-mcp/
+.agents/
+skills-lock.json
+/.tmp-*.png
+/main-cleanup-*.png
+/output-*.png
+/perceptron.html
+/pixel-grid-mobile.png
+/ultrathink-*.png
 
 # Environment files
 .env
