@@ -244,18 +244,25 @@ const vertexShader = `
     float starZ = rand(aSeed * 63.31 + 4.19) * 2.0 - 1.0;
     float starSlice = sqrt(max(0.0, 1.0 - starZ * starZ));
     float starJitter = sin(uLoopTheta * 9.0 + aSeed * 18.0);
-    float starRadius = pow(rand(aSeed * 117.71 + 8.43), 0.3333333) * (0.027 + tonalMass * 0.018);
+    float starOrbit = uLoopTheta * 7.0 + aSeed * 19.0;
+    float starRadius = pow(rand(aSeed * 117.71 + 8.43), 0.3333333) * (0.043 + tonalMass * 0.026);
     vec3 starDirection = vec3(
       cos(starAngle) * starSlice,
       sin(starAngle) * starSlice,
       starZ
     );
     vec3 star = vec3(
-      starDirection.x,
-      starDirection.y * 0.98,
-      starDirection.z * 1.35
+      starDirection.x * uAspect * (0.82 + tonalMass * 0.1),
+      starDirection.y * (0.9 + rand(aSeed * 53.2 + 1.4) * 0.16),
+      starDirection.z * (0.86 + tonalMass * 0.18)
     ) * starRadius;
-    star += starDirection * starJitter * uStarWeight * 0.015;
+    vec3 starTangent = normalize(vec3(-starDirection.y, starDirection.x, starDirection.z * 0.26) + vec3(0.0001));
+    star += starTangent * starJitter * uStarWeight * 0.012;
+    star += vec3(
+      cos(starOrbit) * 0.007,
+      sin(starOrbit * 1.17) * 0.006,
+      sin(starOrbit * 0.83) * 0.011
+    ) * uStarWeight;
     vec3 burstDirection = normalize(vec3(
       aLogo.x * 1.15 + cos(starAngle) * 0.35,
       aLogo.y * 1.2 + sin(starAngle) * 0.35,
@@ -267,6 +274,11 @@ const vertexShader = `
     vec3 target = mix(aBase, aLogo, uLogoWeight);
     vec3 p = mix(target, star, uStarWeight);
     p = mix(p, explosionTarget, uExplosionWeight);
+    float collapseCurve = uStarWeight * (1.0 - uStarWeight) * (1.0 - uExplosionWeight);
+    vec3 collapseDirection = normalize(vec3(aLogo.xy, aLogo.z * 0.7) + vec3(0.0001));
+    vec3 collapseTangent = normalize(vec3(-collapseDirection.y, collapseDirection.x, 0.34 * sin(aSeed * 13.0)) + vec3(0.0001));
+    p += collapseTangent * collapseCurve * (0.16 + aSeed * 0.12);
+    p.z += sin(uLoopTheta * 4.0 + aSeed * 12.0) * collapseCurve * 0.26;
     float logoPresence = uLogoWeight * (1.0 - uExplosionWeight) * (1.0 - uStarWeight);
     float travel = uLoopTheta * 3.0 + aLogo.x * 5.2 - aLogo.y * 2.8 + aSeed * 6.2831853;
     float shimmer = sin(travel);
