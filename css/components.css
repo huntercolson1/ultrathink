@@ -693,7 +693,7 @@
   --home-field-y: 0px;
 
   position: relative;
-  overflow: clip;
+  overflow: visible;
 }
 
 
@@ -769,42 +769,40 @@
 }
 
 .home-graph {
-  --home-graph-ridge: 189 96% 31%;
-  --home-graph-basin: 159 96% 29%;
-  --home-graph-summit: 63 94% 41%;
+  --home-canvas-bleed: clamp(10rem, 18vw, 16rem);
 
   position: absolute;
   z-index: 1;
   top: 50%;
-  right: clamp(-1rem, -2vw, 0rem);
-  width: min(48vw, 520px);
-  min-height: clamp(350px, 32vw, 455px);
+  right: clamp(-19rem, -19vw, -10rem);
+  width: min(60vw, 800px);
+  min-height: clamp(360px, 31vw, 470px);
   transform: translateY(-48%);
-  cursor: default;
+  cursor: crosshair;
   touch-action: pan-y;
   user-select: none;
   isolation: isolate;
-  overflow: hidden;
-  contain: paint;
+  overflow: visible;
 }
 
-.home-graph.is-grabbing {
-  cursor: grabbing;
+.home-graph.is-influencing {
   touch-action: none;
 }
 
 [data-theme="dark"] .home-graph {
-  --home-graph-ridge: 210 100% 72%;
-  --home-graph-basin: 145 100% 61%;
-  --home-graph-summit: 68 100% 63%;
+  mix-blend-mode: screen;
 }
 
 .home-graph__canvas {
   position: absolute;
-  inset: clamp(0.55rem, 1.4vw, 1rem);
-  width: calc(100% - clamp(1.1rem, 2.8vw, 2rem));
-  height: calc(100% - clamp(1.1rem, 2.8vw, 2rem));
+  inset: calc(-1 * var(--home-canvas-bleed));
+  width: calc(100% + (2 * var(--home-canvas-bleed)));
+  height: calc(100% + (2 * var(--home-canvas-bleed)));
   touch-action: none;
+}
+
+.home-graph--fallback .home-graph__canvas {
+  display: none;
 }
 
 .home-index {
@@ -1199,7 +1197,7 @@
   }
 }
 
-@media (width <=900px) {
+@media (width <=1100px) {
   .home-hero-grid {
     grid-template-columns: 1fr;
     gap: clamp(1.25rem, 4vw, 2.25rem);
@@ -1214,6 +1212,13 @@
     min-height: 400px;
     place-self: center;
     transform: none;
+  }
+}
+
+@media (width <=900px) {
+  .home-graph {
+    width: min(100%, 520px);
+    min-height: 380px;
   }
 
   .blog-filter {
@@ -1249,14 +1254,11 @@
   }
 
   .home-graph {
-    width: min(100%, 460px);
-    min-height: 390px;
-    border-radius: 1px;
-  }
+    --home-canvas-bleed: clamp(6rem, 18vw, 10rem);
 
-  .home-graph__canvas {
-    inset: clamp(0.55rem, 1.4vw, 1rem);
-    height: auto;
+    width: min(100%, 440px);
+    min-height: 320px;
+    border-radius: 1px;
   }
 
   .home-feed-list__link {
