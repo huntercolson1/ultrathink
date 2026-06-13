@@ -244,47 +244,55 @@ const vertexShader = `
     float starZ = rand(aSeed * 63.31 + 4.19) * 2.0 - 1.0;
     float starSlice = sqrt(max(0.0, 1.0 - starZ * starZ));
     float starJitter = sin(uLoopTheta * 9.0 + aSeed * 18.0);
-    float starOrbit = uLoopTheta * 7.0 + aSeed * 19.0;
-    float starRadius = pow(rand(aSeed * 117.71 + 8.43), 0.3333333) * (0.043 + tonalMass * 0.026);
+    float springPulse = sin(uLoopTheta * 15.0 + aSeed * 27.0);
+    float starRadius = pow(rand(aSeed * 117.71 + 8.43), 0.3333333) * (0.05 + tonalMass * 0.026);
     vec3 starDirection = vec3(
       cos(starAngle) * starSlice,
       sin(starAngle) * starSlice,
       starZ
     );
     vec3 star = vec3(
-      starDirection.x * uAspect * (0.82 + tonalMass * 0.1),
-      starDirection.y * (0.9 + rand(aSeed * 53.2 + 1.4) * 0.16),
-      starDirection.z * (0.86 + tonalMass * 0.18)
+      starDirection.x * uAspect * (0.96 + tonalMass * 0.04),
+      starDirection.y * (0.97 + rand(aSeed * 53.2 + 1.4) * 0.06),
+      starDirection.z * (0.9 + tonalMass * 0.12)
     ) * starRadius;
-    vec3 starTangent = normalize(vec3(-starDirection.y, starDirection.x, starDirection.z * 0.26) + vec3(0.0001));
-    star += starTangent * starJitter * uStarWeight * 0.012;
-    star += vec3(
-      cos(starOrbit) * 0.007,
-      sin(starOrbit * 1.17) * 0.006,
-      sin(starOrbit * 0.83) * 0.011
-    ) * uStarWeight;
+    vec3 starTangent = normalize(vec3(
+      rand(aSeed * 41.0 + 0.3) - 0.5,
+      rand(aSeed * 67.0 + 2.1) - 0.5,
+      rand(aSeed * 89.0 + 5.7) - 0.5
+    ) + vec3(0.0001));
+    star *= 1.0 + springPulse * uStarWeight * (0.08 + tonalMass * 0.05);
+    star += starTangent * starJitter * uStarWeight * 0.007;
     vec3 burstDirection = normalize(vec3(
       aLogo.x * 1.15 + cos(starAngle) * 0.35,
       aLogo.y * 1.2 + sin(starAngle) * 0.35,
       aLogo.z + (aSeed - 0.5) * 0.75
     ));
-    vec3 explosionTarget = star + burstDirection * (0.58 + aSeed * 0.82 + tonalMass * 0.22);
-    explosionTarget.y -= uExplosionWeight * (0.11 + aSeed * 0.14);
+    vec3 explosionTarget = star + burstDirection * (0.68 + aSeed * 0.98 + tonalMass * 0.28);
+    explosionTarget.y -= uExplosionWeight * (0.15 + aSeed * 0.2);
 
     vec3 target = mix(aBase, aLogo, uLogoWeight);
     vec3 p = mix(target, star, uStarWeight);
     p = mix(p, explosionTarget, uExplosionWeight);
     float collapseCurve = uStarWeight * (1.0 - uStarWeight) * (1.0 - uExplosionWeight);
+    float gravityWell = uStarWeight * (1.0 - uExplosionWeight);
+    float crush = gravityWell * gravityWell;
     vec3 collapseDirection = normalize(vec3(aLogo.xy, aLogo.z * 0.7) + vec3(0.0001));
     vec3 collapseTangent = normalize(vec3(-collapseDirection.y, collapseDirection.x, 0.34 * sin(aSeed * 13.0)) + vec3(0.0001));
-    p += collapseTangent * collapseCurve * (0.16 + aSeed * 0.12);
-    p.z += sin(uLoopTheta * 4.0 + aSeed * 12.0) * collapseCurve * 0.26;
+    float compression = sin(uLoopTheta * 12.0 + aSeed * 8.0);
+    p -= collapseDirection * crush * (0.055 + aSeed * 0.05 + tonalMass * 0.03);
+    p += collapseTangent * collapseCurve * (0.07 + aSeed * 0.06);
+    p -= collapseDirection * collapseCurve * compression * (0.13 + tonalMass * 0.08);
+    p.z += springPulse * crush * 0.18;
+    p.z += sin(uLoopTheta * 8.0 + aSeed * 12.0) * collapseCurve * 0.34;
     float logoPresence = uLogoWeight * (1.0 - uExplosionWeight) * (1.0 - uStarWeight);
+    float starHold = uStarWeight * (1.0 - uExplosionWeight);
+    float flowWeight = uFlow * (1.0 - starHold * 0.78);
     float travel = uLoopTheta * 3.0 + aLogo.x * 5.2 - aLogo.y * 2.8 + aSeed * 6.2831853;
     float shimmer = sin(travel);
-    p.x += cos(travel) * uFlow * (0.024 + aSeed * 0.032);
-    p.y += shimmer * uFlow * (0.018 + tonalMass * 0.018);
-    p.z += sin(travel * 2.0) * uFlow * (0.14 + aSeed * 0.12);
+    p.x += cos(travel) * flowWeight * (0.024 + aSeed * 0.032);
+    p.y += shimmer * flowWeight * (0.018 + tonalMass * 0.018);
+    p.z += sin(travel * 2.0) * flowWeight * (0.14 + aSeed * 0.12);
     p.z += sin(uLoopTheta * 2.0 + aLogo.x * 3.8 + aSeed * 5.0) * logoPresence * (0.048 + uSettle * 0.035);
     p.xy += vec2(
       sin(uLoopTheta * 3.0 + aSeed * 9.0),
@@ -294,6 +302,11 @@ const vertexShader = `
     p.x += sin(uLoopTheta * 2.0 + aSeed * 14.0 + p.y * 4.1) * burstSpin;
     p.y += cos(uLoopTheta * 2.0 + aSeed * 11.0 + p.x * 3.4) * burstSpin * 0.55;
     p.z += uExplosionWeight * (aSeed - 0.5) * 1.42;
+    float shockwave = uExplosionWeight * (1.0 - uExplosionWeight);
+    p += burstDirection * shockwave * (0.34 + aSeed * 0.22);
+    p.z += shockwave * (aSeed - 0.5) * 0.64;
+    float recoil = uExplosionWeight * (1.0 - uExplosionWeight) * sin(uLoopTheta * 13.0 + aSeed * 5.0);
+    p -= burstDirection * recoil * (0.3 + tonalMass * 0.16);
     p.z += (highlight - shadow) * 0.08 * uLogoWeight;
     p += vec3(
       sin(slow * 2.0) * 0.016,
@@ -437,10 +450,10 @@ const initParticleGraph = async (graph, prefersReducedMotion) => {
 
     const phase = (elapsed % LOOP_SECONDS) / LOOP_SECONDS;
     const theta = phase * Math.PI * 2;
-    const star = smoothstep(0.12, 0.24, phase) * (1 - smoothstep(0.25, 0.31, phase));
-    const explosion = smoothstep(0.26, 0.38, phase) * (1 - smoothstep(0.48, 0.7, phase));
-    const logoBefore = 1 - smoothstep(0.12, 0.25, phase);
-    const logoReturn = smoothstep(0.48, 0.78, phase);
+    const star = smoothstep(0.12, 0.22, phase) * (1 - smoothstep(0.225, 0.265, phase));
+    const explosion = smoothstep(0.225, 0.34, phase) * (1 - smoothstep(0.46, 0.68, phase));
+    const logoBefore = 1 - smoothstep(0.12, 0.235, phase);
+    const logoReturn = smoothstep(0.46, 0.78, phase);
     const logo = clamp(Math.max(logoBefore, logoReturn), 0, 1);
     const assembleEnergy = smoothstep(0.46, 0.68, phase) * (1 - smoothstep(0.82, 0.98, phase));
     const settle = smoothstep(0.62, 0.78, phase) * (1 - smoothstep(0.88, 1, phase));
@@ -449,7 +462,7 @@ const initParticleGraph = async (graph, prefersReducedMotion) => {
       logo,
       star: clamp(star, 0, 1),
       explosion: clamp(explosion, 0, 1),
-      flow: clamp(0.12 + star * 0.7 + explosion * 1.0 + assembleEnergy * 0.7, 0, 1),
+      flow: clamp(0.12 + star * 0.95 + explosion * 1.15 + assembleEnergy * 0.7, 0, 1),
       settle: clamp(settle, 0, 1),
       theta
     };
