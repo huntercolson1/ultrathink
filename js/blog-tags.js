@@ -101,13 +101,13 @@ export const initBlogTags = () => {
   let currentSort = 'count';
   let activeTag = getSelectedTag();
 
-  const renderSummary = (visibleCount, totalCount) => {
+  const renderSummary = () => {
     if (!summaryNode) return;
     if (!activeTag) {
-      summaryNode.textContent = `${totalCount} posts · ${Object.keys(tagIndex).length} tags`;
+      summaryNode.textContent = '';
       return;
     }
-    summaryNode.textContent = `${visibleCount} posts tagged #${activeTag}`;
+    summaryNode.textContent = `#${activeTag}`;
   };
 
   const updateEmptyState = (visibleCount) => {

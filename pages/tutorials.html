@@ -8,30 +8,23 @@ permalink: /tutorials/
 <section class="section listing-page">
   <div class="container stack listing-shell">
     <header class="stack listing-hero">
-      <p class="u-text-mono listing-kicker">// TUTORIALS</p>
-      <h1 class="u-text-display listing-title">Hands-On Guides</h1>
-      <p class="u-text-mono listing-lede">
-        Step-by-step walkthroughs for math, medicine, coding, and more. Clear, practical, and written for anyone who
-        learns by doing.
-      </p>
+      <h1 class="u-text-display listing-title">Tutorials</h1>
     </header>
 
-    <div class="blog-tags" data-tag-panel>
-      <div class="blog-tags__header">
-        <div class="stack blog-tags__heading">
-          <p class="u-text-mono blog-tags__title">Tags</p>
-          <p class="u-text-mono blog-tags__summary" data-tag-summary></p>
-        </div>
+    <details class="blog-tags" data-tag-panel>
+      <summary class="u-text-mono blog-tags__toggle">
+        <span>Filter</span>
+        <span class="blog-tags__summary" data-tag-summary></span>
+      </summary>
+      <div class="blog-tags__body">
         <button class="tag-pill tag-pill--ghost" type="button" data-tag-clear>Clear</button>
-      </div>
-      <div class="blog-tags__controls">
         <div class="blog-tags__sort" role="group" aria-label="Sort tags">
           <button class="tag-pill is-active" type="button" data-tag-sort="count" aria-pressed="true">Popular</button>
           <button class="tag-pill" type="button" data-tag-sort="alpha" aria-pressed="false">A–Z</button>
         </div>
+        <ul class="blog-tags__list" data-tag-list role="list"></ul>
       </div>
-      <ul class="blog-tags__list" data-tag-list role="list"></ul>
-    </div>
+    </details>
 
     <div class="blog-feed listing-feed" id="blog-feed">
       {% if site.tutorials.size > 0 %}
@@ -50,7 +43,7 @@ permalink: /tutorials/
           <span class="u-text-mono listing-entry__date">{{ tutorial.date | date: "%Y-%m-%d" }}</span>
           {% if tutorial.tags %}
           <div class="cluster listing-entry__tags">
-            {% for tag in tutorial.tags %}
+            {% for tag in tutorial.tags limit:2 %}
             {% assign tag_clean = tag | downcase | strip %}
             <a class="u-text-mono blog-tag-link"
               href="{{ '/tutorials/' | relative_url }}?tag={{ tag_clean | uri_escape }}">#{{ tag_clean }}</a>

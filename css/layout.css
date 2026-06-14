@@ -53,7 +53,7 @@ main {
   left: 0;
   right: 0;
   z-index: var(--z-nav);
-  border-bottom: 2px solid var(--black);
+  border-bottom: 1px solid color-mix(in srgb, var(--border-color) 28%, transparent);
   background-color: var(--bg-color);
   width: 100%;
   transform: translateY(0);
@@ -63,7 +63,7 @@ main {
 }
 
 .pin-nav.is-hidden {
-  transform: translateY(calc(-100% - 2px));
+  transform: translateY(calc(-100% - 1px));
 }
 
 .pin-nav .container {
@@ -111,8 +111,6 @@ main {
 .post-content h2 {
   font-size: clamp(1.25rem, 2.4vw, 1.55rem);
   text-transform: uppercase;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 0.55rem;
   line-height: 1.2;
 }
 
@@ -142,7 +140,7 @@ main {
 .post-content hr {
   margin: clamp(2rem, 4vw, 2.75rem) 0;
   border: 0;
-  border-top: 1px solid color-mix(in srgb, var(--border-color) 35%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--border-color) 16%, transparent);
 }
 
 .post-content ul,
@@ -412,8 +410,7 @@ main {
 
 .post-hero__header {
   gap: var(--space-md);
-  border-bottom: 3px solid var(--border-color);
-  padding-bottom: clamp(1.25rem, 3vw, 2rem);
+  padding-bottom: 0;
 }
 
 .post-hero__meta-row {
@@ -840,7 +837,7 @@ main {
 
 .post-footer {
   justify-content: space-between;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid color-mix(in srgb, var(--border-color) 14%, transparent);
   padding-top: var(--space-lg);
 }
 

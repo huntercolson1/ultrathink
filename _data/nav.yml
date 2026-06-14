@@ -1,9 +1,6 @@
-- title: Home
-  url: /
-- title: Blog
+- title: Writing
   url: /blog/
 - title: Tutorials
   url: /tutorials/
 - title: About
   url: /about/
-

@@ -1,12 +1,3 @@
 <footer class="container c-footer" role="contentinfo">
-  <div>
-    <p class="u-text-mono c-footer__brand">ULTRATHINK</p>
-    <p class="u-text-muted c-footer__tagline">by Hunter Colson</p>
-  </div>
-  <div class="c-footer__links" aria-label="Utility links">
-    {% for item in site.data.nav %}
-    {% assign item_url = item.url | relative_url %}
-    <a href="{{ item_url }}">{{ item.title }}</a>
-    {% endfor %}
-  </div>
+  <p class="u-text-mono c-footer__brand">Hunter Colson</p>
 </footer>
