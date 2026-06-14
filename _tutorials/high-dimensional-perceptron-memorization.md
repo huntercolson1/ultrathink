@@ -3,8 +3,8 @@ title: High-Dimensional Perceptron Memorization
 date: 2026-05-27
 author: Hunter Colson
 published: false
-subtitle: Why 4096 pixels plus a bias can fit random labels
-description: Why 4096 pixels plus a bias can fit random labels
+subtitle: Why 4096 pixels and a bias can fit random labels
+description: A perceptron on 64×64 grayscale images has 4097 parameters. When labels are random, that is enough to fit thousands of training examples perfectly.
 tags:
   - tutorial
   - machine-learning
@@ -15,20 +15,20 @@ tags:
 
 <section id="why-this-post-exists">
 <h2>Why this post exists</h2>
-<p>Imagine taking a folder of cat and dog face photographs, shrinking every image to a 64 by 64 grayscale square, and handing those numbers to one of the simplest classifiers in machine learning: a single perceptron. If the labels still mean cat and dog, good training accuracy is tempting to read as evidence that the model has found something visual. Perhaps it has noticed ears, eyes, snouts, fur texture, or some other pattern we would recognize.</p>
-<p>This post deliberately removes that comfort. After the images are processed, the true labels are thrown away and replaced with random <span class="math inline">\(+1\)</span> and <span class="math inline">\(-1\)</span> targets. Some cats are assigned <span class="math inline">\(+1\)</span>, some cats are assigned <span class="math inline">\(-1\)</span>, and the same thing happens to the dogs. The photographs remain real, but the target attached to each photograph no longer means cat or dog. It is just a coin flip written beside an image.</p>
-<p>For the processed images used here, a perceptron can still fit those random labels perfectly through 4097 training examples. That result says nothing about recognizing cats, because the labels no longer contain a cat concept to recognize. It says the model has enough geometric freedom to assign the requested signs to the particular training images in front of it. Perfect training accuracy, by itself, is therefore a weaker achievement than it first appears: sometimes it reflects a useful rule, and sometimes the input space simply has enough room for memorization.</p>
-<p>The point is not that perceptrons are bad, or that high-dimensional models are useless, or that VC dimension explains all of modern deep learning. The point is narrower and more useful: when the number of examples is small relative to the number of input dimensions, even a simple linear classifier can have surprising capacity to memorize. Random labels make that capacity visible because they remove the real-world pattern we would otherwise be tempted to credit.</p>
+<p>Take a folder of cat and dog face photographs, resize each image to a 64 by 64 grayscale square, and feed the pixel values to a perceptron, one of the simplest classifiers in machine learning. If the labels still say cat and dog, high training accuracy is easy to read as evidence that the model picked up something visual: ears, eyes, snouts, fur texture, or some other pattern we would recognize.</p>
+<p>For this experiment, the true labels are replaced after preprocessing with random <span class="math inline">\(+1\)</span> and <span class="math inline">\(-1\)</span> targets. Some cats get <span class="math inline">\(+1\)</span>, some cats get <span class="math inline">\(-1\)</span>, and the same holds for the dogs. The photographs stay real, but the target beside each one no longer means cat or dog.</p>
+<p>On the processed images used here, a perceptron can still fit those random labels perfectly through 4097 training examples. That says nothing about recognizing cats, because the labels no longer encode a cat concept. It says the model has enough geometric freedom to assign the requested signs to the particular training images in front of it. Perfect training accuracy alone is therefore not enough to show that the model learned a meaningful visual rule; sometimes it reflects memorization in a high-dimensional input space.</p>
+<p>Perceptrons remain useful tools. High-dimensional models can generalize well in practice. VC dimension alone does not explain modern deep learning. The narrower lesson is more practical: when the number of examples is small relative to the number of input dimensions, even a simple linear classifier can memorize. Random labels make that capacity visible because they strip away the real-world pattern we would otherwise be tempted to credit.</p>
 </section>
 <section id="the-experiment">
 <h2>The experiment</h2>
-<p>The experiment uses the AFHQ animal-faces dataset and keeps the mechanics intentionally simple. The code loads cat and dog images, resizes them to 64 by 64 grayscale, flattens each image into a row of 4096 numbers, assigns random binary labels, and then asks the same question in two complementary ways. One route is algebraic: can we directly construct weights that classify every randomized training image correctly? The other route is algorithmic: can the perceptron learning rule find such weights by making one correction after another?</p>
+<p>The experiment uses the AFHQ animal-faces dataset and keeps the mechanics straightforward. The code loads cat and dog images, resizes them to 64 by 64 grayscale, flattens each image into a row of 4096 numbers, assigns random binary labels, and then asks the same question in two ways. One route is algebraic: can we directly construct weights that classify every randomized training image correctly? The other route is algorithmic: can the perceptron learning rule find such weights by correcting mistakes one at a time?</p>
 <p>The algebraic route is the exact separator construction. It builds a matrix from the images, adds one bias column, checks whether the rows of that matrix have the right rank, and then asks for weights whose scores match the target labels exactly:</p>
 <p><span id="eq-linear-system"><span class="math display">\[
 X_{\mathrm{aug}}\tilde{w} = y.
 \tag{1}\]</span></span></p>
 <p>The equation asks whether there is one parameter vector, <span class="math inline">\(\tilde{w}\)</span>, whose scores exactly match the label vector <span class="math inline">\(y\)</span>. If the score for each image is exactly <span class="math inline">\(+1\)</span> or <span class="math inline">\(-1\)</span>, then the sign of every score is automatically correct, and the perceptron has zero training error on the randomized labels.</p>
-<p>The training route uses the perceptron learning rule instead of solving the equation directly. It starts with weights at zero, looks at one image at a time, and updates the weights only when the model makes a mistake. Once the algebra tells us a separator exists, the training run asks a more practical question: how hard is it for the original mistake-driven algorithm to find one? Figure 1 shows how the images move through both tests.</p>
+<p>The training route uses the perceptron learning rule instead of solving the equation directly. It starts with weights at zero, looks at one image at a time, and updates the weights only when the model makes a mistake. Once the algebra shows that a separator exists, the training run asks a more practical question: how hard is it for the mistake-driven algorithm to find one? Figure 1 shows how the images move through both tests.</p>
 <figure class="post-figure-card post-figure-card--image" id="fig-pipeline">
 
 <div class="post-figure-card__media-frame"><img alt="The experiment turns images into a high-dimensional linear-algebra problem. Real cat and dog images are resized, flattened into 4096-pixel vectors, augmented with a bias column, assigned random labels, and then passed to both an exact separator proof and perceptron training." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/experiment_pipeline.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/experiment_pipeline-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-pipeline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -38,8 +38,8 @@ Figure&nbsp;1: The experiment turns images into a high-dimensional linear-algebr
 </section>
 <section id="how-to-read-the-experiment">
 <h2>How to read the experiment</h2>
-<p>This post assumes no machine learning background. The math is included because the claim is mathematical, but each symbol is introduced where it becomes useful. The idea builds in layers: an image becomes a vector, a perceptron becomes a weighted sum over that vector, and the bias term becomes one more column in a matrix. Once those pieces are in place, the VC-dimension statement stops sounding like a slogan and becomes a concrete claim about how many independent constraints a linear model can satisfy.</p>
-<p>By the end, the symbols should no longer feel like decoration. You should know what <span class="math inline">\(x\)</span> is, what <span class="math inline">\(w\)</span> is, why <span class="math inline">\(b\)</span> can be treated as another weight, what rank is checking, why <span class="math inline">\(X_{\mathrm{aug}}\tilde{w}=y\)</span> proves that a separator exists, why the perceptron learning rule can still take many epochs, and why training accuracy alone cannot tell us whether the model learned a meaningful concept. The thread is simple once the notation is unpacked: a perceptron is a weighted sum, an image is a long list of pixels, and a high-dimensional list gives the weighted sum many adjustable directions. If the examples are independent enough, those directions can be used to fit arbitrary labels.</p>
+<p>This post assumes no machine learning background. The math is included because the claim is mathematical, but each symbol is introduced where it becomes useful. The argument builds in layers: an image becomes a vector, a perceptron becomes a weighted sum over that vector, and the bias term becomes one more column in a matrix. Once those pieces are in place, the VC-dimension statement becomes a concrete claim about how many independent constraints a linear model can satisfy.</p>
+<p>After working through the sections, you should be able to say what <span class="math inline">\(x\)</span> is, what <span class="math inline">\(w\)</span> is, why <span class="math inline">\(b\)</span> can be treated as another weight, what rank is checking, why <span class="math inline">\(X_{\mathrm{aug}}\tilde{w}=y\)</span> proves that a separator exists, why the perceptron learning rule can still take many epochs, and why training accuracy alone cannot tell us whether the model learned a meaningful concept. The thread is straightforward once the notation is unpacked: a perceptron is a weighted sum, an image is a long list of pixels, and a high-dimensional list gives the weighted sum many adjustable directions. If the examples are independent enough, those directions can be used to fit arbitrary labels.</p>
 </section>
 <section id="the-capacity-claim">
 <h2>The capacity claim</h2>
@@ -56,7 +56,7 @@ x = (x_1, x_2, \ldots, x_{4096}).
 s = w_1x_1 + w_2x_2 + \cdots + w_{4096}x_{4096} + b.
 \tag{2}\]</span></span></p>
 <p>The values <span class="math inline">\(w_1,\ldots,w_{4096}\)</span> are the pixel weights, <span class="math inline">\(b\)</span> is the bias, and <span class="math inline">\(s\)</span> is the signed score produced by the model. A positive score becomes the prediction <span class="math inline">\(+1\)</span>; a negative score becomes the prediction <span class="math inline">\(-1\)</span>. The whole classifier is therefore controlled by 4097 adjustable numbers: 4096 pixel weights and one bias.</p>
-<p>For linear classifiers in <span class="math inline">\(d\)</span> input dimensions, the VC dimension is <span class="math inline">\(d+1\)</span>. Here <span class="math inline">\(d=4096\)</span>, so the boundary is <span class="math inline">\(d+1=4097\)</span>. Under the right rank condition, a linear classifier can fit any binary labels on up to 4097 examples, even labels assigned by random coin flips. That is why this experiment is useful: if the model fits the randomized labels, the success cannot be explained by cat features or dog features. The labels no longer point to animals. They point to capacity.</p>
+<p>For linear classifiers in <span class="math inline">\(d\)</span> input dimensions, the VC dimension is <span class="math inline">\(d+1\)</span>. Here <span class="math inline">\(d=4096\)</span>, so the boundary is <span class="math inline">\(d+1=4097\)</span>. Under the right rank condition, a linear classifier can fit any binary labels on up to 4097 examples, even labels assigned at random. If the model fits the randomized labels, the success cannot be explained by cat features or dog features, because the labels no longer encode those categories.</p>
 </section>
 <section id="the-data-animal-faces-become-rows-of-numbers">
 <h2>The data: animal faces become rows of numbers</h2>
@@ -79,20 +79,20 @@ s = w_1x_1 + w_2x_2 + \cdots + w_{4096}x_{4096} + b.
 \quad \longrightarrow \quad
 (12, 40, 91, 8, 55, 110, 4, 61, 130).
 \]</span></p>
-<p>A vector is just an ordered list of numbers. The order matters because each position corresponds to a location in the original image. Pixel 1 might be the upper-left corner. Pixel 4096 might be the lower-right corner.</p>
+<p>A vector is an ordered list of numbers. The order matters because each position corresponds to a location in the original image. Pixel 1 might be the upper-left corner. Pixel 4096 might be the lower-right corner.</p>
 <p>Once every image has been turned into a vector, the training set becomes a table. Each row is one image. Each column is one pixel position. If there are <span class="math inline">\(N\)</span> images, the table has <span class="math inline">\(N\)</span> rows and 4096 pixel columns. We call that table <span class="math inline">\(X\)</span>.</p>
 </section>
 <section id="the-perceptron-as-a-small-machine">
 <h2>The perceptron as a small machine</h2>
 <p>The perceptron is a linear classifier. It takes the input numbers, multiplies each input by a corresponding weight, adds everything together, adds a bias, and then checks the sign.</p>
-<p><a href="#fig-perceptron-anatomy">Figure 2</a> draws that computation as a small machine: pixel values enter on the left, weights scale them, the bias shifts the sum, and the sign of the final score becomes the prediction.</p>
+<p><a href="#fig-perceptron-anatomy">Figure 2</a> draws that computation as a small machine: pixel values enter on the left, weights scale them, the bias shifts the sum, and the sign of the final score becomes the prediction.</p>
 <figure class="post-figure-card post-figure-card--image" id="fig-perceptron-anatomy">
 
 <div class="post-figure-card__media-frame"><img alt="A perceptron multiplies each input feature by a weight, adds the weighted values plus the bias, and predicts by checking whether the score is positive or negative." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/perceptron_anatomy.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/perceptron_anatomy-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-perceptron-anatomy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: A perceptron multiplies each input feature by a weight, adds the weighted values plus the bias, and predicts by checking whether the score is positive or negative.
 </figcaption>
 </figure>
-<p>The word “linear” matters. The perceptron does not multiply pixels by other pixels. It does not build an eye detector, an ear detector, or a fur detector. It only computes the weighted sum in <a href="#eq-score">Equation 2</a> and then checks the sign.</p>
+<p>The word “linear” matters. The perceptron does not multiply pixels by other pixels. It does not build an eye detector, an ear detector, or a fur detector. It only computes the weighted sum in <a href="#eq-score">Equation 2</a> and then checks the sign.</p>
 <p>In symbols, the prediction is</p>
 <p><span class="math display">\[
 \hat{y} =
@@ -206,13 +206,13 @@ Figure&nbsp;3: A line separating three points in two dimensions. The same logic 
 Figure&nbsp;4: The XOR pattern is not linearly separable because matching labels sit on opposite corners of the square.
 </figcaption>
 </figure>
-<p>This is why the result in this post should be stated carefully. We are not saying a perceptron can learn every pattern. It cannot. We are saying that when the input dimension is large and the number of examples is not too large, linear separators can fit many arbitrary labelings.</p>
-<p>That contrast is the reason XOR belongs in this post. XOR shows the limitation of a single linear boundary, while VC dimension shows how much freedom that same boundary can still have when the examples live in a high-dimensional space.</p>
+<p>State the result in this post with that limitation in mind. A perceptron cannot learn every pattern. What it can do, when the input dimension is large and the number of examples is not too large, is fit many arbitrary labelings with a linear separator.</p>
+<p>XOR and VC dimension answer different questions about the same object. XOR shows the limitation of a single linear boundary. VC dimension shows how much freedom that boundary still has when the examples live in a high-dimensional space.</p>
 </section>
 <section id="random-labels-are-the-diagnostic">
 <h2>Random labels are the diagnostic</h2>
 <p>If we trained on true cat and dog labels and got 100 percent training accuracy, it would be natural to say the model learned cats versus dogs. It might have. But training accuracy alone cannot prove that, because the same number can come from a model that learned a useful visual rule and from a model that found a way to fit the examples it saw.</p>
-<p>The cleaner test is to destroy the semantic meaning of the labels while leaving the images intact. In this experiment, every training image receives a target label</p>
+<p>The cleaner test is to remove the semantic meaning of the labels while leaving the images intact. In this experiment, every training image receives a target label</p>
 <p><span class="math display">\[
 y_i \in \{-1,+1\}.
 \]</span></p>
@@ -227,7 +227,7 @@ Figure&nbsp;5: Real AFHQ cat and dog images with random training labels. The ran
 </section>
 <section id="what-is-vc-dimension">
 <h2>What is VC dimension?</h2>
-<p>VC dimension is a way to measure how flexible a class of models is. The formal theory is deeper than this post needs, but the central idea starts with a simple counting question. Take \(N\) points. If each point can receive one of two labels, there are</p>
+<p>VC dimension measures how flexible a class of models is. The formal theory goes deeper than this post needs, but the central idea starts with a counting question. Take \(N\) points. If each point can receive one of two labels, there are</p>
 <p><span class="math display">\[
 2^N
 \]</span></p>
@@ -243,8 +243,8 @@ d = 4096,
 \qquad
 d + 1 = 4097.
 \]</span></p>
-<p>Stated without the formal machinery, a linear classifier in 4096 dimensions can shatter 4097 points in general position. “General position” is a geometry phrase for points that have not fallen into a degenerate arrangement that removes independent directions. In the code, we do not simply assume the condition; we check it by measuring the rank of the augmented image matrix. Figure 6 shows why 4097 is the ceiling in this setup.</p>
-<p>Put differently, VC dimension does not say the perceptron understands cats and dogs. It says the class of linear separators has enough capacity to realize any labeling of a sufficiently well-positioned set of up to 4097 image vectors. Random labels make that statement visible because they remove the semantic pattern that would otherwise distract from the geometry.</p>
+<p>In plain terms, a linear classifier in 4096 dimensions can shatter 4097 points in general position. “General position” is a geometry phrase for points that have not fallen into a degenerate arrangement that removes independent directions. In the code, we do not simply assume the condition; we check it by measuring the rank of the augmented image matrix. Figure 6 shows why 4097 is the ceiling in this setup.</p>
+<p>VC dimension does not say the perceptron understands cats and dogs. It says the class of linear separators has enough capacity to realize any labeling of a sufficiently well-positioned set of up to 4097 image vectors. Random labels make that statement visible because they remove the semantic pattern that would otherwise distract from the geometry.</p>
 <figure class="post-figure-card post-figure-card--image" id="fig-capacity-boundary">
 
 <div class="post-figure-card__media-frame"><img alt="The augmented image matrix has one row per example and 4097 columns after the bias is added. In this sampled AFHQ run, the rank follows the number of examples through 4097 and then stops at the column limit, which is exactly the capacity boundary this post is testing." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/capacity_boundary.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/capacity_boundary-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-capacity-boundary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -288,7 +288,7 @@ x_{N,1} &amp; x_{N,2} &amp; \cdots &amp; x_{N,4096} &amp; 1
 </section>
 <section id="the-linear-system-construction">
 <h2>The linear-system construction</h2>
-<p>The phrase “linear system construction” can sound abstract, but it is only a compact way of writing down the requirement that every training score should match its label. For the first few images, that requirement would be</p>
+<p>The phrase “linear system construction” sounds abstract, but it is only a compact way of writing down the requirement that every training score should match its label. For the first few images, that requirement would be</p>
 <p><span class="math display">\[
 x_{1,\mathrm{aug}}^\top \tilde{w} = y_1.
 \]</span></p>
@@ -302,7 +302,7 @@ x_{3,\mathrm{aug}}^\top \tilde{w} = y_3.
 <p><span class="math display">\[
 X_{\mathrm{aug}}\tilde{w} = y.
 \]</span></p>
-<p>Figure 7 draws the same equation as a matrix so the dimensions are visible. \(X_{\mathrm{aug}}\) is the data matrix, with one row per image and one column per parameter. In this experiment it has 4097 columns. \(\tilde{w}\) is the vector of unknown parameters, meaning all pixel weights plus the bias. \(y\) is the vector of labels, with one random target for each image.</p>
+<p>Figure 7 draws the same equation as a matrix so the dimensions are visible. \(X_{\mathrm{aug}}\) is the data matrix, with one row per image and one column per parameter. In this experiment it has 4097 columns. \(\tilde{w}\) is the vector of unknown parameters, meaning all pixel weights plus the bias. \(y\) is the vector of labels, with one random target for each image.</p>
 <figure class="post-figure-card post-figure-card--image" id="fig-linear-system">
 
 <div class="post-figure-card__media-frame"><img alt="The exact separator proof writes all training-score equations at once. The augmented image matrix has one row per training image. The unknown vector contains the pixel weights and bias. The label vector contains the randomly assigned targets." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/linear_system_construction.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/linear_system_construction-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-linear-system-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -316,7 +316,7 @@ Figure&nbsp;7: The exact separator proof writes all training-score equations at 
 <p>The linear system <span class="math inline">\(X_{\mathrm{aug}}\tilde{w}=y\)</span> is solvable for every possible label vector <span class="math inline">\(y\)</span> when the rows of <span class="math inline">\(X_{\mathrm{aug}}\)</span> are linearly independent.</p>
 <p>Rows are linearly independent when no row can be perfectly built from a weighted combination of the other rows. In this project, each row is an image. Full row rank means each training image contributes an independent direction in the augmented pixel space.</p>
 <p>Rank is the number of independent rows or columns in a matrix. If <span class="math inline">\(X_{\mathrm{aug}}\)</span> has <span class="math inline">\(N\)</span> rows and rank <span class="math inline">\(N\)</span>, then all <span class="math inline">\(N\)</span> rows are independent. We call this full row rank.</p>
-<p>Why does that matter? Because full row rank means the map from parameter vectors <span class="math inline">\(\tilde{w}\)</span> to training scores can reach any target vector in <span class="math inline">\(\mathbb{R}^N\)</span>. The weights have enough freedom to assign arbitrary scores to the training examples, not because they understand the images, but because the rows of the matrix give them enough independent directions to move in.</p>
+<p>Full row rank matters because it means the map from parameter vectors <span class="math inline">\(\tilde{w}\)</span> to training scores can reach any target vector in <span class="math inline">\(\mathbb{R}^N\)</span>. The weights have enough freedom to assign arbitrary scores to the training examples, not because they understand the images, but because the rows of the matrix give them enough independent directions to move in.</p>
 <p>The proof chain is:</p>
 <ol type="1">
 <li>Each processed image is a 4096-dimensional vector.</li>
@@ -327,7 +327,7 @@ Figure&nbsp;7: The exact separator proof writes all training-score equations at 
 <li>If the solution makes the scores equal <span class="math inline">\(y_i \in \{-1,+1\}\)</span>, every score has the correct sign.</li>
 <li>Therefore a linear separator exists for those labels.</li>
 </ol>
-<p>This is the point where it is easy to mix up two claims. The rank construction proves that a separator exists. It does not show that the perceptron learning rule has already found it. That is why this project includes both the exact solve and the training run.</p>
+<p>Two claims are easy to conflate here. The rank construction proves that a separator exists. It does not show that the perceptron learning rule has already found it. That is why this project includes both the exact solve and the training run.</p>
 </section>
 <section id="why-exact-scores-imply-correct-classification">
 <h2>Why exact scores imply correct classification</h2>
@@ -346,7 +346,7 @@ s_i = y_i.
 y_i s_i = y_i^2 = 1 &gt; 0.
 \]</span></p>
 <p>That expression says the label and the score have the same sign. When their product is positive, the point is correctly classified.</p>
-<p>This is why the direct solve is so useful. It constructs scores that exactly match the labels, so the training error is zero.</p>
+<p>That is why the direct solve is so useful. It constructs scores that exactly match the labels, so the training error is zero.</p>
 </section>
 <section id="the-perceptron-learning-rule">
 <h2>The perceptron learning rule</h2>
@@ -371,19 +371,19 @@ b \leftarrow b + \eta y_i.
 Figure&nbsp;8: Perceptron weights are built from signed image-like updates. The final weight image is a memory trace of the random training split, not a clean cat or dog template.
 </figcaption>
 </figure>
-<p>The random-label setting is important here. The weight image in <a href="#fig-weight-story">Figure 8</a> should not be interpreted as a cat detector or dog detector. The labels are arbitrary. The weight image is a record of the corrections needed to separate this particular random split.</p>
+<p>The random-label setting matters here. The weight image in <a href="#fig-weight-story">Figure 8</a> should not be read as a cat detector or dog detector. The labels are arbitrary. The weight image is a record of the corrections needed to separate this particular random split.</p>
 </section>
 <section id="why-enough-iterations-does-not-give-a-simple-epoch-formula">
 <h2>Why enough iterations does not give a simple epoch formula</h2>
 <p>The perceptron convergence theorem says that if the training data are linearly separable, the perceptron learning rule will eventually find a separator. The theorem connects the existence proof to the training process, but it is a guarantee of eventual success rather than a stopwatch.</p>
 <p>In particular, the theorem does not say that 4097 examples should take exactly 4097 epochs, and it does not give a tight practical prediction for this dataset. The number of updates depends on the geometry of the examples.</p>
-<p>The most important geometric quantity is the margin: the amount of breathing room between the separating hyperplane and the closest training points. A large margin means the classes are separated comfortably. A small margin means a separator exists, but some points sit very close to the boundary, so the algorithm may need many corrections before it finds a separating direction.</p>
+<p>The most important geometric quantity is the margin: the distance between the separating hyperplane and the closest training points. A large margin means the classes are separated comfortably. A small margin means a separator exists, but some points sit very close to the boundary, so the algorithm may need many corrections before it finds a separating direction.</p>
 <p>The classic perceptron mistake bound says that if every input has norm at most <span class="math inline">\(R\)</span>, and there exists a unit-length separator with margin <span class="math inline">\(\gamma\)</span>, then the perceptron makes at most:</p>
 <p><span class="math display">\[
 \left(\frac{R}{\gamma}\right)^2
 \]</span></p>
 <p>mistakes.</p>
-<p>Here \(R\) is a bound on the size of the input vectors, and \(\gamma\), pronounced gamma, is the margin. The important part is the ratio. If the margin is tiny, \(R/\gamma\) is large, and the mistake bound becomes large. Random labels usually create awkward geometry because they ask the model to thread a boundary through points with no underlying visual rule, which is why convergence can take far longer than the clean algebraic proof makes it sound.</p>
+<p>Here \(R\) is a bound on the size of the input vectors, and \(\gamma\), pronounced gamma, is the margin. The important part is the ratio. If the margin is tiny, \(R/\gamma\) is large, and the mistake bound becomes large. Random labels usually create awkward geometry because they ask the model to thread a boundary through points with no underlying visual rule, which is why convergence can take far longer than the clean algebraic proof might suggest.</p>
 <p>The experiment therefore separates two responsibilities: the exact solve asks whether a separator exists at all, while perceptron training asks whether this particular update rule found one within the epoch budget we gave it.</p>
 <ol type="1">
 <li>VC dimension and rank tell us whether a separator exists.</li>
@@ -462,7 +462,7 @@ Table&nbsp;1: Fifty-epoch sweep on randomized AFHQ cat/dog labels.
 </table>
 </div>
 </figure>
-<p>In Table 1, the rank column carries the existence proof. Through \(N=4097\), the rank equals \(N\). The augmented image rows are independent, so the exact solve fits the random labels with zero training error all the way up to the 4097-example boundary.</p>
+<p>In Table 1, the rank column carries the existence proof. Through \(N=4097\), the rank equals \(N\). The augmented image rows are independent, so the exact solve fits the random labels with zero training error all the way up to the 4097-example boundary.</p>
 <p>The perceptron column tells the training story. At \(N=500\), the perceptron reaches zero training error within 50 epochs. At larger sample sizes, 50 epochs is not enough, which does not contradict the proof; it only says the training run stopped before the algorithm reached a separator. To test the “given enough iterations” part more directly, the experiment also runs longer perceptron training for the separable sample sizes:</p>
 <figure class="post-table-figure" id="tbl-long-run">
 <figcaption class="post-table-figure__caption" id="tbl-long-run-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -526,14 +526,14 @@ Table&nbsp;2: Long perceptron runs on randomized labels up to the VC-dimension b
 </table>
 </div>
 </figure>
-<p>Table 2 is the direct demonstration. The exact solve proves that a separator exists through 4097 examples in this sampled dataset, and the long perceptron runs show the perceptron learning rule actually reaching zero training error at each of those sample sizes.</p>
+<p>Table 2 is the direct demonstration. The exact solve proves that a separator exists through 4097 examples in this sampled dataset, and the long perceptron runs show the perceptron learning rule actually reaching zero training error at each of those sample sizes.</p>
 <figure class="post-figure-card post-figure-card--image" id="fig-long-run">
 
 <div class="post-figure-card__media-frame"><img alt="Long perceptron runs reach zero training error up through 4097 examples, though the number of epochs rises substantially." class="post-figure-card__media theme-asset theme-asset--light" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/perceptron_long_run_epochs.svg?v=20260527h"/><img alt="" aria-hidden="true" class="post-figure-card__media theme-asset theme-asset--dark" decoding="async" loading="lazy" src="/assets/img/perceptron-memorization/perceptron_long_run_epochs-dark.svg?v=20260527h"/></div><figcaption class="post-figure-card__caption" id="fig-long-run-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;9: Long perceptron runs reach zero training error up through 4097 examples, though the number of epochs rises substantially.
 </figcaption>
 </figure>
-<p>The epoch counts are not universal constants. They depend on the random seed, preprocessing, example order, learning rate, and margin. The important result is not that \(N=4097\) took 1228 epochs specifically; it is that the perceptron converged on random labels at the VC-dimension boundary, exactly as the separability result says it can.</p>
+<p>The epoch counts are not universal constants. They depend on the random seed, preprocessing, example order, learning rate, and margin. What matters is not that \(N=4097\) took 1228 epochs specifically, but that the perceptron converged on random labels at the VC-dimension boundary, exactly as the separability result says it can.</p>
 </section>
 <section id="why-the-5000-example-row-changes">
 <h2>Why the 5000-example row changes</h2>
@@ -576,11 +576,7 @@ Figure&nbsp;13: Training journey for 500 randomly labeled images, including snap
 w = \sum_i \alpha_i y_i x_i.
 \]</span></p>
 <p>Here \(x_i\) is training image \(i\), \(y_i\) is its label, and \(\alpha_i\) records how much that example contributed through mistakes and updates. If an example never caused an update, its contribution may be zero; if it caused multiple updates, its contribution may be larger. The final weight vector is therefore shaped by the examples that pushed on the model during training.</p>
-<p>Because the weights are built from image vectors, the final \(w\) can be reshaped into a 64 by 64 image. In the random-label experiment, however, that image is not a cat template or a dog template. It is a signed accumulation of corrections: pixels from examples labeled \(+1\) and pixels from examples labeled \(-1\) have been added and subtracted until the training split becomes separable.</p>
-<p>The best intuition is:</p>
-<blockquote class="blockquote">
-<p>The weights are not learning catness or dogness under random labels. They are accumulating just enough signed pixel evidence to separate this particular random split.</p>
-</blockquote>
+<p>Because the weights are built from image vectors, the final \(w\) can be reshaped into a 64 by 64 image. In the random-label experiment, however, that image is not a cat template or a dog template. It is a signed accumulation of corrections: pixels from examples labeled \(+1\) and pixels from examples labeled \(-1\) have been added and subtracted until the training split becomes separable. Under random labels, the weights are not learning catness or dogness. They are accumulating just enough signed pixel evidence to separate this particular random split.</p>
 </section>
 <section id="what-this-does-and-does-not-prove">
 <h2>What this does and does not prove</h2>
@@ -593,7 +589,7 @@ w = \sum_i \alpha_i y_i x_i.
 <li>Random labels are useful because they remove semantic meaning from the target.</li>
 <li>Generalization requires more than fitting the training set.</li>
 </ol>
-<p>That is the point that carries over to real machine learning. We care about performance on new examples, not only performance on the training set. If a model performs well only on the data it trained on, it may have memorized the examples without learning a rule that travels beyond them. Random labels are useful because they make that failure mode impossible to hide behind a familiar category name.</p>
+<p>In real machine learning, we care about performance on new examples, not only performance on the training set. If a model performs well only on the data it trained on, it may have memorized the examples without learning a rule that travels beyond them. Random labels are useful because they make that failure mode impossible to hide behind a familiar category name.</p>
 </section>
 <section id="a-hand-exercise">
 <h2>A hand exercise</h2>
@@ -671,7 +667,7 @@ w_2 = 2.
 <p><span class="math display">\[
 2x_1 + 2x_2 - 1 = 0.
 \]</span></p>
-<p>That is the same separator shown in <a href="#fig-toy-separator">Figure 3</a>. The large experiment is not using a different kind of reasoning. It is the same linear-system idea with 4097 columns instead of 3.</p>
+<p>That is the same separator shown in <a href="#fig-toy-separator">Figure 3</a>. The large experiment is not using a different kind of reasoning. It is the same linear-system idea with 4097 columns instead of 3.</p>
 </section>
 <section id="practice-questions">
 <h2>Practice questions</h2>
@@ -681,7 +677,7 @@ w_2 = 2.
 <li><p>Suppose a dataset has <span class="math inline">\(N=100\)</span> examples and <span class="math inline">\(d=20\)</span> input dimensions. Can VC dimension guarantee that a linear classifier can shatter all 100 examples? Why or why not?</p></li>
 <li><p>In the hand exercise, change the labels to <span class="math inline">\((+1,-1,+1)\)</span>. Solve the new linear system and write the separator.</p></li>
 <li><p>Explain why the direct linear-system solve is not the same thing as perceptron training.</p></li>
-<li><p>The long run reaches zero error for <span class="math inline">\(N=4097\)</span> after 1228 epochs. Does VC dimension predict the number 1228? If not, what kind of information would help reason about training time?</p></li>
+<li><p>The long run reaches zero error for <span class="math inline">\(N=4097\)</span> after 1228 epochs. Does VC dimension predict the number 1228? If not, what kind of information would help you reason about training time?</p></li>
 <li><p>If a model reaches 100 percent training accuracy and 50 percent test accuracy on balanced random labels, what does that tell you about memorization and generalization?</p></li>
 <li><p>Look at the weight image. Why is it reasonable that the weights can be reshaped into an image? Why would it be misleading to call that image a cat detector in the random-label experiment?</p></li>
 </ol>
@@ -696,9 +692,9 @@ w_2 = 2.
 <p id="glossary-full-row-rank"><strong>Full row rank.</strong> A matrix with <span class="math inline">\(N\)</span> rows has full row rank when its rank is <span class="math inline">\(N\)</span>. This means the rows are linearly independent.</p>
 <p id="glossary-hyperplane"><strong>Hyperplane.</strong> The high-dimensional version of a line or plane. A perceptron’s decision boundary is a hyperplane.</p>
 <p id="glossary-linearly-separable"><strong>Linearly separable.</strong> A dataset is linearly separable if some hyperplane can place all positive examples on one side and all negative examples on the other.</p>
-<p id="glossary-margin"><strong>Margin.</strong> The amount of breathing room between a separator and the closest training examples. Larger margins usually make perceptron learning easier.</p>
+<p id="glossary-margin"><strong>Margin.</strong> The distance between a separator and the closest training examples. Larger margins usually make perceptron learning easier.</p>
 <p id="glossary-perceptron"><strong>Perceptron.</strong> A linear classifier that predicts from the sign of a weighted sum.</p>
-<p id="glossary-random-labels"><strong>Random labels.</strong> Labels assigned independently of the real class. They are useful for testing memorization because they remove semantic meaning.</p>
+<p id="glossary-random-labels"><strong>Random labels.</strong> Labels assigned independently of the true class. They are useful for testing memorization because they remove semantic meaning.</p>
 <p id="glossary-rank"><strong>Rank.</strong> The number of independent directions represented by the rows or columns of a matrix.</p>
 <p id="glossary-shattering"><strong>Shattering.</strong> A model class shatters a set of points if it can fit every possible binary labeling of those points.</p>
 <p id="glossary-training-error"><strong>Training error.</strong> The fraction of training examples classified incorrectly.</p>

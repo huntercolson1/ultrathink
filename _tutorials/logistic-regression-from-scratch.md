@@ -2,7 +2,7 @@
 title: Logistic Regression From Scratch
 date: 2026-02-19
 author: Hunter Colson
-subtitle: Learn how a machine learning model learns to classify data, one spreadsheet cell at a time.
+subtitle: Build a working classifier in Excel and see every step of the learning process in plain sight.
 description: Companion tutorial guide for Logistic_Regression_Tutorial.xlsx covering logistic regression, gradient descent, and model interpretation in Excel.
 tags:
   - tutorial
@@ -13,11 +13,11 @@ tags:
 
 ## Introduction: What Is Machine Learning?
 
-Imagine you are a doctor examining tumor biopsies. After years of experience, you develop an intuition: larger, rougher tumors tend to be malignant. You cannot write down an exact rule, but you have learned patterns from hundreds of past cases.
+A doctor who reads tumor biopsies for long enough starts to notice patterns. Larger, rougher-looking nuclei tend to go with malignant cases. That judgment comes from experience, not from a fixed checklist written down on day one.
 
-Machine learning automates this process. Instead of a human learning patterns from experience, a computer learns patterns from data. The computer starts with no knowledge, looks at many examples, and gradually adjusts its internal settings until it can make accurate predictions on new cases it has never seen.
+Machine learning does something similar, but systematically. A computer starts with no knowledge, looks at many labeled examples, and adjusts internal settings until it can classify new cases it has never seen before.
 
-In this tutorial, you will play the role of that computer. You will manually perform every step of the learning process inside an Excel spreadsheet, with every calculation visible and inspectable. By the end, you will understand the fundamental mechanism behind how machines learn.
+In this tutorial, you play the role of that computer. You will run every step of the learning process inside an Excel spreadsheet, with every calculation visible in the cells. Along the way, you will see how a model stores what it has learned as a handful of numbers, how it turns measurements into probabilities, how we score wrong answers, and how small repeated adjustments make those answers better. No prior machine learning background is required.
 
 <div style="margin: var(--space-lg) 0; padding: var(--space-md) var(--space-lg); border: 1px solid var(--border-color); border-left: 4px solid var(--text-primary); display: flex; align-items: center; justify-content: space-between; gap: var(--space-lg); flex-wrap: wrap;">
   <div style="display: flex; flex-direction: column; gap: 0.25rem;">
@@ -30,20 +30,9 @@ In this tutorial, you will play the role of that computer. You will manually per
 
 ### What You Will Build
 
-You will build a logistic regression model, one of the simplest and most important models in all of machine learning. It takes in measurements about a subject and outputs a probability: how likely is it that this subject belongs to a particular category?
+You will build a logistic regression model, one of the simplest and most widely used classifiers in machine learning. It takes measurements about a subject and returns a probability: how likely is this subject to belong to a particular category?
 
-Specifically, your model will take two measurements from a breast tumor biopsy (the mean nuclear radius and nuclear texture of the sampled cells) and output a probability that the tumor is malignant. If the probability is above 50%, the model predicts malignant. If below 50%, it predicts benign.
-
-### What You Will Learn
-
-This tutorial is designed for someone with no prior machine learning experience. By working through it, you will develop an intuitive understanding of:
-
-- How a model represents its knowledge as a small set of numbers (weights and a bias)
-- How a model converts input features into a probability (the sigmoid function)
-- How we measure whether the model is right or wrong (the loss function)
-- How the model figures out which direction to adjust its numbers (gradients)
-- How repeatedly adjusting those numbers makes the model better (gradient descent)
-- Why some features matter more than others (learned weights)
+Your model will read two measurements from a breast tumor biopsy (the mean nuclear radius and nuclear texture of the sampled cells) and output a probability that the tumor is malignant. If the probability is above 50%, the model predicts malignant. If below 50%, it predicts benign.
 
 ### Prerequisites
 
@@ -51,7 +40,7 @@ You need basic familiarity with Excel (opening files, editing cells, copying and
 
 ## The Dataset: Breast Tumor Measurements
 
-Our dataset comes from the [Breast Cancer Wisconsin (Diagnostic) dataset](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic), a popular dataset in machine learning education. It was created by researchers at the University of Wisconsin who used a fine needle aspirate (FNA) procedure to extract cell samples from breast masses. They then digitized images of those cells and measured various geometric properties of the cell nuclei.
+Our dataset comes from the [Breast Cancer Wisconsin (Diagnostic) dataset](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic), a standard teaching dataset in machine learning. Researchers at the University of Wisconsin used fine needle aspirate (FNA) to collect cell samples from breast masses, digitized images of those cells, and measured geometric properties of the nuclei.
 
 We use a subset of 150 samples with two features and one label:
 
@@ -67,11 +56,11 @@ We use a subset of 150 samples with two features and one label:
 
 ### Why These Features?
 
-We chose radius and texture because they have real medical significance. In general, malignant tumors tend to have larger nuclei (higher radius) and more irregular surfaces (higher texture). This means there is a genuine pattern for the model to discover. You can verify this yourself by looking at the scatter plot on the Visualizations sheet: the red (malignant) and blue (benign) points partially separate along these axes, though they overlap.
+We chose radius and texture because they carry real medical meaning. Malignant tumors often have larger nuclei (higher radius) and more irregular surfaces (higher texture). That gives the model a genuine pattern to find, not just noise. You can see this in the scatter plot on the Visualizations sheet: red (malignant) and blue (benign) points partially separate along these axes, though they overlap in the middle.
 
 ### Feature Normalization
 
-The raw radius values range from about 7 to 25, while texture values range from about 10 to 31. These different scales can cause problems during training: the model would need to use tiny weights for the larger-valued feature and larger weights for the smaller one. This makes the learning process lopsided and slow.
+The raw radius values range from about 7 to 25, while texture values range from about 10 to 31. When two features sit on different scales, training gets lopsided. The model ends up needing tiny weights for the larger-valued feature and larger weights for the smaller one, which slows learning down.
 
 To fix this, we normalize each feature by subtracting its mean and dividing by its standard deviation:
 
@@ -79,11 +68,11 @@ $$
 x' = \frac{x - \mu}{\sigma}
 $$
 
-After normalization, both features are centered around zero and have similar scales (most values fall between -2 and +2). This ensures both features contribute equally to learning from the start. The Data sheet in the workbook shows both the raw and normalized values side by side so you can see exactly what normalization does.
+After normalization, both features are centered around zero and have similar scales (most values fall between -2 and +2). That way both features can contribute equally from the start. The Data sheet in the workbook shows raw and normalized values side by side so you can see exactly what normalization does.
 
 ## The Model: How Logistic Regression Works
 
-A logistic regression model is like a simple decision-making machine with adjustable knobs. It takes in numbers (the features), processes them through a formula, and outputs a probability. The adjustable knobs are the model's parameters: the values that change during training.
+A logistic regression model is a small decision-making machine with adjustable knobs. It takes in numbers (the features), runs them through a formula, and outputs a probability. Those knobs are the model's parameters: the values that change during training.
 
 ### The Parameters
 
@@ -93,11 +82,11 @@ Our model has exactly three parameters:
 
 - **Weight 2 (w2):** This controls how much the Texture feature influences the prediction. Same logic: positive means higher texture pushes toward malignant.
 
-- **Bias (b):** This shifts the overall prediction up or down, regardless of the input features. Think of it as the model's baseline tendency. A negative bias means the model leans toward predicting benign unless the features push it the other way.
+- **Bias (b):** This shifts the overall prediction up or down, regardless of the input features. It works like a baseline tendency. A negative bias means the model leans toward predicting benign unless the features push it the other way.
 
 These three numbers are the entirety of the model's "knowledge." Before training, all three are set to zero, meaning the model has no opinion about anything. After training, they will contain the learned pattern.
 
-> *Key insight: A machine learning model is just a mathematical function with adjustable parameters. "Training" means finding the parameter values that make the function produce correct outputs.*
+A machine learning model is a mathematical function with adjustable parameters. Training means finding the parameter values that make the function produce correct outputs.
 
 ### Step 1: The Linear Combination (Computing z)
 
@@ -131,9 +120,9 @@ The function exp(-z) means "e raised to the power of negative z," where e is the
 
 - **When z is exactly 0:** exp(0) = 1, so p = 1/(1 + 1) = 0.5. The model is perfectly uncertain, a coin flip.
 
-The sigmoid creates a smooth S-shaped curve. It never outputs exactly 0 or exactly 1, but it gets arbitrarily close. This smoothness is mathematically important because it allows us to compute gradients (which we will need for learning). The Visualizations sheet includes a plot of this curve.
+The sigmoid creates a smooth S-shaped curve. It never outputs exactly 0 or exactly 1, but it gets arbitrarily close. That smoothness matters because it allows us to compute gradients, which we will need for learning. The Visualizations sheet includes a plot of this curve.
 
-> *Why not just use a hard threshold? We could simply say "if z > 0, predict 1; if z < 0, predict 0." But hard thresholds create sharp corners that make it impossible to compute gradients. The sigmoid's smoothness is what makes gradient descent work. It tells us not just which direction to go, but how far.*
+Hard thresholds would create sharp corners that make gradient computation impossible. The sigmoid's smoothness is what makes gradient descent work: it tells us not just which direction to go, but how far.
 
 In the Training sheet, column F shows p = sigmoid(z) for every sample. When all weights are zero, every p equals exactly 0.5.
 
@@ -179,9 +168,7 @@ If the model predicts p = 0.99 (confidently wrong), Loss = -ln(0.01) = 4.61. Hug
 
 ### Why Cross-Entropy Instead of Simple Difference?
 
-You might wonder: why not just use (p - y) squared as the loss? This would technically work, but cross-entropy has an important advantage. It penalizes confident wrong predictions much more harshly than uncertain ones. If the model predicts p = 0.99 for a benign tumor, the cross-entropy loss is 4.61, but the squared error loss would only be (0.99 - 0)^2 = 0.98. Cross-entropy provides a much stronger signal to the model that something is seriously wrong, which speeds up learning.
-
-> *Think of it this way: cross-entropy says "being confidently wrong is much worse than being uncertain." This harsh penalty for confident mistakes is exactly what we want, because it forces the model to be honest about its uncertainty.*
+You might wonder: why not just use (p - y) squared as the loss? That would technically work, but cross-entropy penalizes confident wrong predictions much more harshly than uncertain ones. If the model predicts p = 0.99 for a benign tumor, the cross-entropy loss is 4.61, but the squared error loss would only be (0.99 - 0)^2 = 0.98. Cross-entropy gives a much stronger signal that something is seriously wrong, which speeds up learning.
 
 ### The Average Loss
 
@@ -199,9 +186,11 @@ We now have a model that makes predictions and a loss function that measures how
 
 ### The Core Idea
 
-Imagine you are standing on a hilly landscape in complete fog. You cannot see which way is downhill, but you can feel the slope of the ground beneath your feet. Gradient descent is like taking a step in whichever direction feels most downhill. After many steps, you end up in a valley (a low point of the loss).
+Picture the loss as a landscape with hills and valleys. Each point on that landscape corresponds to one set of parameter values, and the height at that point is the loss. We want to find a valley: parameter values where the loss is low.
 
-The gradient tells you the slope. Specifically, for each parameter, the gradient tells you: "If you increase this parameter by a tiny amount, how much does the loss increase?" If the gradient is positive, increasing the parameter makes things worse, so you should decrease it. If the gradient is negative, increasing the parameter makes things better, so you should increase it.
+We cannot see the whole landscape at once, but we can measure the slope at our current position. That slope is the gradient. For each parameter, the gradient answers a simple question: if you nudge this parameter up by a tiny amount, does the loss go up or down? A positive gradient means increasing the parameter makes things worse, so we should decrease it. A negative gradient means increasing the parameter helps, so we should increase it.
+
+Each update moves us a small step downhill. After enough steps, we land in a valley where the loss has stopped falling much.
 
 ### The Error Signal
 
@@ -261,7 +250,7 @@ $$
 b_{\text{new}} = b_{\text{old}} - \alpha \cdot \frac{\partial L}{\partial b}
 $$
 
-Here α (alpha) is the learning rate. The minus sign is critical: we subtract the gradient because the gradient points uphill (toward higher loss), and we want to go downhill (toward lower loss). Think of it as walking in the opposite direction of the slope.
+Here α (alpha) is the learning rate. The minus sign is critical: we subtract the gradient because the gradient points uphill (toward higher loss), and we want to go downhill (toward lower loss). We walk in the opposite direction of the slope.
 
 ### The Learning Rate
 
@@ -273,7 +262,7 @@ The learning rate is a number (typically between 0.001 and 1.0) that controls th
 
 - **Just right (e.g., 0.1):** The model makes steady progress, reaching a good solution in tens of iterations. The default value of 0.1 works well for this dataset.
 
-> *Experiment! Try changing the learning rate on the Parameters sheet to see its effect. Set it to 0.01 and notice how the loss decreases more slowly. Set it to 1.0 and watch the model learn faster (but be aware it may become unstable for even larger values).*
+Try changing the learning rate on the Parameters sheet to see its effect. Set it to 0.01 and notice how the loss decreases more slowly. Set it to 1.0 and watch the model learn faster, though it may become unstable for even larger values.
 
 ### What Is One Training Iteration?
 
@@ -473,49 +462,29 @@ This is the equation of a straight line in the feature space. Every point on one
 
 ### Why the Model Cannot Reach 100% Accuracy
 
-With only two features and a linear decision boundary, the model has limited expressive power. Some malignant and benign samples have similar nuclear radius and texture values, making them impossible to separate with a straight line. This is not a failure of the model; it is a reflection of the data. To achieve higher accuracy, you would need more features, a more complex model (like a neural network), or both.
+With only two features and a linear decision boundary, the model has limited expressive power. Some malignant and benign samples have similar nuclear radius and texture values, making them impossible to separate with a straight line. That is a property of the data, not a failure of the training process. To achieve higher accuracy, you would need more features, a more complex model (like a neural network), or both.
 
-> *This limitation is actually the key insight that motivates deep learning: by stacking many logistic regression units in layers (creating a neural network), you can learn curved, complex decision boundaries that separate data that a single straight line cannot.*
+This limitation is part of what motivates deep learning: by stacking many logistic regression units in layers, you can learn curved decision boundaries that a single straight line cannot represent.
 
 ## The Bigger Picture: From Here to Neural Networks
 
-Everything you have learned in this tutorial is the foundation of modern AI systems. Here is how the concepts scale up:
+Everything in this tutorial carries forward into larger systems. The model you built here (weighted sum, then sigmoid) is exactly one neuron. A neural network is many such units connected in layers, with data passing through intermediate layers that learn increasingly abstract patterns instead of going straight from inputs to output.
 
-- **One neuron is logistic regression:** The model you built (weighted sum, then sigmoid) is exactly one neuron. A neural network is many of these neurons connected in layers.
+Real models often use hundreds or thousands of input features instead of two, but the math is the same: more weights to learn, same update rule. In production, a computer runs the copy-paste-update loop you did by hand millions of times per second on GPUs. The algorithm does not change; only the scale does.
 
-- **More features:** Real models might have hundreds or thousands of input features instead of just two. The math is the same; there are just more weights to learn.
+In multi-layer networks, gradients are computed with backpropagation, which extends the same chain-rule logic you used here to networks where each layer depends on the one before it. For tasks with more than two categories, cross-entropy generalizes to multiple classes. For regression (predicting a continuous number rather than a category), other loss functions like mean squared error are common.
 
-- **Hidden layers:** Instead of going directly from inputs to output, neural networks pass data through intermediate layers of neurons. Each layer learns increasingly abstract patterns.
-
-- **Automatic training:** In practice, a computer performs the copy-paste-update loop millions of times per second using GPUs. The same gradient descent algorithm you did by hand runs at enormous scale.
-
-- **Backpropagation:** In multi-layer networks, gradients are computed using a technique called backpropagation, which is an extension of the same chain-rule logic used here.
-
-- **Different loss functions:** For tasks with more than two categories, cross-entropy generalizes to multiple classes. For regression tasks (predicting a continuous number), other loss functions like mean squared error are used.
-
-The conceptual core is always the same: start with adjustable parameters, compute predictions, measure loss, compute gradients, and update parameters to reduce loss. You now understand this core.
+The core loop stays the same regardless of scale: start with adjustable parameters, compute predictions, measure loss, compute gradients, update parameters to reduce loss.
 
 ## Key Takeaways
 
-After working through this tutorial, here are the essential ideas:
+A machine learning model is a function with adjustable parameters. Ours had just three (w1, w2, b) and still reached about 90% accuracy on tumor classification. The sigmoid converts a raw score into a probability. It is smooth, differentiable, and bounded between 0 and 1, which makes it well suited to classification problems.
 
-- A machine learning model is a function with adjustable parameters. Our model had just three parameters (w1, w2, b), yet it learned to classify tumors with 90% accuracy.
+Binary cross-entropy measures prediction quality by penalizing confident wrong answers much more than uncertain ones, giving the model a clear signal about where it went astray. Gradients point in the direction of steepest loss increase; moving opposite the gradient decreases loss. Gradient descent repeats that move many times, improving the parameters a little on each pass until the loss flattens out.
 
-- The sigmoid function converts a raw score into a probability. It is smooth, differentiable, and bounded between 0 and 1, which makes it ideal for classification.
+The learning rate sets the step size for each update. Too large and the model overshoots; too small and convergence takes forever. Feature normalization keeps all inputs on comparable scales so no single feature dominates the gradients.
 
-- The loss function measures prediction quality. Binary cross-entropy harshly penalizes confident wrong predictions, providing a strong learning signal.
-
-- Gradients point in the direction of steepest loss increase. By moving opposite the gradient, we decrease the loss.
-
-- Gradient descent is iterative. Each iteration improves the parameters a little. Over many iterations, the model converges to a good solution.
-
-- The learning rate controls the trade-off between speed and stability. Too large causes overshooting; too small causes slow convergence.
-
-- Feature normalization ensures all features contribute equally to learning and prevents the gradient from being dominated by one feature.
-
-- This simple model is the building block of neural networks. Everything in deep learning builds on the concepts you have just learned.
-
-**Congratulations on completing this tutorial. You now have a working understanding of the fundamental mechanism behind how machines learn from data. Every time you hear about AI "training" on data, you know exactly what that means: computing predictions, measuring errors, and adjusting parameters to do better next time.**
+This simple model is also the building block of neural networks. When you hear about AI systems "training" on data, the process is the same one you ran in Excel: compute predictions, measure errors, adjust parameters, repeat.
 
 ## Glossary
 
