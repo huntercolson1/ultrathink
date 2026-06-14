@@ -61,35 +61,24 @@ layout: default
 </article>
 
 <button class="post-toc-toggle" type="button" aria-label="Open contents" aria-expanded="false" aria-controls="post-toc-drawer" data-toc-toggle hidden>
-  <span class="post-toc-toggle__bracket" aria-hidden="true">[</span>
-  <span class="post-toc-toggle__label">INDEX</span>
-  <span class="post-toc-toggle__bracket" aria-hidden="true">]</span>
+  <span class="post-toc-toggle__lines" aria-hidden="true">
+    <span></span>
+    <span></span>
+    <span></span>
+  </span>
 </button>
 
 <div class="post-toc-drawer" id="post-toc-drawer" data-toc-drawer hidden role="dialog" aria-modal="true" aria-label="Table of contents">
   <div class="post-toc-drawer__overlay" data-toc-overlay></div>
   <aside class="post-toc-drawer__panel" tabindex="-1" data-toc-panel>
     <header class="post-toc-drawer__header">
-      <p class="post-toc-drawer__eyebrow">INDEX / {{ reading_minutes }} MIN</p>
       <button class="post-toc-drawer__close" type="button" aria-label="Close contents" data-toc-close>
         <span aria-hidden="true">×</span>
       </button>
     </header>
 
-    <div class="post-toc-drawer__progress" aria-hidden="true">
-      <span class="post-toc-drawer__progress-track">
-        <span class="post-toc-drawer__progress-fill" data-toc-progress></span>
-      </span>
-      <span class="post-toc-drawer__progress-label" data-toc-progress-label>0%</span>
-    </div>
-
     <nav class="post-toc-drawer__nav" aria-label="Sections">
       <ol class="post-toc__list" data-post-toc-list></ol>
     </nav>
-
-    <footer class="post-toc-drawer__footer">
-      <button type="button" class="post-toc-drawer__jump" data-toc-jump="top">↑ Top</button>
-      <button type="button" class="post-toc-drawer__jump" data-toc-jump="bottom">↓ End</button>
-    </footer>
   </aside>
 </div>

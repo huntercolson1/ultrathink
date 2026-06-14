@@ -33,9 +33,11 @@ permalink: /about/
   <div class="container stack listing-shell">
     <header class="stack listing-hero">
       <h1 class="u-text-display listing-title">{{ site.data.about.title }}</h1>
-      <p class="u-text-mono listing-lede about-page__bio">
-        {{ site.data.about.bio }}
-      </p>
+      <div class="stack listing-lede about-page__bio">
+        {% for paragraph in site.data.about.bio %}
+        <p class="u-text-mono">{{ paragraph }}</p>
+        {% endfor %}
+      </div>
     </header>
     <div class="cluster about-page__links">
       {% if site.data.about.social.github %}

@@ -773,9 +773,11 @@
 
 .home-graph__canvas {
   position: absolute;
-  inset: calc(-1 * var(--home-canvas-bleed));
-  width: calc(100% + (2 * var(--home-canvas-bleed)));
-  height: calc(100% + (2 * var(--home-canvas-bleed)));
+  inset:
+    calc(-1 * var(--home-canvas-bleed-y, var(--home-canvas-bleed)))
+    calc(-1 * var(--home-canvas-bleed-x, var(--home-canvas-bleed)));
+  width: calc(100% + (2 * var(--home-canvas-bleed-x, var(--home-canvas-bleed))));
+  height: calc(100% + (2 * var(--home-canvas-bleed-y, var(--home-canvas-bleed))));
   touch-action: none;
 }
 
@@ -1213,6 +1215,10 @@
 }
 
 @media (width <=600px) {
+  .home-lab {
+    overflow-x: clip;
+  }
+
   .home-lab__inner {
     margin-top: var(--space-lg);
   }
@@ -1230,11 +1236,15 @@
   }
 
   .home-graph {
-    --home-canvas-bleed: clamp(6rem, 18vw, 10rem);
+    --home-canvas-bleed: clamp(6rem, 24vw, 8rem);
 
     width: min(100%, 440px);
     min-height: 320px;
     border-radius: 1px;
+  }
+
+  .home-graph__canvas {
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 76%, transparent 100%);
   }
 
   .home-feed-list__link {
