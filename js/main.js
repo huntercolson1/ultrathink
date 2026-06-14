@@ -9,21 +9,34 @@ import {
   initThemeToggle
 } from './ui.js?v=toc-mobile-20260528b';
 
-// Initialize theme before render to prevent flash
-const initTheme = () => {
-  const root = document.documentElement;
-  const savedTheme = localStorage.getItem('ultrathink-theme');
+const THEME_STORAGE_KEY = 'ultrathink-theme';
 
-  if (savedTheme) {
-    root.setAttribute('data-theme', savedTheme);
-  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-    root.setAttribute('data-theme', 'light');
-  } else {
-    root.setAttribute('data-theme', 'dark');
+const getPreferredTheme = () => {
+  try {
+    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    if (savedTheme) return savedTheme;
+  } catch {
+    return 'dark';
+  }
+
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+};
+
+const syncThemeColor = (theme) => {
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+  if (themeColor) {
+    themeColor.setAttribute('content', theme === 'light' ? '#ffffff' : '#0a0a0a');
   }
 };
 
-// Run theme init immediately to prevent flash
+// The head include sets the first-paint theme. This keeps runtime state aligned.
+const initTheme = () => {
+  const root = document.documentElement;
+  const theme = getPreferredTheme();
+  root.setAttribute('data-theme', theme);
+  syncThemeColor(theme);
+};
+
 initTheme();
 
 const initExternalLinksInMain = () => {

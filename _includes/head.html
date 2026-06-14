@@ -1,10 +1,49 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0a0a0a">
 <meta name="description" content="{{ page.description | default: site.description }}">
 <meta name="author" content="Hunter Colson">
 <meta name="google-site-verification" content="UPOuYG3sSrjmcSLgLq32KFkHZHHUhdCEZHwaNJ34Td4" />
 <title>{{ page.title | default: site.title }}</title>
 {% assign asset_version = site.time | date: "%s" %}
+
+<script>
+  (function () {
+    var theme = 'dark';
+    try {
+      var savedTheme = window.localStorage.getItem('ultrathink-theme');
+      var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+      theme = savedTheme || (prefersLight ? 'light' : 'dark');
+    } catch (error) {
+      theme = 'dark';
+    }
+    document.documentElement.setAttribute('data-theme', theme);
+    var themeColor = document.querySelector('meta[name="theme-color"]');
+    if (themeColor) {
+      themeColor.setAttribute('content', theme === 'light' ? '#ffffff' : '#0a0a0a');
+    }
+  }());
+</script>
+<style>
+  html {
+    background: #0a0a0a;
+    color-scheme: dark;
+  }
+
+  html[data-theme='light'] {
+    background: #fff;
+    color-scheme: light;
+  }
+
+  body {
+    background: #0a0a0a;
+  }
+
+  html[data-theme='light'] body {
+    background: #fff;
+  }
+</style>
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">

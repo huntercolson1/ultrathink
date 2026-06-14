@@ -173,20 +173,34 @@ export const initScrollBehavior = () => {
 
 export const initThemeToggle = (node) => {
   const root = document.documentElement;
+
+  const syncThemeColor = (theme) => {
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+    if (themeColor) {
+      themeColor.setAttribute('content', theme === 'light' ? '#ffffff' : '#0a0a0a');
+    }
+  };
   
   const updateAriaLabel = (theme) => {
     node.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
   };
   
   // Initialize aria-label based on current theme
-  updateAriaLabel(root.getAttribute('data-theme') || 'dark');
+  const initialTheme = root.getAttribute('data-theme') || 'dark';
+  updateAriaLabel(initialTheme);
+  syncThemeColor(initialTheme);
   
   node.addEventListener('click', () => {
     const currentTheme = root.getAttribute('data-theme') || 'dark';
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     root.setAttribute('data-theme', newTheme);
-    localStorage.setItem('ultrathink-theme', newTheme);
+    try {
+      localStorage.setItem('ultrathink-theme', newTheme);
+    } catch {
+      // Keep the visual theme even when storage is unavailable.
+    }
     updateAriaLabel(newTheme);
+    syncThemeColor(newTheme);
   });
 };
 
